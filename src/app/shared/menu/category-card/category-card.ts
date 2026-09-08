@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { LanguageCode } from '../../models/language.model';
 import { Category } from '../../models/menu.model';
 import { getTranslation } from '../../utils/get-translation';
+import { responsiveImageSrcset } from '../../utils/responsive-image';
 
 @Component({
   selector: 'app-category-card',
@@ -10,6 +11,8 @@ import { getTranslation } from '../../utils/get-translation';
   styles: `
     :host {
       display: block;
+      content-visibility: auto;
+      contain-intrinsic-block-size: 10.5rem;
     }
 
     .card {
@@ -71,7 +74,10 @@ import { getTranslation } from '../../utils/get-translation';
           [alt]="''"
           [attr.fetchpriority]="priority() ? 'high' : null"
           [attr.loading]="priority() ? 'eager' : 'lazy'"
+          [attr.srcset]="srcset()"
+          decoding="async"
           [height]="image.height"
+          sizes="(max-width: 36rem) calc(100vw - 2rem), 34rem"
           [src]="image.url"
           [width]="image.width"
         />
@@ -84,6 +90,7 @@ export class CategoryCard {
   readonly category = input.required<Category>();
   readonly language = input.required<LanguageCode>();
   readonly priority = input(false);
+  readonly srcset = computed(() => responsiveImageSrcset(this.category().image?.url ?? ''));
   readonly name = computed(
     () => getTranslation(this.category().translations, this.language())?.name ?? '',
   );
