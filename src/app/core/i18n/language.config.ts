@@ -1,6 +1,6 @@
 import { LanguageCode, SupportedLanguage } from '../../shared/models/language.model';
 
-export const DEFAULT_LANGUAGE: LanguageCode = 'en';
+export const DEFAULT_LANGUAGE: LanguageCode = 'ka';
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'ka', label: 'ქართული' },

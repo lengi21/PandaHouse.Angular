@@ -2,6 +2,19 @@
   "COMMON": {
     "LOADING": "Loading…"
   },
+  "HEADER": {
+    "SEARCH": "Search menu",
+    "TOGGLE_THEME": "Switch light and dark mode",
+    "CART": "Open cart",
+    "LANGUAGE": "Language"
+  },
+  "NAVIGATION": {
+    "LABEL": "Customer navigation",
+    "CATEGORIES": "Categories",
+    "MENU": "Menu",
+    "CART": "Cart",
+    "INFO": "Info"
+  },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "Categories" },
     "MENU": { "TITLE": "Menu" },

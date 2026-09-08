@@ -2,6 +2,19 @@
   "COMMON": {
     "LOADING": "Загрузка…"
   },
+  "HEADER": {
+    "SEARCH": "Поиск по меню",
+    "TOGGLE_THEME": "Переключить светлый и тёмный режим",
+    "CART": "Открыть корзину",
+    "LANGUAGE": "Язык"
+  },
+  "NAVIGATION": {
+    "LABEL": "Навигация для гостей",
+    "CATEGORIES": "Категории",
+    "MENU": "Меню",
+    "CART": "Корзина",
+    "INFO": "Информация"
+  },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "Категории" },
     "MENU": { "TITLE": "Меню" },

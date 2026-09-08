@@ -1,6 +1,6 @@
 :root {
-  color-scheme: light;
   font-family: Inter, system-ui, sans-serif;
+  color-scheme: light;
   --color-background: #f7f3e9;
   --color-surface: #eee9dd;
   --color-text: #111512;
@@ -9,8 +9,45 @@
   --color-on-image: #fff;
   --color-muted-text: #4c554c;
   --color-focus: #285b28;
+  --customer-header-height: 4rem;
+  --customer-navigation-height: 4.5rem;
   background-color: var(--color-background);
   color: var(--color-text);
+}
+
+:root[data-palette='olive'][data-color-mode='dark'] {
+  color-scheme: dark;
+  --color-background: #111512;
+  --color-surface: #1d261e;
+  --color-text: #f7f3e9;
+  --color-primary: #8eaf83;
+  --color-secondary: #b7c9ad;
+  --color-on-image: #fff;
+  --color-muted-text: #c4d0bf;
+  --color-focus: #b7c9ad;
+}
+
+:root[data-palette='wine'][data-color-mode='light'] {
+  --color-background: #fff7f3;
+  --color-surface: #f6e5e1;
+  --color-text: #291316;
+  --color-primary: #7b2639;
+  --color-secondary: #a95061;
+  --color-on-image: #fff;
+  --color-muted-text: #694248;
+  --color-focus: #7b2639;
+}
+
+:root[data-palette='wine'][data-color-mode='dark'] {
+  color-scheme: dark;
+  --color-background: #1d1113;
+  --color-surface: #321a1f;
+  --color-text: #fff7f3;
+  --color-primary: #e19ba7;
+  --color-secondary: #f0c0c7;
+  --color-on-image: #fff;
+  --color-muted-text: #e3bec3;
+  --color-focus: #f0c0c7;
 }
 
 * {

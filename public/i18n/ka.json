@@ -2,6 +2,19 @@
   "COMMON": {
     "LOADING": "იტვირთება…"
   },
+  "HEADER": {
+    "SEARCH": "მენიუში ძიება",
+    "TOGGLE_THEME": "ღია და მუქი რეჟიმის შეცვლა",
+    "CART": "კალათის გახსნა",
+    "LANGUAGE": "ენა"
+  },
+  "NAVIGATION": {
+    "LABEL": "მომხმარებლის ნავიგაცია",
+    "CATEGORIES": "კატეგორიები",
+    "MENU": "მენიუ",
+    "CART": "კალათა",
+    "INFO": "ინფორმაცია"
+  },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "კატეგორიები" },
     "MENU": { "TITLE": "მენიუ" },

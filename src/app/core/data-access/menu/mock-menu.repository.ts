@@ -1,80 +1,159 @@
 import { Service } from '@angular/core';
-import { CustomerMenu, RestaurantId } from '../../../shared/models/menu.model';
+import {
+  Category,
+  CustomerMenu,
+  Dish,
+  DishTranslation,
+  MenuCategory,
+  RestaurantId,
+} from '../../../shared/models/menu.model';
 import { MenuRepository } from './menu.repository';
+
+const restaurantId = 'panda-house';
+
+interface TrilingualText {
+  readonly ka: string;
+  readonly en: string;
+  readonly ru: string;
+}
+
+interface DishSeed {
+  readonly id: string;
+  readonly price: number;
+  readonly name: TrilingualText;
+}
+
+function createCategory(
+  id: string,
+  sortOrder: number,
+  imageUrl: string,
+  name: TrilingualText,
+  dishes: readonly DishSeed[],
+): MenuCategory {
+  const category: Category = {
+    id,
+    restaurantId,
+    image: { url: imageUrl, width: 1200, height: 800 },
+    isVisible: true,
+    sortOrder,
+    translations: [
+      { languageCode: 'ka', name: name.ka },
+      { languageCode: 'en', name: name.en },
+      { languageCode: 'ru', name: name.ru },
+    ],
+  };
+
+  return { category, dishes: dishes.map((dish, index) => createDish(category.id, index + 1, dish)) };
+}
+
+function createDish(categoryId: string, sortOrder: number, dish: DishSeed): Dish {
+  const translations: readonly DishTranslation[] = [
+    { languageCode: 'ka', name: dish.name.ka, description: 'შეფის განსაკუთრებული რეცეპტი.' },
+    { languageCode: 'en', name: dish.name.en, description: 'A special recipe from our chef.' },
+    { languageCode: 'ru', name: dish.name.ru, description: 'Особый рецепт от нашего шеф-повара.' },
+  ];
+
+  return {
+    id: dish.id,
+    restaurantId,
+    categoryId,
+    image: {
+      url: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80',
+      width: 900,
+      height: 600,
+    },
+    price: { amountMinor: dish.price * 100, currency: 'GEL' },
+    isPublished: true,
+    isAvailable: true,
+    sortOrder,
+    translations,
+  };
+}
 
 const pandaHouseMenu: CustomerMenu = {
   restaurant: {
-    id: 'panda-house',
-    name: 'Panda House',
+    id: restaurantId,
     logo: null,
-    coverImage: null,
+    coverImage: {
+      url: 'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1600&q=80',
+      width: 1600,
+      height: 900,
+    },
+    translations: [
+      { languageCode: 'ka', name: 'პანდა ჰაუსი', description: 'თბილი კერძები და სასიამოვნო გარემო.' },
+      { languageCode: 'en', name: 'Panda House', description: 'Warm food and a welcoming atmosphere.' },
+      { languageCode: 'ru', name: 'Панда Хаус', description: 'Тёплая еда и уютная атмосфера.' },
+    ],
+    address: 'აღმაშენებლის გამზირი 40D',
+    phone: '+995 555 55 22 50',
+    openingHours: [
+      { day: 'monday', opensAt: '09:00', closesAt: '23:00' },
+      { day: 'tuesday', opensAt: '09:00', closesAt: '23:00' },
+      { day: 'wednesday', opensAt: '09:00', closesAt: '23:00' },
+      { day: 'thursday', opensAt: '09:00', closesAt: '23:00' },
+      { day: 'friday', opensAt: '09:00', closesAt: '23:00' },
+      { day: 'saturday', opensAt: '09:00', closesAt: '23:00' },
+      { day: 'sunday', opensAt: '09:00', closesAt: '23:00' },
+    ],
+    socialLinks: [
+      { platform: 'facebook', url: 'https://www.facebook.com/' },
+      { platform: 'instagram', url: 'https://www.instagram.com/' },
+    ],
   },
   categories: [
-    {
-      category: {
-        id: 'signature-dishes',
-        restaurantId: 'panda-house',
-        image: {
-          url: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80',
-          width: 1200,
-          height: 800,
-        },
-        isVisible: true,
-        sortOrder: 1,
-        translations: [
-          { languageCode: 'en', name: 'Signature dishes' },
-          { languageCode: 'ka', name: 'სპეციალური კერძები' },
-          { languageCode: 'ru', name: 'Фирменные блюда' },
-        ],
-      },
-      dishes: [],
-    },
-    {
-      category: {
-        id: 'sushi-rolls',
-        restaurantId: 'panda-house',
-        image: {
-          url: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1200&q=80',
-          width: 1200,
-          height: 800,
-        },
-        isVisible: true,
-        sortOrder: 2,
-        translations: [
-          { languageCode: 'en', name: 'Sushi & rolls' },
-          { languageCode: 'ka', name: 'სუში და როლები' },
-          { languageCode: 'ru', name: 'Суши и роллы' },
-        ],
-      },
-      dishes: [],
-    },
-    {
-      category: {
-        id: 'bowls',
-        restaurantId: 'panda-house',
-        image: {
-          url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80',
-          width: 1200,
-          height: 800,
-        },
-        isVisible: true,
-        sortOrder: 3,
-        translations: [
-          { languageCode: 'en', name: 'Bowls & salads' },
-          { languageCode: 'ka', name: 'ბოულები და სალათები' },
-          { languageCode: 'ru', name: 'Боулы и салаты' },
-        ],
-      },
-      dishes: [],
-    },
+    createCategory('pastries', 1, 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80', { ka: 'ცომეული', en: 'Pastries', ru: 'Выпечка' }, [
+      { id: 'adjarian-khachapuri', price: 1800, name: { ka: 'აჭარული ხაჭაპური', en: 'Adjarian khachapuri', ru: 'Аджарский хачапури' } },
+      { id: 'lobiani', price: 1200, name: { ka: 'ლობიანი', en: 'Bean bread', ru: 'Лобиани' } },
+      { id: 'kubdari', price: 1600, name: { ka: 'კუბდარი', en: 'Kubdari', ru: 'Кубдари' } },
+    ]),
+    createCategory('salads', 2, 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80', { ka: 'სალათები', en: 'Salads', ru: 'Салаты' }, [
+      { id: 'georgian-salad', price: 1300, name: { ka: 'ქართული სალათი', en: 'Georgian salad', ru: 'Грузинский салат' } },
+      { id: 'caesar-salad', price: 1700, name: { ka: 'ცეზარის სალათი', en: 'Caesar salad', ru: 'Салат Цезарь' } },
+      { id: 'vegetable-salad', price: 1200, name: { ka: 'ბოსტნეულის სალათი', en: 'Garden vegetable salad', ru: 'Овощной салат' } },
+    ]),
+    createCategory('main-dishes', 3, 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80', { ka: 'ძირითადი კერძები', en: 'Main dishes', ru: 'Основные блюда' }, [
+      { id: 'chkmeruli', price: 2600, name: { ka: 'ჩქმერული', en: 'Chkmeruli chicken', ru: 'Чкмерули' } },
+      { id: 'ojakhuri', price: 2400, name: { ka: 'ოჯახური', en: 'Ojakhuri', ru: 'Оджахури' } },
+      { id: 'chashushuli', price: 2500, name: { ka: 'ჩაშუშული', en: 'Chashushuli', ru: 'Чашушули' } },
+    ]),
+    createCategory('desserts', 4, 'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=1200&q=80', { ka: 'დესერტი', en: 'Desserts', ru: 'Десерты' }, [
+      { id: 'honey-cake', price: 1100, name: { ka: 'თაფლიანი ტორტი', en: 'Honey cake', ru: 'Медовик' } },
+      { id: 'napoleon', price: 1100, name: { ka: 'ნაპოლეონი', en: 'Napoleon cake', ru: 'Наполеон' } },
+      { id: 'churchkhela', price: 700, name: { ka: 'ჩურჩხელა', en: 'Churchkhela', ru: 'Чурчхела' } },
+    ]),
+    createCategory('hot-drinks', 5, 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80', { ka: 'ცხელი სასმელები', en: 'Hot drinks', ru: 'Горячие напитки' }, [
+      { id: 'espresso', price: 500, name: { ka: 'ესპრესო', en: 'Espresso', ru: 'Эспрессо' } },
+      { id: 'cappuccino', price: 800, name: { ka: 'კაპუჩინო', en: 'Cappuccino', ru: 'Капучино' } },
+      { id: 'tea', price: 600, name: { ka: 'ჩაი', en: 'Tea', ru: 'Чай' } },
+    ]),
+    createCategory('cold-drinks', 6, 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1200&q=80', { ka: 'ცივი სასმელები', en: 'Cold drinks', ru: 'Холодные напитки' }, [
+      { id: 'tarragon-lemonade', price: 700, name: { ka: 'ტარხუნის ლიმონათი', en: 'Tarragon lemonade', ru: 'Лимонад тархун' } },
+      { id: 'pear-lemonade', price: 700, name: { ka: 'მსხლის ლიმონათი', en: 'Pear lemonade', ru: 'Грушевый лимонад' } },
+      { id: 'mineral-water', price: 400, name: { ka: 'მინერალური წყალი', en: 'Mineral water', ru: 'Минеральная вода' } },
+    ]),
+    createCategory('alcoholic-drinks', 7, 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1200&q=80', { ka: 'ალკოჰოლური სასმელები', en: 'Alcoholic drinks', ru: 'Алкогольные напитки' }, [
+      { id: 'saperavi', price: 1500, name: { ka: 'საფერავი', en: 'Saperavi wine', ru: 'Саперави' } },
+      { id: 'rkatsiteli', price: 1400, name: { ka: 'რქაწითელი', en: 'Rkatsiteli wine', ru: 'Ркацители' } },
+      { id: 'chacha', price: 900, name: { ka: 'ჭაჭა', en: 'Chacha', ru: 'Чача' } },
+    ]),
+    createCategory('side-dishes', 8, 'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1200&q=80', { ka: 'გარნირი', en: 'Side dishes', ru: 'Гарниры' }, [
+      { id: 'french-fries', price: 700, name: { ka: 'კარტოფილი ფრი', en: 'French fries', ru: 'Картофель фри' } },
+      { id: 'grilled-vegetables', price: 1000, name: { ka: 'გრილზე მომზადებული ბოსტნეული', en: 'Grilled vegetables', ru: 'Овощи на гриле' } },
+      { id: 'rice', price: 600, name: { ka: 'ბრინჯი', en: 'Rice', ru: 'Рис' } },
+    ]),
+    createCategory('soups', 9, 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80', { ka: 'სუპები', en: 'Soups', ru: 'Супы' }, [
+      { id: 'kharcho', price: 1400, name: { ka: 'ხარჩო', en: 'Kharcho soup', ru: 'Суп харчо' } },
+      { id: 'chicken-soup', price: 1300, name: { ka: 'ქათმის სუპი', en: 'Chicken soup', ru: 'Куриный суп' } },
+      { id: 'mushroom-soup', price: 1300, name: { ka: 'სოკოს კრემ-სუპი', en: 'Mushroom cream soup', ru: 'Грибной крем-суп' } },
+    ]),
   ],
 };
 
 @Service()
 export class MockMenuRepository implements MenuRepository {
-  getCustomerMenu(restaurantId: RestaurantId): Promise<CustomerMenu> {
-    if (restaurantId !== pandaHouseMenu.restaurant.id) {
-      return Promise.reject(new Error(`Restaurant \"${restaurantId}\" was not found.`));
+  getCustomerMenu(id: RestaurantId): Promise<CustomerMenu> {
+    if (id !== pandaHouseMenu.restaurant.id) {
+      return Promise.reject(new Error(`Restaurant \"${id}\" was not found.`));
     }
 
     return Promise.resolve(pandaHouseMenu);

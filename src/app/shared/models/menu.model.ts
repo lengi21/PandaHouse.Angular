@@ -6,11 +6,39 @@ export type RestaurantId = string;
 export type CategoryId = string;
 export type DishId = string;
 
+export type Weekday =
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
+
+export interface RestaurantTranslation extends NamedTranslation {
+  readonly description: string;
+}
+
+export interface OpeningHours {
+  readonly day: Weekday;
+  readonly opensAt: string;
+  readonly closesAt: string;
+}
+
+export interface SocialLink {
+  readonly platform: 'facebook' | 'instagram';
+  readonly url: string;
+}
+
 export interface Restaurant {
   readonly id: RestaurantId;
-  readonly name: string;
   readonly logo: MediaAsset | null;
   readonly coverImage: MediaAsset | null;
+  readonly translations: readonly RestaurantTranslation[];
+  readonly address: string;
+  readonly phone: string;
+  readonly openingHours: readonly OpeningHours[];
+  readonly socialLinks: readonly SocialLink[];
 }
 
 export interface CategoryTranslation extends NamedTranslation {}
