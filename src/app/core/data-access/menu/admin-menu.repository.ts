@@ -10,6 +10,8 @@ export interface AdminMenuRepository {
   getDishes(restaurantId: RestaurantId, request: AdminDishListRequest): Promise<PageResult<AdminDishSummary>>;
   createDish(restaurantId: RestaurantId, draft: DishDraft): Promise<Dish>;
   updateDish(restaurantId: RestaurantId, dishId: DishId, draft: DishDraft): Promise<Dish>;
+  setDishStatus(restaurantId: RestaurantId, dishId: DishId, status: Pick<Dish, 'isAvailable' | 'isPublished'>): Promise<Dish>;
+  deleteDish(restaurantId: RestaurantId, dishId: DishId): Promise<void>;
   reorderDishes(restaurantId: RestaurantId, categoryId: CategoryId, dishIds: readonly DishId[]): Promise<void>;
   moveDish(restaurantId: RestaurantId, categoryId: CategoryId, dishId: DishId, targetDishId: DishId, placeAfter: boolean): Promise<void>;
 }

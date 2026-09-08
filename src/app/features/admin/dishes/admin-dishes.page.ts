@@ -43,6 +43,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
     .badge.paused { background: color-mix(in srgb, #d77354 18%, transparent); color: #a13d28; }
     .actions { display: flex; align-items: center; gap: .25rem; }
     .more { display: grid; inline-size: 2rem; block-size: 2rem; place-items: center; border: 0; border-radius: .45rem; background: var(--color-surface); color: var(--color-text); }
+    .more.primary { color: var(--color-primary); } .more.danger { color: #b53d35; }
     .more mat-icon { inline-size: 1.1rem; block-size: 1.1rem; font-size: 1.1rem; }
     .state { display: grid; min-block-size: 12rem; place-items: center; color: var(--color-muted-text); font-size: .82rem; }
     @media (max-width: 40rem) { .heading { align-items: stretch; flex-direction: column; } .add { justify-content: center; } .filters { grid-template-columns: 1fr; } }
@@ -50,15 +51,16 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
       main { padding: 1rem; }
       .table-wrap { overflow: visible; border: 0; background: transparent; }
       table, tbody { display: grid; min-inline-size: 0; }
+      tbody { gap: .7rem; }
       thead { display: none; }
       tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .2rem .8rem; padding: .8rem; border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent); border-radius: .75rem; background: var(--color-panel); }
       th, td { min-inline-size: 0; padding: .15rem 0; border: 0; }
       td:first-child { grid-column: 1 / -1; }
       td:not(:first-child) { display: flex; align-items: center; justify-content: space-between; gap: .75rem; color: var(--color-text); }
       td:not(:first-child)::before { color: var(--color-muted-text); content: attr(data-label); font-size: .66rem; font-weight: 700; }
-      td:last-child { grid-column: 2; grid-row: 2 / span 3; align-self: center; }
+      td:last-child { grid-column: 1 / -1; grid-row: auto; padding-block-start: .55rem; border-block-start: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
       td:last-child::before { display: none; }
-      .actions { justify-content: end; }
+      .actions { flex-wrap: wrap; justify-content: start; }
     }
   `,
   template: `
@@ -88,7 +90,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
                   <td data-label="Category">{{ name(summary.category.translations) }}</td>
                   <td data-label="Price"><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></td>
                   <td data-label="Status"><span class="badge" [class.paused]="!summary.dish.isPublished || !summary.dish.isAvailable">{{ (summary.dish.isPublished && summary.dish.isAvailable ? 'ADMIN.DISHES.ACTIVE' : 'ADMIN.DISHES.PAUSED') | translate }}</span></td>
-                  <td data-label="Actions"><div class="actions"><button class="more" type="button" [attr.aria-label]="'ADMIN.DISHES.MORE_ACTIONS' | translate" (click)="openEditor(summary)"><mat-icon aria-hidden="true">more_vert</mat-icon></button></div></td>
+                  <td data-label="Actions"><div class="actions"><button class="more primary" type="button" [attr.aria-label]="(summary.dish.isAvailable ? 'ADMIN.DISHES.PAUSE' : 'ADMIN.DISHES.RESUME') | translate" (click)="toggleAvailability(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isAvailable ? 'pause_circle' : 'play_circle' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="(summary.dish.isPublished ? 'ADMIN.DISHES.HIDE' : 'ADMIN.DISHES.SHOW') | translate" (click)="togglePublication(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isPublished ? 'visibility_off' : 'visibility' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="'ADMIN.DISHES.EDIT' | translate" (click)="openEditor(summary)"><mat-icon aria-hidden="true">edit</mat-icon></button><button class="more danger" type="button" [attr.aria-label]="'ADMIN.DISHES.REMOVE' | translate" (click)="remove(summary)"><mat-icon aria-hidden="true">delete</mat-icon></button></div></td>
                 </tr>
               } @empty { <tr><td class="state" colspan="5">{{ 'ADMIN.DISHES.EMPTY' | translate }}</td></tr> }
             </tbody>
@@ -142,6 +144,10 @@ export class AdminDishesPage {
   protected drop(event: CdkDragDrop<readonly AdminDishSummary[]>): void {
     void this.store.reorderVisibleDishes(event.previousIndex, event.currentIndex);
   }
+
+  protected toggleAvailability(summary: AdminDishSummary): void { void this.store.setDishStatus(summary, { isAvailable: !summary.dish.isAvailable, isPublished: summary.dish.isPublished }); }
+  protected togglePublication(summary: AdminDishSummary): void { void this.store.setDishStatus(summary, { isAvailable: summary.dish.isAvailable, isPublished: !summary.dish.isPublished }); }
+  protected remove(summary: AdminDishSummary): void { void this.store.remove(summary.dish.id); }
 
   protected name(translations: readonly NamedTranslation[]): string {
     return getTranslation(translations, this.languageService.currentLanguage())?.name ?? '';

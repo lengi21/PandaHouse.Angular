@@ -56,6 +56,20 @@ export class AdminDishesStore {
   create(draft: DishDraft): Promise<Dish> { return this.requests.run(() => this.repository.createDish(DEFAULT_RESTAURANT_ID, draft), { action: true, successKey: 'ADMIN.FEEDBACK.SAVED' }).then((dish) => { this.resetAndLoad(); return dish; }); }
   update(dishId: DishId, draft: DishDraft): Promise<Dish> { return this.requests.run(() => this.repository.updateDish(DEFAULT_RESTAURANT_ID, dishId, draft), { action: true, successKey: 'ADMIN.FEEDBACK.SAVED' }).then((dish) => { this.load(); return dish; }); }
 
+  setDishStatus(summary: AdminDishSummary, status: Pick<Dish, 'isAvailable' | 'isPublished'>): Promise<Dish> {
+    return this.requests.run(() => this.repository.setDishStatus(DEFAULT_RESTAURANT_ID, summary.dish.id, status), { action: true, successKey: 'ADMIN.FEEDBACK.SAVED' }).then((dish) => {
+      this.dishList.update((items) => items.map((item) => item.dish.id === dish.id ? { ...item, dish } : item));
+      return dish;
+    });
+  }
+
+  remove(dishId: DishId): Promise<void> {
+    return this.requests.run(() => this.repository.deleteDish(DEFAULT_RESTAURANT_ID, dishId), { action: true, successKey: 'ADMIN.FEEDBACK.DELETED' }).then(() => {
+      this.dishList.update((items) => items.filter((summary) => summary.dish.id !== dishId));
+      this.totalItemsState.update((total) => Math.max(0, total - 1));
+    });
+  }
+
   reorderVisibleDishes(previousIndex: number, currentIndex: number): Promise<void> {
     const previous = this.dishList();
     const moving = previous[previousIndex];

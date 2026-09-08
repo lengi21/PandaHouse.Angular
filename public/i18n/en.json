@@ -70,7 +70,8 @@
       "RETRY": "Try again",
       "SAVED": "Changes saved successfully.",
       "ORDER_SAVED": "Order updated successfully.",
-      "UPLOAD_SAVED": "Image uploaded successfully."
+      "UPLOAD_SAVED": "Image uploaded successfully.",
+      "DELETED": "Dish removed successfully."
     },
     "MEDIA": {
       "UPLOAD_TITLE": "Upload image",
@@ -122,7 +123,9 @@
       "SAVING": "Saving…",
       "SAVE_ERROR": "The category could not be saved.",
       "MOVE_EARLIER": "Move category earlier",
-      "MOVE_LATER": "Move category later"
+      "MOVE_LATER": "Move category later",
+      "HIDE": "Hide category",
+      "SHOW": "Show category"
     },
     "DISHES": {
       "TITLE": "Dishes",
@@ -151,8 +154,13 @@
       "SAVE": "Save dish",
       "SAVE_ERROR": "The dish could not be saved.",
       "MOVE_EARLIER": "Move dish earlier in its category",
-      "MOVE_LATER": "Move dish later in its category"
-      ,"REORDER_NOTE": "Choose one category, then drag dishes to change their order."
+      "MOVE_LATER": "Move dish later in its category",
+      "REORDER_NOTE": "Choose one category, then drag dishes to change their order.",
+      "PAUSE": "Pause dish",
+      "RESUME": "Resume dish",
+      "HIDE": "Hide dish",
+      "SHOW": "Show dish",
+      "REMOVE": "Remove dish"
     },
     "SETTINGS": { "TITLE": "Restaurant information", "DESCRIPTION": "Manage the details shown in the customer menu.", "IMAGES": "Restaurant images", "LOGO_URL": "Logo image URL", "COVER_URL": "Cover image URL", "CONTACT": "Contact information", "ADDRESS": "Address", "PHONE": "Phone", "FACEBOOK": "Facebook URL", "INSTAGRAM": "Instagram URL", "NAMES": "Restaurant names", "HOURS": "Working hours", "OPENS": "Opens", "CLOSES": "Closes", "SAVE": "Save changes", "SAVING": "Saving…", "SAVED": "Changes saved.", "SAVE_ERROR": "Changes could not be saved." }
   }

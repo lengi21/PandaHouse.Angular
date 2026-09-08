@@ -17,6 +17,10 @@ import { getTranslation } from '../../utils/get-translation';
     h2 { overflow: hidden; margin: 0; font-size: .82rem; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
     .more { display: grid; flex: 0 0 auto; inline-size: 1.8rem; block-size: 1.8rem; place-items: center; margin: -.25rem -.3rem -.25rem 0; border: 0; border-radius: .45rem; background: transparent; color: var(--color-muted-text); }
     .more mat-icon { inline-size: 1.1rem; block-size: 1.1rem; font-size: 1.1rem; }
+    .quick-actions { display: flex; gap: .35rem; }
+    .quick-actions button { display: inline-grid; flex: 1; min-block-size: 2rem; place-items: center; border: 0; border-radius: .45rem; background: var(--color-surface); color: var(--color-text); }
+    .quick-actions button:first-child { color: var(--color-primary); }
+    .quick-actions mat-icon { inline-size: 1.05rem; block-size: 1.05rem; font-size: 1.05rem; }
     .order { display: flex; gap: .15rem; }
     .order button { display: grid; inline-size: 1.45rem; block-size: 1.45rem; place-items: center; border: 0; border-radius: .35rem; background: var(--color-surface); color: var(--color-text); }
     .order button:disabled { opacity: .35; }
@@ -46,6 +50,10 @@ import { getTranslation } from '../../utils/get-translation';
           <button type="button" [attr.aria-label]="'ADMIN.CATEGORIES.MOVE_LATER' | translate" (click)="moveRequested.emit(1)"><mat-icon aria-hidden="true">arrow_forward</mat-icon></button>
           <span>#{{ summary().category.sortOrder }}</span>
         </div>
+        <div class="quick-actions">
+          <button type="button" [attr.aria-label]="'ADMIN.CATEGORIES.EDIT' | translate" (click)="editRequested.emit()"><mat-icon aria-hidden="true">edit</mat-icon></button>
+          <button type="button" [attr.aria-label]="(summary().category.isVisible ? 'ADMIN.CATEGORIES.HIDE' : 'ADMIN.CATEGORIES.SHOW') | translate" (click)="visibilityRequested.emit()"><mat-icon aria-hidden="true">{{ summary().category.isVisible ? 'visibility_off' : 'visibility' }}</mat-icon></button>
+        </div>
       </div>
     </article>
   `,
@@ -55,6 +63,7 @@ export class AdminCategoryTile {
   readonly language = input.required<LanguageCode>();
   readonly editRequested = output<void>();
   readonly moveRequested = output<-1 | 1>();
+  readonly visibilityRequested = output<void>();
   protected readonly name = computed(
     () => getTranslation(this.summary().category.translations, this.language())?.name ?? '',
   );

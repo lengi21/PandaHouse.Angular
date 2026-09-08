@@ -193,6 +193,38 @@ export class MockAdminMenuRepository implements AdminMenuRepository {
     );
   }
 
+  setDishStatus(restaurantId: RestaurantId, dishId: DishId, status: Pick<Dish, 'isAvailable' | 'isPublished'>): Promise<Dish> {
+    return firstValueFrom(this.http.post(apiUrl(`/api/admin/restaurants/${restaurantId}/dishes/${dishId}/status`), status, (request) => {
+      this.assertRestaurant(restaurantId);
+      let updated: Dish | null = null;
+      replaceMockMenuCategories(pandaHouseMenu.categories.map((menuCategory) => ({
+        ...menuCategory,
+        dishes: menuCategory.dishes.map((dish) => {
+          if (dish.id !== dishId) return dish;
+          updated = { ...dish, isAvailable: request.isAvailable, isPublished: request.isPublished };
+          return updated;
+        }),
+      })));
+      if (!updated) throw new Error(`Dish \"${dishId}\" was not found.`);
+      return updated;
+    }));
+  }
+
+  deleteDish(restaurantId: RestaurantId, dishId: DishId): Promise<void> {
+    return firstValueFrom(this.http.post(apiUrl(`/api/admin/restaurants/${restaurantId}/dishes/${dishId}/delete`), {}, () => {
+      this.assertRestaurant(restaurantId);
+      let found = false;
+      replaceMockMenuCategories(pandaHouseMenu.categories.map((menuCategory) => {
+        const dishes = menuCategory.dishes.filter((dish) => {
+          if (dish.id === dishId) { found = true; return false; }
+          return true;
+        });
+        return { ...menuCategory, dishes: dishes.map((dish, index) => ({ ...dish, sortOrder: index + 1 })) };
+      }));
+      if (!found) throw new Error(`Dish \"${dishId}\" was not found.`);
+    }));
+  }
+
   reorderDishes(restaurantId: RestaurantId, categoryId: CategoryId, dishIds: readonly DishId[]): Promise<void> {
     return firstValueFrom(
       this.http.post(apiUrl(`/api/admin/restaurants/${restaurantId}/categories/${categoryId}/dishes/order`), { dishIds }, (request) => {

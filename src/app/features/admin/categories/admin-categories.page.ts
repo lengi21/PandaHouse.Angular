@@ -49,7 +49,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
         <div class="summary"><span>{{ store.categories().length }} {{ 'ADMIN.CATEGORIES.TOTAL' | translate }}</span><span>{{ 'ADMIN.CATEGORIES.ORDER_NOTE' | translate }}</span></div>
         <div class="grid" cdkDropList cdkDropListOrientation="mixed" [cdkDropListData]="store.categories()" (cdkDropListDropped)="drop($event)">
           @for (summary of store.categories(); track summary.category.id) {
-            <app-admin-category-tile cdkDrag [cdkDragData]="summary" [language]="languageService.currentLanguage()" [summary]="summary" (editRequested)="openEditor(summary.category)" (moveRequested)="move(summary.category.id, $event)" />
+            <app-admin-category-tile cdkDrag [cdkDragData]="summary" [language]="languageService.currentLanguage()" [summary]="summary" (editRequested)="openEditor(summary.category)" (moveRequested)="move(summary.category.id, $event)" (visibilityRequested)="toggleVisibility(summary.category)" />
           }
         </div>
       }
@@ -96,6 +96,14 @@ export class AdminCategoriesPage {
 
   protected move(categoryId: string, direction: -1 | 1): void {
     void this.store.move(categoryId, direction);
+  }
+
+  protected toggleVisibility(category: Category): void {
+    void this.store.update(category.id, {
+      imageUrl: category.image?.url ?? '',
+      isVisible: !category.isVisible,
+      translations: category.translations,
+    });
   }
 
   protected drop(event: CdkDragDrop<readonly AdminCategorySummary[]>): void {
