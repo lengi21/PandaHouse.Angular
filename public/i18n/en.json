@@ -62,10 +62,88 @@
     "ADD": "Add"
   },
   "ADMIN": {
-    "SIGN_IN": { "TITLE": "Admin sign in" },
-    "DASHBOARD": { "TITLE": "Dashboard" },
-    "CATEGORIES": { "TITLE": "Categories" },
-    "DISHES": { "TITLE": "Dishes" },
-    "SETTINGS": { "TITLE": "Settings" }
+    "MEDIA": {
+      "UPLOAD_TITLE": "Upload image",
+      "UPLOAD_HINT": "JPEG, PNG, or WebP. Uploading replaces the image URL with the storage link.",
+      "SELECT_IMAGE": "Select image",
+      "UPLOADING": "Uploading…",
+      "UPLOAD_ERROR": "The image could not be uploaded."
+    },
+    "SIGN_IN": {
+      "TITLE": "Admin sign in",
+      "DESCRIPTION": "Use your administrator email and password to continue.",
+      "EMAIL": "Email address",
+      "PASSWORD": "Password",
+      "SUBMIT": "Sign in",
+      "SUBMITTING": "Signing in…",
+      "INVALID_CREDENTIALS": "The email or password is incorrect."
+    },
+    "NAVIGATION": {
+      "LABEL": "Administrator navigation",
+      "DASHBOARD": "Dashboard",
+      "CATEGORIES": "Categories",
+      "DISHES": "Dishes",
+      "RESTAURANT": "Restaurant information",
+      "BACK_TO_MENU": "Back to menu",
+      "SIGN_OUT": "Sign out"
+    },
+    "DASHBOARD": { "TITLE": "Dashboard", "DESCRIPTION": "Overview of your restaurant menu.", "CATEGORIES": "Categories", "DISHES": "Dishes", "PUBLISHED": "Published dishes", "AVAILABLE": "Available dishes", "RECENT_DISHES": "Recent dishes", "VIEW_ALL": "View all" },
+    "CATEGORIES": {
+      "TITLE": "Categories",
+      "DESCRIPTION": "Manage menu categories and their order.",
+      "ADD": "Add category",
+      "TOTAL": "categories",
+      "ORDER_NOTE": "Categories appear in this order in the customer menu.",
+      "DISHES": "dishes",
+      "ACTIVE": "Active",
+      "HIDDEN": "Hidden",
+      "MORE_ACTIONS": "More category actions",
+      "LOAD_ERROR": "Categories could not be loaded.",
+      "EDIT": "Edit category",
+      "CLOSE_EDITOR": "Close category editor",
+      "IMAGE_URL": "Image URL",
+      "NAMES": "Category names",
+      "GEORGIAN": "Georgian",
+      "ENGLISH": "English",
+      "RUSSIAN": "Russian",
+      "VISIBLE": "Visible in the customer menu",
+      "CANCEL": "Cancel",
+      "SAVE": "Save category",
+      "SAVING": "Saving…",
+      "SAVE_ERROR": "The category could not be saved.",
+      "MOVE_EARLIER": "Move category earlier",
+      "MOVE_LATER": "Move category later"
+    },
+    "DISHES": {
+      "TITLE": "Dishes",
+      "DESCRIPTION": "Manage dishes, category assignment, availability, and order.",
+      "ADD": "Add dish",
+      "SEARCH": "Search dishes",
+      "CATEGORY_FILTER": "Filter by category",
+      "STATUS_FILTER": "Filter by status",
+      "DISH": "Dish",
+      "CATEGORY": "Category",
+      "PRICE": "Price",
+      "STATUS": "Status",
+      "ACTIONS": "Actions",
+      "ACTIVE": "Active",
+      "PAUSED": "Paused",
+      "MORE_ACTIONS": "More dish actions",
+      "EMPTY": "No dishes match these filters.",
+      "EDIT": "Edit dish",
+      "CLOSE_EDITOR": "Close dish editor",
+      "PRICE_GEL": "Price (GEL)",
+      "CALORIES": "Calories (optional)",
+      "IMAGE_URL": "Image URL",
+      "NAMES": "Dish names",
+      "PUBLISHED": "Published in the customer menu",
+      "AVAILABLE": "Available to order",
+      "SAVE": "Save dish",
+      "SAVE_ERROR": "The dish could not be saved.",
+      "MOVE_EARLIER": "Move dish earlier in its category",
+      "MOVE_LATER": "Move dish later in its category"
+      ,"REORDER_NOTE": "Choose one category, then drag dishes to change their order."
+    },
+    "SETTINGS": { "TITLE": "Restaurant information", "DESCRIPTION": "Manage the details shown in the customer menu.", "IMAGES": "Restaurant images", "LOGO_URL": "Logo image URL", "COVER_URL": "Cover image URL", "CONTACT": "Contact information", "ADDRESS": "Address", "PHONE": "Phone", "FACEBOOK": "Facebook URL", "INSTAGRAM": "Instagram URL", "NAMES": "Restaurant names", "HOURS": "Working hours", "OPENS": "Opens", "CLOSES": "Closes", "SAVE": "Save changes", "SAVING": "Saving…", "SAVED": "Changes saved.", "SAVE_ERROR": "Changes could not be saved." }
   }
 }

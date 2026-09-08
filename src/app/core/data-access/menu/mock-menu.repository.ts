@@ -1,4 +1,5 @@
-import { Service } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import {
   Category,
   CustomerMenu,
@@ -8,6 +9,8 @@ import {
   RestaurantId,
 } from '../../../shared/models/menu.model';
 import { MenuRepository } from './menu.repository';
+import { MockHttpClient } from '../../http/mock-http-client.service';
+import { apiUrl } from '../../http/api-endpoints';
 
 const restaurantId = 'panda-house';
 
@@ -102,7 +105,7 @@ const caloriesByCategory: Readonly<Record<string, number | null>> = {
   soups: 280,
 };
 
-const pandaHouseMenu: CustomerMenu = {
+export let pandaHouseMenu: CustomerMenu = {
   restaurant: {
     id: restaurantId,
     logo: null,
@@ -181,13 +184,27 @@ const pandaHouseMenu: CustomerMenu = {
   ],
 };
 
+export function replaceMockMenuCategories(categories: CustomerMenu['categories']): void {
+  pandaHouseMenu = { ...pandaHouseMenu, categories };
+}
+
+export function replaceMockRestaurant(restaurant: CustomerMenu['restaurant']): void {
+  pandaHouseMenu = { ...pandaHouseMenu, restaurant };
+}
+
 @Service()
 export class MockMenuRepository implements MenuRepository {
-  getCustomerMenu(id: RestaurantId): Promise<CustomerMenu> {
-    if (id !== pandaHouseMenu.restaurant.id) {
-      return Promise.reject(new Error(`Restaurant \"${id}\" was not found.`));
-    }
+  private readonly http = inject(MockHttpClient);
 
-    return Promise.resolve(pandaHouseMenu);
+  getCustomerMenu(id: RestaurantId): Promise<CustomerMenu> {
+    return firstValueFrom(
+      this.http.get(apiUrl(`/api/restaurants/${id}/customer-menu`), () => {
+        if (id !== pandaHouseMenu.restaurant.id) {
+          throw new Error(`Restaurant \"${id}\" was not found.`);
+        }
+
+        return pandaHouseMenu;
+      }),
+    );
   }
 }

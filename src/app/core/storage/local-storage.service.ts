@@ -17,4 +17,12 @@ export class LocalStorageService {
       // Storage may be unavailable in private browsing modes.
     }
   }
+
+  remove(key: string): void {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      // Storage may be unavailable in private browsing modes.
+    }
+  }
 }
