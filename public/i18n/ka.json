@@ -17,7 +17,13 @@
   },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "კატეგორიები" },
-    "MENU": { "TITLE": "მენიუ" },
+    "MENU": {
+      "TITLE": "მენიუ",
+      "RECIPE": "რეცეპტი",
+      "CALORIES": "კკალ",
+      "QUANTITY": "რაოდენობა",
+      "CLOSE_DETAILS": "კერძის დეტალების დახურვა"
+    },
     "CART": {
       "TITLE": "კალათა",
       "ITEMS": "პროდუქტი",

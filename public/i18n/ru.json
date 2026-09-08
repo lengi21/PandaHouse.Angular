@@ -17,7 +17,13 @@
   },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "Категории" },
-    "MENU": { "TITLE": "Меню" },
+    "MENU": {
+      "TITLE": "Меню",
+      "RECIPE": "Рецепт",
+      "CALORIES": "ккал",
+      "QUANTITY": "Количество",
+      "CLOSE_DETAILS": "Закрыть детали блюда"
+    },
     "CART": {
       "TITLE": "Ваша корзина",
       "ITEMS": "позиций",

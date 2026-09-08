@@ -7,18 +7,24 @@ import { LanguageService } from '../../../core/i18n/language.service';
 import { CategorySelector } from '../../../shared/menu/category-selector/category-selector';
 import { DishCard } from '../../../shared/menu/dish-card/dish-card';
 import { CategoryId, CategoryTranslation } from '../../../shared/models/menu.model';
+import { Dish } from '../../../shared/models/menu.model';
 import { getTranslation } from '../../../shared/utils/get-translation';
 import { CartStore } from '../cart/cart.store';
 import { CustomerMenuStore } from './customer-menu.store';
 import { SearchField } from '../../../shared/ui/search-field/search-field';
+import { DishDetailsSheet } from '../../../shared/menu/dish-details-sheet/dish-details-sheet';
 
 @Component({
   selector: 'app-menu-page',
-  imports: [CategorySelector, DishCard, SearchField, TranslatePipe],
+  imports: [CategorySelector, DishCard, DishDetailsSheet, SearchField, TranslatePipe],
   styles: `
     main { display: flex; flex-direction: column; max-inline-size: 36rem; block-size: calc(100dvh - var(--customer-header-height)); margin: 0 auto; padding: .7rem 0 0; overflow: hidden; color: var(--color-text); }
     .menu-top { z-index: 5; display: grid; flex: 0 0 auto; gap: .65rem; padding: .65rem 1rem .2rem; background: var(--color-shell); } h1, h2 { margin: 0; } h1 { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); } h2 { padding-bottom: .65rem; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent); font-size: 1.15rem; }
-    .menu-panel { flex: 1 1 auto; min-block-size: 0; margin-top: .2rem; padding: 1rem 1rem calc(var(--customer-navigation-height) + 1.5rem); overflow-y: auto; overscroll-behavior: contain; border-radius: 1.1rem 1.1rem 0 0; background: var(--color-panel); }
+    .menu-workspace { position: relative; flex: 1 1 auto; min-block-size: 0; margin-top: .2rem; }
+    .menu-panel { block-size: 100%; padding: 1rem 1rem calc(var(--customer-navigation-height) + 1.5rem); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--color-primary) 72%, transparent) transparent; border-radius: 1.1rem 1.1rem 0 0; background: var(--color-panel); }
+    .menu-panel::-webkit-scrollbar { inline-size: .55rem; }
+    .menu-panel::-webkit-scrollbar-track { margin: .8rem 0; background: transparent; }
+    .menu-panel::-webkit-scrollbar-thumb { border: .16rem solid var(--color-panel); border-radius: 999px; background: color-mix(in srgb, var(--color-primary) 72%, transparent); }
     section { margin-block-start: 1.4rem; }
     section:first-child { margin-block-start: 0; } .dishes { display: grid; grid-template-columns: minmax(0, 1fr); gap: .2rem; margin-block-start: .15rem; }
     .status { color: var(--color-muted-text); }
@@ -33,17 +39,22 @@ import { SearchField } from '../../../shared/ui/search-field/search-field';
           <app-search-field [label]="'HEADER.SEARCH' | translate" [placeholder]="'HEADER.SEARCH' | translate" [value]="menuStore.searchQuery()" (valueChange)="menuStore.setSearchQuery($event)" />
           <app-category-selector [activeCategoryId]="activeCategoryId()" [categories]="menuStore.categories()" [firstCategoryId]="carouselFirstCategoryId()" [label]="'CUSTOMER.CATEGORIES.TITLE' | translate" [language]="languageService.currentLanguage()" (selected)="scrollToCategory($event)" />
         </div>
-        <div class="menu-panel">
-          @for (menuCategory of menuStore.filteredCategories(); track menuCategory.category.id) {
-            <section [id]="menuCategory.category.id">
-              <h2>{{ categoryName(menuCategory.category.translations) }}</h2>
-              <div class="dishes" role="list">
-                @for (dish of menuCategory.dishes; track dish.id) {
-                  <app-dish-card [addLabel]="'CART.ADD' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" (add)="cartStore.add(dish.id)" (decrement)="cartStore.decrement(dish.id)" (increment)="cartStore.increment(dish.id)" />
-                }
-              </div>
-            </section>
-          } @empty { <p class="status">No dishes match your search.</p> }
+        <div class="menu-workspace">
+          <div class="menu-panel">
+            @for (menuCategory of menuStore.filteredCategories(); track menuCategory.category.id) {
+              <section [id]="menuCategory.category.id">
+                <h2>{{ categoryName(menuCategory.category.translations) }}</h2>
+                <div class="dishes" role="list">
+                  @for (dish of menuCategory.dishes; track dish.id) {
+                    <app-dish-card [addLabel]="'CART.ADD' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" (add)="cartStore.add(dish.id)" (decrement)="cartStore.decrement(dish.id)" (detailsRequested)="selectedDish.set(dish)" (increment)="cartStore.increment(dish.id)" />
+                  }
+                </div>
+              </section>
+            } @empty { <p class="status">No dishes match your search.</p> }
+          </div>
+          @if (selectedDish(); as dish) {
+            <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish.id)" />
+          }
         </div>
       }
     </main>
@@ -54,6 +65,7 @@ export class MenuPage {
   protected readonly languageService = inject(LanguageService);
   protected readonly menuStore = inject(CustomerMenuStore);
   protected readonly activeCategoryId = signal<string | null>(null);
+  protected readonly selectedDish = signal<Dish | null>(null);
   protected readonly carouselFirstCategoryId = signal<CategoryId | null>(null);
   private readonly requestedCategoryId = signal<string | null>(null);
   private readonly isProgrammaticCategoryScroll = signal(false);
@@ -133,6 +145,15 @@ export class MenuPage {
       menuPanel.scrollTo({ behavior: 'smooth', top: targetTop });
     }
     this.categoryScrollTimer = setTimeout(() => this.isProgrammaticCategoryScroll.set(false), 650);
+  }
+
+  protected addOrIncrement(dishId: string): void {
+    if (this.cartStore.quantityFor(dishId) === 0) {
+      this.cartStore.add(dishId);
+      return;
+    }
+
+    this.cartStore.increment(dishId);
   }
 
   protected categoryName(translations: readonly CategoryTranslation[]): string {

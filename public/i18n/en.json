@@ -17,7 +17,13 @@
   },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "Categories" },
-    "MENU": { "TITLE": "Menu" },
+    "MENU": {
+      "TITLE": "Menu",
+      "RECIPE": "Recipe",
+      "CALORIES": "kcal",
+      "QUANTITY": "Quantity",
+      "CLOSE_DETAILS": "Close dish details"
+    },
     "CART": {
       "TITLE": "Your cart",
       "ITEMS": "items",

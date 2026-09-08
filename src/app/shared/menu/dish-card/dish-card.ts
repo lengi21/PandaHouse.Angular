@@ -9,7 +9,7 @@ import { getTranslation } from '../../utils/get-translation';
   selector: 'app-dish-card',
   imports: [Price, QuantityControl],
   styles: `
-    article { display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); gap: .875rem; padding: .75rem; border-radius: 1rem; background: var(--color-surface); }
+    article { display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); gap: .875rem; padding: .75rem; border-radius: 1rem; background: var(--color-surface); cursor: pointer; }
     img { inline-size: 6.25rem; block-size: 6.25rem; border-radius: .75rem; object-fit: cover; }
     h3, p { margin: 0; } h3 { font-size: 1rem; } p { margin-block-start: .3rem; color: var(--color-muted-text); font-size: .875rem; }
     .bottom { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-block-start: .65rem; }
@@ -17,7 +17,7 @@ import { getTranslation } from '../../utils/get-translation';
     .add:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
   `,
   template: `
-    <article>
+    <article (click)="detailsRequested.emit()">
       @if (dish().image; as image) { <img [alt]="name()" [height]="image.height" [src]="image.url" [width]="image.width" loading="lazy" /> }
       <div>
         <h3>{{ name() }}</h3>
@@ -25,9 +25,9 @@ import { getTranslation } from '../../utils/get-translation';
         <div class="bottom">
           <app-price [language]="language()" [money]="dish().price" />
           @if (quantity() > 0) {
-            <app-quantity-control [quantity]="quantity()" (decrement)="decrement.emit()" (increment)="increment.emit()" />
+            <span (click)="$event.stopPropagation()"><app-quantity-control [quantity]="quantity()" (decrement)="decrement.emit()" (increment)="increment.emit()" /></span>
           } @else {
-            <button class="add" type="button" (click)="add.emit()">{{ addLabel() }}</button>
+            <button class="add" type="button" (click)="$event.stopPropagation(); add.emit()">{{ addLabel() }}</button>
           }
         </div>
       </div>
@@ -42,6 +42,7 @@ export class DishCard {
   readonly add = output<void>();
   readonly increment = output<void>();
   readonly decrement = output<void>();
+  readonly detailsRequested = output<void>();
   readonly name = computed(() => getTranslation(this.dish().translations, this.language())?.name ?? '');
   readonly description = computed(
     () => getTranslation(this.dish().translations, this.language())?.description ?? '',

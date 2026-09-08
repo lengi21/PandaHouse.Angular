@@ -52,7 +52,9 @@ export interface Category {
   readonly translations: readonly CategoryTranslation[];
 }
 
-export interface DishTranslation extends DescribedTranslation {}
+export interface DishTranslation extends DescribedTranslation {
+  readonly recipe: string | null;
+}
 
 export interface Dish {
   readonly id: DishId;
@@ -60,6 +62,7 @@ export interface Dish {
   readonly categoryId: CategoryId;
   readonly image: MediaAsset | null;
   readonly price: Money;
+  readonly calories: number | null;
   readonly isPublished: boolean;
   readonly isAvailable: boolean;
   readonly sortOrder: number;

@@ -47,10 +47,11 @@ function createCategory(
 }
 
 function createDish(categoryId: string, sortOrder: number, dish: DishSeed): Dish {
+  const recipe = recipeByCategory[categoryId] ?? defaultRecipe;
   const translations: readonly DishTranslation[] = [
-    { languageCode: 'ka', name: dish.name.ka, description: 'შეფის განსაკუთრებული რეცეპტი.' },
-    { languageCode: 'en', name: dish.name.en, description: 'A special recipe from our chef.' },
-    { languageCode: 'ru', name: dish.name.ru, description: 'Особый рецепт от нашего шеф-повара.' },
+    { languageCode: 'ka', name: dish.name.ka, description: 'შეფის განსაკუთრებული რეცეპტი.', recipe: recipe.ka },
+    { languageCode: 'en', name: dish.name.en, description: 'A special recipe from our chef.', recipe: recipe.en },
+    { languageCode: 'ru', name: dish.name.ru, description: 'Особый рецепт от нашего шеф-повара.', recipe: recipe.ru },
   ];
 
   return {
@@ -63,12 +64,43 @@ function createDish(categoryId: string, sortOrder: number, dish: DishSeed): Dish
       height: 600,
     },
     price: { amountMinor: dish.price * 100, currency: 'GEL' },
+    calories: caloriesByCategory[categoryId] ?? null,
     isPublished: true,
     isAvailable: true,
     sortOrder,
     translations,
   };
 }
+
+const defaultRecipe: TrilingualText = {
+  ka: 'მომზადებულია სეზონური ინგრედიენტებით შეფის რეცეპტის მიხედვით.',
+  en: 'Prepared with seasonal ingredients using our chef’s recipe.',
+  ru: 'Готовится из сезонных ингредиентов по рецепту шефа.',
+};
+
+const recipeByCategory: Readonly<Record<string, TrilingualText>> = {
+  pastries: { ka: 'ცომი, იმერული ყველი და კარაქი ცხვება ოქროსფერ ქერქამდე.', en: 'Dough, Imeretian cheese and butter are baked to a golden crust.', ru: 'Тесто, имеретинский сыр и масло запекаются до золотистой корочки.' },
+  salads: { ka: 'ახალი ბოსტნეული, მწვანილი და კახური ზეთი მსუბუქად არის შეზავებული.', en: 'Fresh vegetables, herbs and Kakhetian oil are lightly dressed.', ru: 'Свежие овощи, зелень и кахетинское масло слегка заправлены.' },
+  'main-dishes': { ka: 'ხორცი ნელა მზადდება სურნელოვან სანელებლებთან და ახალ მწვანილთან ერთად.', en: 'The main ingredients are slowly cooked with aromatic spices and fresh herbs.', ru: 'Основные ингредиенты медленно готовятся с ароматными специями и свежей зеленью.' },
+  desserts: { ka: 'ნაზი კრემი და ტრადიციული ტკბილი ინგრედიენტები ფენებად ერთიანდება.', en: 'Delicate cream and traditional sweet ingredients are layered together.', ru: 'Нежный крем и традиционные сладкие ингредиенты соединяются слоями.' },
+  'hot-drinks': { ka: 'ახლად მომზადებული სასმელი სურნელოვანი მარცვლებით ან ჩაის ფოთლებით.', en: 'Freshly prepared with aromatic beans or tea leaves.', ru: 'Готовится из ароматных зёрен или чайных листьев.' },
+  'cold-drinks': { ka: 'გაცივებული სასმელი მზადდება ნატურალური ხილისა და ცქრიალა წყლით.', en: 'A chilled drink prepared with natural fruit and sparkling water.', ru: 'Охлаждённый напиток из натуральных фруктов и газированной воды.' },
+  'alcoholic-drinks': { ka: 'ადგილობრივი ყურძნისგან დამზადებული სასმელი ტრადიციული მეთოდით.', en: 'A local grape drink made with traditional methods.', ru: 'Напиток из местного винограда, изготовленный традиционным способом.' },
+  'side-dishes': { ka: 'სეზონური გარნირი მზადდება სუფთა ზეთში და მსუბუქ სანელებლებში.', en: 'A seasonal side is prepared with clean oil and light spices.', ru: 'Сезонный гарнир готовится на чистом масле с лёгкими специями.' },
+  soups: { ka: 'ნელი ხარშვით მიღებული ბულიონი ახალი ბოსტნეულით და მწვანილით.', en: 'A slow-simmered broth with fresh vegetables and herbs.', ru: 'Бульон медленного приготовления со свежими овощами и зеленью.' },
+};
+
+const caloriesByCategory: Readonly<Record<string, number | null>> = {
+  pastries: 480,
+  salads: 240,
+  'main-dishes': 620,
+  desserts: 390,
+  'hot-drinks': 90,
+  'cold-drinks': 120,
+  'alcoholic-drinks': 150,
+  'side-dishes': 310,
+  soups: 280,
+};
 
 const pandaHouseMenu: CustomerMenu = {
   restaurant: {
