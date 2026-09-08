@@ -18,7 +18,6 @@ export interface SelectOption {
     .control { position: relative; display: grid; }
 
     select {
-      min-block-size: 2.75rem;
       inline-size: 100%; min-inline-size: 10rem; max-inline-size: 14rem;
       min-block-size: 2.7rem;
       appearance: none;
