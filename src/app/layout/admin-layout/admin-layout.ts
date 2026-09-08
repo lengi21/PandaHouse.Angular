@@ -61,7 +61,7 @@ import { ToastContainer } from '../../shared/ui/toast-container/toast-container'
     <div class="layout">
       <aside>
         <a class="brand" routerLink="/admin/dashboard">
-          <img ngSrc="/brand/panda-house-logo.jpeg" width="38" height="38" priority alt="" />
+          <img ngSrc="/brand/panda-house-logo-112.jpeg" width="38" height="38" priority alt="" />
           <span>PANDA HOUSE <small>RESTAURANT ADMIN</small></span>
         </a>
         <nav [attr.aria-label]="'ADMIN.NAVIGATION.LABEL' | translate">

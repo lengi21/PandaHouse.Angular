@@ -81,7 +81,7 @@ import { MatIcon } from '@angular/material/icon';
     <nav [attr.aria-label]="'NAVIGATION.LABEL' | translate">
       <a routerLink="/categories" routerLinkActive="active"><mat-icon aria-hidden="true">home</mat-icon>{{ 'NAVIGATION.CATEGORIES' | translate }}</a>
       <a routerLink="/menu" routerLinkActive="active"><mat-icon aria-hidden="true">restaurant_menu</mat-icon>{{ 'NAVIGATION.MENU' | translate }}</a>
-      <div class="brand-slot"><button class="brand" type="button" [attr.aria-label]="'CUSTOMER.APPEARANCE.OPEN' | translate" (click)="appearanceRequested.emit()"><img ngSrc="/brand/panda-house-logo.jpeg" width="56" height="56" alt="" /></button></div>
+      <div class="brand-slot"><button class="brand" type="button" [attr.aria-label]="'CUSTOMER.APPEARANCE.OPEN' | translate" (click)="appearanceRequested.emit()"><img ngSrc="/brand/panda-house-logo-112.jpeg" width="56" height="56" alt="" /></button></div>
       <a routerLink="/info" routerLinkActive="active"><mat-icon aria-hidden="true">info</mat-icon>{{ 'NAVIGATION.INFO' | translate }}</a>
       <a routerLink="/cart" routerLinkActive="active"><mat-icon aria-hidden="true">shopping_cart</mat-icon>{{ 'NAVIGATION.CART' | translate }}</a>
     </nav>

@@ -33,7 +33,7 @@ import { ToastContainer } from '../../../shared/ui/toast-container/toast-contain
   template: `
     <main>
       <div class="brand">
-        <img ngSrc="/brand/panda-house-logo.jpeg" width="48" height="48" priority alt="" />
+        <img ngSrc="/brand/panda-house-logo-112.jpeg" width="48" height="48" priority alt="" />
         <span>Panda House <small>ADMINISTRATION</small></span>
       </div>
       <h1>{{ 'ADMIN.SIGN_IN.TITLE' | translate }}</h1>

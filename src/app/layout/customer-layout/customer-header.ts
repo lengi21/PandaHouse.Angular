@@ -97,7 +97,7 @@ import { getTranslation } from '../../shared/utils/get-translation';
   template: `
     <header>
       <a class="brand" routerLink="/categories">
-        <img class="mark" ngSrc="/brand/panda-house-logo.jpeg" width="36" height="36" priority alt="" />
+        <img class="mark" ngSrc="/brand/panda-house-logo-112.jpeg" width="36" height="36" priority alt="" />
         <span class="restaurant-name">{{ restaurantName() }}<small>GEORGIAN KITCHEN</small></span>
       </a>
 
