@@ -19,6 +19,8 @@ import { SearchField } from '../../../shared/ui/search-field/search-field';
     main { max-inline-size: 36rem; margin: 0 auto; padding: .7rem 0 calc(var(--customer-navigation-height) + .75rem); color: var(--color-text); }
     .menu-top { position: sticky; z-index: 5; top: var(--customer-header-height); display: grid; gap: .65rem; padding: .65rem 1rem .2rem; background: var(--color-shell); } h1, h2 { margin: 0; } h1 { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); } h2 { padding-bottom: .65rem; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent); font-size: 1.15rem; }
     .menu-panel { min-block-size: calc(100dvh - var(--customer-header-height) - var(--customer-navigation-height)); margin-top: .2rem; padding: 1rem; border-radius: 1.1rem 1.1rem 0 0; background: var(--color-panel); }
+    .menu-panel-corner { position: sticky; z-index: 4; top: calc(var(--customer-header-height) + 10rem); display: block; block-size: 0; pointer-events: none; }
+    .menu-panel-corner::before { position: absolute; inset: 0 -1rem auto; block-size: 1.1rem; border-radius: 1.1rem; background: var(--color-panel); content: ''; }
     section { scroll-margin-top: calc(var(--customer-header-height) + 1rem); margin-block-start: 1.4rem; }
     section:first-child { margin-block-start: 0; } .dishes { display: grid; grid-template-columns: minmax(0, 1fr); gap: .2rem; margin-block-start: .15rem; }
     .status { color: var(--color-muted-text); }
@@ -34,6 +36,7 @@ import { SearchField } from '../../../shared/ui/search-field/search-field';
           <app-category-selector [activeCategoryId]="activeCategoryId()" [categories]="menuStore.categories()" [firstCategoryId]="carouselFirstCategoryId()" [label]="'CUSTOMER.CATEGORIES.TITLE' | translate" [language]="languageService.currentLanguage()" (selected)="scrollToCategory($event)" />
         </div>
         <div class="menu-panel">
+          <span aria-hidden="true" class="menu-panel-corner"></span>
           @for (menuCategory of menuStore.filteredCategories(); track menuCategory.category.id) {
             <section [id]="menuCategory.category.id">
               <h2>{{ categoryName(menuCategory.category.translations) }}</h2>

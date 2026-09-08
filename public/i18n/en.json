@@ -18,8 +18,29 @@
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "Categories" },
     "MENU": { "TITLE": "Menu" },
-    "CART": { "TITLE": "Cart" },
-    "INFO": { "TITLE": "Restaurant information" }
+    "CART": {
+      "TITLE": "Your cart",
+      "ITEMS": "items",
+      "TOTAL": "Total",
+      "EMPTY": "Your cart is empty.",
+      "BROWSE_MENU": "Browse menu",
+      "REMOVE": "Remove"
+    },
+    "INFO": {
+      "TITLE": "Restaurant information",
+      "HOURS": "Working hours",
+      "LOCATION": "Location",
+      "CONTACT": "Contact",
+      "DAYS": {
+        "MONDAY": "Monday",
+        "TUESDAY": "Tuesday",
+        "WEDNESDAY": "Wednesday",
+        "THURSDAY": "Thursday",
+        "FRIDAY": "Friday",
+        "SATURDAY": "Saturday",
+        "SUNDAY": "Sunday"
+      }
+    }
   },
   "CART": {
     "ADD": "Add"
