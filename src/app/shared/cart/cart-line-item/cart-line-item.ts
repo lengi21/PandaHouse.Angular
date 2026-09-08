@@ -19,7 +19,8 @@ import { getTranslation } from '../../utils/get-translation';
     .placeholder { display: grid; place-items: center; background: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface)); }
     .placeholder mat-icon { inline-size: 1.5rem; block-size: 1.5rem; font-size: 1.5rem; }
     h2, p { margin: 0; } h2 { font-size: .95rem; line-height: 1.25; } p { margin-block-start: .25rem; color: var(--color-muted-text); font-size: .78rem; }
-    .bottom { display: flex; align-items: center; justify-content: space-between; gap: .45rem; margin-block-start: .5rem; font-weight: 700; }
+    .bottom { display: flex; align-items: center; justify-content: space-between; gap: .65rem; margin-block-start: .5rem; font-weight: 700; }
+    app-quantity-control { flex: 0 0 auto; }
     .remove { display: grid; inline-size: 2.5rem; block-size: 2.5rem; place-items: center; border: 0; border-radius: .7rem; background: color-mix(in srgb, var(--color-text) 7%, transparent); color: var(--color-text); }
     .remove mat-icon { inline-size: 1.1rem; block-size: 1.1rem; font-size: 1.1rem; }
     .remove:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
@@ -35,7 +36,7 @@ import { getTranslation } from '../../utils/get-translation';
           <p>{{ description() }}</p>
           <div class="bottom">
             <app-price [language]="language()" [money]="dish().price" />
-            <span (pointerdown)="$event.stopPropagation()"><app-quantity-control [quantity]="quantity()" (decrement)="decrement.emit()" (increment)="increment.emit()" /></span>
+            <span (pointerdown)="$event.stopPropagation()"><app-quantity-control variant="cart" [quantity]="quantity()" (decrement)="decrement.emit()" (increment)="increment.emit()" /></span>
           </div>
         </div>
         <button class="remove" type="button" [attr.aria-label]="removeLabel() + ': ' + name()" (pointerdown)="$event.stopPropagation()" (click)="remove.emit()"><mat-icon aria-hidden="true">delete_outline</mat-icon></button>
