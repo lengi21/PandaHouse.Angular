@@ -1,4 +1,7 @@
 {
+  "COMMON": {
+    "LOADING": "Loading…"
+  },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "Categories" },
     "MENU": { "TITLE": "Menu" },

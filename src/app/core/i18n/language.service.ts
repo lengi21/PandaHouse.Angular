@@ -5,9 +5,9 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   DEFAULT_LANGUAGE,
   isSupportedLanguage,
-  LanguageCode,
   SUPPORTED_LANGUAGES,
 } from './language.config';
+import { LanguageCode } from '../../shared/models/language.model';
 
 @Service()
 export class LanguageService {

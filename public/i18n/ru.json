@@ -1,4 +1,7 @@
 {
+  "COMMON": {
+    "LOADING": "Загрузка…"
+  },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "Категории" },
     "MENU": { "TITLE": "Меню" },

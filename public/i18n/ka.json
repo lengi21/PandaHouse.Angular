@@ -1,4 +1,7 @@
 {
+  "COMMON": {
+    "LOADING": "იტვირთება…"
+  },
   "CUSTOMER": {
     "CATEGORIES": { "TITLE": "კატეგორიები" },
     "MENU": { "TITLE": "მენიუ" },
