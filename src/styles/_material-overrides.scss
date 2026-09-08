@@ -1,0 +1,50 @@
+// Material menus are rendered in the global overlay container, outside the component tree.
+// These styles keep the admin account menu aligned with the active Panda House palette.
+.cdk-overlay-container .admin-context-menu,
+.cdk-overlay-container .admin-context-menu.mat-mdc-menu-panel,
+.cdk-overlay-container .admin-context-menu.mdc-menu-surface {
+  --mat-menu-container-color: var(--color-panel);
+  --mat-menu-container-shape: .9rem;
+  min-inline-size: 14rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-text) 14%, transparent);
+  border-radius: .85rem;
+  background: var(--color-panel) !important;
+  background-color: var(--color-panel) !important;
+  background-image: none !important;
+  color: var(--color-text) !important;
+  opacity: 1 !important;
+  box-shadow: 0 .9rem 2.2rem rgb(0 0 0 / 24%);
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-content,
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-content.mdc-menu-surface {
+  padding: .35rem;
+  background: var(--color-panel) !important;
+  background-color: var(--color-panel) !important;
+  color: var(--color-text) !important;
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item {
+  min-block-size: 2.7rem;
+  border-radius: .55rem;
+  background: transparent !important;
+  color: var(--color-text) !important;
+  font-family: 'FiraGO', system-ui, sans-serif;
+  font-size: .78rem;
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item:hover,
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item:focus {
+  background: color-mix(in srgb, var(--color-primary) 13%, transparent) !important;
+}
+
+.cdk-overlay-container .admin-context-menu .mat-icon,
+.cdk-overlay-container .admin-context-menu .selected {
+  color: var(--color-primary) !important;
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item.sign-out-item,
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item.sign-out-item .mat-icon {
+  color: #bd493a !important;
+}
