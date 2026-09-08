@@ -1,0 +1,15 @@
+{
+  "CUSTOMER": {
+    "CATEGORIES": { "TITLE": "Categories" },
+    "MENU": { "TITLE": "Menu" },
+    "CART": { "TITLE": "Cart" },
+    "INFO": { "TITLE": "Restaurant information" }
+  },
+  "ADMIN": {
+    "SIGN_IN": { "TITLE": "Admin sign in" },
+    "DASHBOARD": { "TITLE": "Dashboard" },
+    "CATEGORIES": { "TITLE": "Categories" },
+    "DISHES": { "TITLE": "Dishes" },
+    "SETTINGS": { "TITLE": "Settings" }
+  }
+}

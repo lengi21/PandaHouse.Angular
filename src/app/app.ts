@@ -1,16 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LanguageService } from './core/i18n/language.service';
 
 @Component({
   imports: [RouterOutlet],
   selector: 'app-root',
   styles: [],
-  template: `
-    <h1>Hello, {{ title() }}</h1>
-
-    <router-outlet />
-  `,
+  template: '<router-outlet />',
 })
 export class App {
-  protected readonly title = signal('panda_house');
+  private readonly languageService = inject(LanguageService);
 }

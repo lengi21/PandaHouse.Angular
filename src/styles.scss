@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, sans-serif;
+  --color-background: #f7f3e9;
+  --color-surface: #eee9dd;
+  --color-text: #111512;
+  --color-primary: #285b28;
+  --color-secondary: #64875a;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100dvh;
+}

@@ -1,0 +1,15 @@
+{
+  "CUSTOMER": {
+    "CATEGORIES": { "TITLE": "კატეგორიები" },
+    "MENU": { "TITLE": "მენიუ" },
+    "CART": { "TITLE": "კალათა" },
+    "INFO": { "TITLE": "რესტორნის ინფორმაცია" }
+  },
+  "ADMIN": {
+    "SIGN_IN": { "TITLE": "ადმინისტრატორის შესვლა" },
+    "DASHBOARD": { "TITLE": "მართვის პანელი" },
+    "CATEGORIES": { "TITLE": "კატეგორიები" },
+    "DISHES": { "TITLE": "კერძები" },
+    "SETTINGS": { "TITLE": "პარამეტრები" }
+  }
+}

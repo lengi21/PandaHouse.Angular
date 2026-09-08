@@ -1,0 +1,15 @@
+{
+  "CUSTOMER": {
+    "CATEGORIES": { "TITLE": "Категории" },
+    "MENU": { "TITLE": "Меню" },
+    "CART": { "TITLE": "Корзина" },
+    "INFO": { "TITLE": "Информация о ресторане" }
+  },
+  "ADMIN": {
+    "SIGN_IN": { "TITLE": "Вход для администратора" },
+    "DASHBOARD": { "TITLE": "Панель управления" },
+    "CATEGORIES": { "TITLE": "Категории" },
+    "DISHES": { "TITLE": "Блюда" },
+    "SETTINGS": { "TITLE": "Настройки" }
+  }
+}
