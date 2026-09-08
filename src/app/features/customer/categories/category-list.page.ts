@@ -9,30 +9,28 @@ import { CustomerMenuStore } from '../menu/customer-menu.store';
   imports: [CategoryCard, TranslatePipe],
   styles: `
     main {
-      max-inline-size: 72rem;
+      max-inline-size: 36rem;
       margin: 0 auto;
-      padding: 1.5rem 1rem 6rem;
+      padding: 1rem 1rem calc(var(--customer-navigation-height) + 1.5rem);
     }
 
     h1 {
-      margin: 0 0 1.25rem;
-      font-size: clamp(1.75rem, 8vw, 2.5rem);
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
     }
 
     .category-grid {
       display: grid;
-      gap: 1rem;
+      gap: .55rem;
     }
 
     .status {
       color: var(--color-muted-text);
     }
 
-    @media (min-width: 42rem) {
-      .category-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
   `,
   template: `
     <main>

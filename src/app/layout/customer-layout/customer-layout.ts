@@ -8,7 +8,9 @@ import { CustomerNavigation } from './customer-navigation';
   selector: 'app-customer-layout',
   imports: [CustomerHeader, CustomerNavigation, RouterOutlet],
   styles: `
+    :host { display: block; min-block-size: 100dvh; background: var(--color-shell); }
     .content {
+      min-block-size: 100dvh;
       padding-block-start: var(--customer-header-height);
     }
   `,

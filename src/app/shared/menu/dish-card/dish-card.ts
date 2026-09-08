@@ -1,0 +1,49 @@
+import { Component, computed, input, output } from '@angular/core';
+import { LanguageCode } from '../../models/language.model';
+import { Dish } from '../../models/menu.model';
+import { Price } from '../../ui/price/price';
+import { QuantityControl } from '../../ui/quantity-control/quantity-control';
+import { getTranslation } from '../../utils/get-translation';
+
+@Component({
+  selector: 'app-dish-card',
+  imports: [Price, QuantityControl],
+  styles: `
+    article { display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); gap: .875rem; padding: .75rem; border-radius: 1rem; background: var(--color-surface); }
+    img { inline-size: 6.25rem; block-size: 6.25rem; border-radius: .75rem; object-fit: cover; }
+    h3, p { margin: 0; } h3 { font-size: 1rem; } p { margin-block-start: .3rem; color: var(--color-muted-text); font-size: .875rem; }
+    .bottom { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-block-start: .65rem; }
+    .add { min-block-size: 2.5rem; border: 0; border-radius: .75rem; padding: .5rem .8rem; background: var(--color-primary); color: var(--color-on-image); font: inherit; font-weight: 700; }
+    .add:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  `,
+  template: `
+    <article>
+      @if (dish().image; as image) { <img [alt]="name()" [height]="image.height" [src]="image.url" [width]="image.width" loading="lazy" /> }
+      <div>
+        <h3>{{ name() }}</h3>
+        <p>{{ description() }}</p>
+        <div class="bottom">
+          <app-price [language]="language()" [money]="dish().price" />
+          @if (quantity() > 0) {
+            <app-quantity-control [quantity]="quantity()" (decrement)="decrement.emit()" (increment)="increment.emit()" />
+          } @else {
+            <button class="add" type="button" (click)="add.emit()">{{ addLabel() }}</button>
+          }
+        </div>
+      </div>
+    </article>
+  `,
+})
+export class DishCard {
+  readonly dish = input.required<Dish>();
+  readonly language = input.required<LanguageCode>();
+  readonly quantity = input.required<number>();
+  readonly addLabel = input.required<string>();
+  readonly add = output<void>();
+  readonly increment = output<void>();
+  readonly decrement = output<void>();
+  readonly name = computed(() => getTranslation(this.dish().translations, this.language())?.name ?? '');
+  readonly description = computed(
+    () => getTranslation(this.dish().translations, this.language())?.description ?? '',
+  );
+}

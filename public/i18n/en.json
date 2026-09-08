@@ -21,6 +21,9 @@
     "CART": { "TITLE": "Cart" },
     "INFO": { "TITLE": "Restaurant information" }
   },
+  "CART": {
+    "ADD": "Add"
+  },
   "ADMIN": {
     "SIGN_IN": { "TITLE": "Admin sign in" },
     "DASHBOARD": { "TITLE": "Dashboard" },

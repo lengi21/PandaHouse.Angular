@@ -15,10 +15,12 @@ import { getTranslation } from '../../utils/get-translation';
     .card {
       position: relative;
       display: grid;
-      min-block-size: 11rem;
+      place-items: center;
+      min-block-size: 10.5rem;
       overflow: hidden;
-      border-radius: 1.25rem;
-      background: var(--color-surface);
+      border: 1px solid rgb(255 255 255 / 12%);
+      border-radius: .65rem;
+      background: var(--color-shell);
       color: var(--color-on-image);
       isolation: isolate;
       text-decoration: none;
@@ -42,10 +44,13 @@ import { getTranslation } from '../../utils/get-translation';
 
     .name {
       z-index: 2;
-      align-self: end;
       padding: 1rem;
-      font-size: 1.125rem;
+      text-align: center;
+      font-family: Georgia, serif;
+      font-size: 1.3rem;
       font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
       line-height: 1.2;
     }
 
