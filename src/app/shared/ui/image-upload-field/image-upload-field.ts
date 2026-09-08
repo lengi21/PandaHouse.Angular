@@ -3,6 +3,9 @@ import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MEDIA_STORAGE_REPOSITORY } from '../../../core/data-access/storage/media-storage.repository';
 import { ImageUploadResult } from '../../models/media-upload.model';
+import { retry, finalize } from 'rxjs';
+import { ActionLoaderService } from '../../../core/feedback/action-loader.service';
+import { ToastService } from '../../../core/feedback/toast.service';
 
 @Component({
   selector: 'app-image-upload-field',
@@ -30,6 +33,8 @@ export class ImageUploadField {
   readonly folder = input.required<'categories' | 'dishes' | 'restaurant'>();
   readonly uploaded = output<ImageUploadResult>();
   private readonly storage = inject(MEDIA_STORAGE_REPOSITORY);
+  private readonly loader = inject(ActionLoaderService);
+  private readonly toasts = inject(ToastService);
   protected readonly uploading = signal(false);
   protected readonly error = signal(false);
 
@@ -38,10 +43,10 @@ export class ImageUploadField {
     if (!file || this.uploading()) return;
     this.uploading.set(true);
     this.error.set(false);
-    this.storage.uploadImage({ file, folder: this.folder() }).subscribe({
-      next: (result) => this.uploaded.emit(result),
-      error: () => this.error.set(true),
-      complete: () => this.uploading.set(false),
+    this.loader.start();
+    this.storage.uploadImage({ file, folder: this.folder() }).pipe(retry({ count: 2, delay: 350 }), finalize(() => { this.uploading.set(false); this.loader.finish(); })).subscribe({
+      next: (result) => { this.uploaded.emit(result); this.toasts.show('success', 'ADMIN.FEEDBACK.UPLOAD_SAVED'); },
+      error: () => { this.error.set(true); this.toasts.show('error', 'ADMIN.FEEDBACK.REQUEST_FAILED'); },
     });
   }
 }

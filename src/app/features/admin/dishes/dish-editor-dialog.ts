@@ -23,7 +23,7 @@ import { ImageUploadField } from '../../../shared/ui/image-upload-field/image-up
     footer { display: flex; justify-content: flex-end; gap: .6rem; }
     button { min-block-size: 2.55rem; padding: .5rem .85rem; border: 0; border-radius: .6rem; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: .78rem; font-weight: 700; }
     button.save { background: var(--color-primary); color: var(--color-on-image); }
-    @media (max-width: 35rem) { .two-columns { grid-template-columns: 1fr; } }
+    @media (max-width: 35rem) { form { gap: .85rem; padding: .85rem; } .two-columns { grid-template-columns: 1fr; } footer { display: grid; grid-template-columns: 1fr 1fr; } button { inline-size: 100%; } }
   `,
   template: `
     <app-modal-panel [closeLabel]="'ADMIN.DISHES.CLOSE_EDITOR' | translate" [title]="(dish() ? 'ADMIN.DISHES.EDIT' : 'ADMIN.DISHES.ADD') | translate" (dismissed)="cancelled.emit()">

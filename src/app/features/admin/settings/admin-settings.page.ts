@@ -7,12 +7,13 @@ import { Weekday } from '../../../shared/models/menu.model';
 import { getTranslation } from '../../../shared/utils/get-translation';
 import { RestaurantSettingsStore } from './restaurant-settings.store';
 import { ImageUploadField } from '../../../shared/ui/image-upload-field/image-upload-field';
+import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
 
 const languages = ['ka', 'en', 'ru'] as const;
 
 @Component({
   selector: 'app-admin-settings-page',
-  imports: [ImageUploadField, ReactiveFormsModule, TextInput, TranslatePipe],
+  imports: [ImageUploadField, PageSkeleton, ReactiveFormsModule, TextInput, TranslatePipe],
   providers: [RestaurantSettingsStore],
   styles: `
     main { max-inline-size: 90rem; margin: 0 auto; padding: clamp(1rem, 3vw, 2.5rem); }
@@ -25,12 +26,13 @@ const languages = ['ka', 'en', 'ru'] as const;
     .hour-row > span { padding-block-end: .85rem; font-size: .75rem; font-weight: 700; }
     .save { justify-self: end; min-block-size: 2.6rem; padding: .5rem 1rem; border: 0; border-radius: .6rem; background: var(--color-primary); color: var(--color-on-image); font: inherit; font-size: .76rem; font-weight: 700; }
     .status { min-block-size: 1rem; margin: 0; color: #1a713d; font-size: .74rem; } .status.error { color: #b33131; }
-    @media (max-width: 68rem) { .grid, .translations { grid-template-columns: 1fr; } } @media (max-width: 34rem) { .heading { align-items: stretch; flex-direction: column; } .save { justify-self: stretch; } }
+    @media (max-width: 68rem) { .grid, .translations, .hours { grid-template-columns: 1fr; } }
+    @media (max-width: 34rem) { main { padding: 1rem; } .heading { align-items: stretch; flex-direction: column; } .save { justify-self: stretch; } section { padding: .85rem; } .hour-row { grid-template-columns: 4.8rem 1fr 1fr; gap: .4rem; } }
   `,
   template: `
     <main>
       <div class="heading"><div><h1>{{ 'ADMIN.SETTINGS.TITLE' | translate }}</h1><p>{{ 'ADMIN.SETTINGS.DESCRIPTION' | translate }}</p></div><button class="save" type="submit" form="restaurant-settings" [disabled]="form.invalid || saving()">{{ (saving() ? 'ADMIN.SETTINGS.SAVING' : 'ADMIN.SETTINGS.SAVE') | translate }}</button></div>
-      @if (store.loading() || !store.restaurant()) { <p>{{ 'COMMON.LOADING' | translate }}</p> } @else {
+      @if (store.loading()) { <app-page-skeleton [columns]="2" /> } @else if (store.hasError()) { <p class="status error">{{ 'ADMIN.FEEDBACK.PAGE_LOAD_ERROR' | translate }} <button type="button" (click)="store.load()">{{ 'ADMIN.FEEDBACK.RETRY' | translate }}</button></p> } @else if (store.restaurant()) {
         <form id="restaurant-settings" [formGroup]="form" (ngSubmit)="save()">
           <div class="grid">
             <section><h2>{{ 'ADMIN.SETTINGS.IMAGES' | translate }}</h2><app-image-upload-field folder="restaurant" (uploaded)="form.controls.logoUrl.setValue($event.url)" /><app-text-input formControlName="logoUrl" [label]="'ADMIN.SETTINGS.LOGO_URL' | translate" name="logoUrl" type="text" /><app-image-upload-field folder="restaurant" (uploaded)="form.controls.coverImageUrl.setValue($event.url)" /><app-text-input formControlName="coverImageUrl" [label]="'ADMIN.SETTINGS.COVER_URL' | translate" name="coverImageUrl" type="text" /></section>

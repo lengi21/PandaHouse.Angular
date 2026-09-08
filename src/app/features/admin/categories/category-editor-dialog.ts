@@ -84,6 +84,12 @@ import { ImageUploadField } from '../../../shared/ui/image-upload-field/image-up
     button:disabled {
       opacity: .6;
     }
+
+    @media (max-width: 34rem) {
+      form { gap: .85rem; padding: .85rem; }
+      footer { display: grid; grid-template-columns: 1fr 1fr; }
+      button { inline-size: 100%; }
+    }
   `,
   template: `
     <app-modal-panel [closeLabel]="'ADMIN.CATEGORIES.CLOSE_EDITOR' | translate" [title]="(category() ? 'ADMIN.CATEGORIES.EDIT' : 'ADMIN.CATEGORIES.ADD') | translate" (dismissed)="cancelled.emit()">

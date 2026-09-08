@@ -3,8 +3,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
+import { retry } from 'rxjs';
 import { AdminAuthService } from '../../../core/auth/admin-auth.service';
 import { TextInput } from '../../../shared/ui/text-input/text-input';
+import { ActionLoaderService } from '../../../core/feedback/action-loader.service';
+import { ToastService } from '../../../core/feedback/toast.service';
 
 @Component({
   selector: 'app-admin-sign-in-page',
@@ -60,6 +63,8 @@ export class AdminSignInPage {
   private readonly auth = inject(AdminAuthService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly loader = inject(ActionLoaderService);
+  private readonly toasts = inject(ToastService);
 
   protected readonly submitting = signal(false);
   protected readonly error = signal(false);
@@ -76,15 +81,16 @@ export class AdminSignInPage {
 
     this.error.set(false);
     this.submitting.set(true);
+    this.loader.start();
     this.auth
       .signIn(this.form.getRawValue())
-      .pipe(finalize(() => this.submitting.set(false)))
+      .pipe(retry({ count: 2, delay: 350 }), finalize(() => { this.submitting.set(false); this.loader.finish(); }))
       .subscribe({
         next: () => {
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
           void this.router.navigateByUrl(returnUrl?.startsWith('/admin') ? returnUrl : '/admin/dashboard');
         },
-        error: () => this.error.set(true),
+        error: () => { this.error.set(true); this.toasts.show('error', 'ADMIN.SIGN_IN.INVALID_CREDENTIALS'); },
       });
   }
 }

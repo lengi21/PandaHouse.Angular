@@ -9,10 +9,11 @@ import { CategoryEditorDialog } from './category-editor-dialog';
 import { CategoryDraft } from '../../../shared/models/admin-menu.model';
 import { Category } from '../../../shared/models/menu.model';
 import { AdminCategorySummary } from '../../../shared/models/admin-menu.model';
+import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
 
 @Component({
   selector: 'app-admin-categories-page',
-  imports: [AdminCategoryTile, CategoryEditorDialog, CdkDrag, CdkDropList, MatIcon, TranslatePipe],
+  imports: [AdminCategoryTile, CategoryEditorDialog, CdkDrag, CdkDropList, MatIcon, PageSkeleton, TranslatePipe],
   providers: [AdminCategoriesStore],
   styles: `
     main { max-inline-size: 90rem; margin: 0 auto; padding: clamp(1rem, 3vw, 2.5rem); }
@@ -41,9 +42,9 @@ import { AdminCategorySummary } from '../../../shared/models/admin-menu.model';
         <button class="add" type="button" (click)="openEditor()"><mat-icon aria-hidden="true">add</mat-icon>{{ 'ADMIN.CATEGORIES.ADD' | translate }}</button>
       </div>
       @if (store.loading()) {
-        <div class="state">{{ 'COMMON.LOADING' | translate }}</div>
+        <app-page-skeleton [columns]="4" />
       } @else if (store.hasError()) {
-        <div class="state">{{ 'ADMIN.CATEGORIES.LOAD_ERROR' | translate }}</div>
+        <div class="state">{{ 'ADMIN.CATEGORIES.LOAD_ERROR' | translate }}<button type="button" (click)="store.load()">{{ 'ADMIN.FEEDBACK.RETRY' | translate }}</button></div>
       } @else {
         <div class="summary"><span>{{ store.categories().length }} {{ 'ADMIN.CATEGORIES.TOTAL' | translate }}</span><span>{{ 'ADMIN.CATEGORIES.ORDER_NOTE' | translate }}</span></div>
         <div class="grid" cdkDropList cdkDropListOrientation="mixed" [cdkDropListData]="store.categories()" (cdkDropListDropped)="drop($event)">

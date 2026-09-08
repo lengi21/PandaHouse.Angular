@@ -62,6 +62,16 @@
     "ADD": "Add"
   },
   "ADMIN": {
+    "FEEDBACK": {
+      "PROCESSING": "Saving your changes…",
+      "RETRYING": "Request failed. Retrying…",
+      "REQUEST_FAILED": "Something went wrong. Please try again.",
+      "PAGE_LOAD_ERROR": "This page could not be loaded.",
+      "RETRY": "Try again",
+      "SAVED": "Changes saved successfully.",
+      "ORDER_SAVED": "Order updated successfully.",
+      "UPLOAD_SAVED": "Image uploaded successfully."
+    },
     "MEDIA": {
       "UPLOAD_TITLE": "Upload image",
       "UPLOAD_HINT": "JPEG, PNG, or WebP. Uploading replaces the image URL with the storage link.",

@@ -6,10 +6,11 @@ import { LanguageService } from '../../../core/i18n/language.service';
 import { Price } from '../../../shared/ui/price/price';
 import { getTranslation } from '../../../shared/utils/get-translation';
 import { AdminDashboardStore } from './admin-dashboard.store';
+import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [MatIcon, Price, RouterLink, TranslatePipe],
+  imports: [MatIcon, PageSkeleton, Price, RouterLink, TranslatePipe],
   providers: [AdminDashboardStore],
   styles: `
     main { max-inline-size: 90rem; margin: 0 auto; padding: clamp(1rem, 3vw, 2.5rem); }
@@ -38,7 +39,7 @@ import { AdminDashboardStore } from './admin-dashboard.store';
     <main>
       <h1>{{ 'ADMIN.DASHBOARD.TITLE' | translate }}</h1>
       <p class="intro">{{ 'ADMIN.DASHBOARD.DESCRIPTION' | translate }}</p>
-      @if (store.loading() || !store.dashboard()) { <div class="state">{{ 'COMMON.LOADING' | translate }}</div> } @else {
+      @if (store.loading()) { <app-page-skeleton [columns]="4" /> } @else if (store.hasError()) { <div class="state">{{ 'ADMIN.FEEDBACK.PAGE_LOAD_ERROR' | translate }}<button type="button" (click)="store.load()">{{ 'ADMIN.FEEDBACK.RETRY' | translate }}</button></div> } @else if (store.dashboard()) {
         <div class="stats">
           <div class="stat"><mat-icon aria-hidden="true">category</mat-icon><span>{{ 'ADMIN.DASHBOARD.CATEGORIES' | translate }}</span><strong>{{ store.dashboard()!.categoryCount }}</strong></div>
           <div class="stat"><mat-icon aria-hidden="true">restaurant_menu</mat-icon><span>{{ 'ADMIN.DASHBOARD.DISHES' | translate }}</span><strong>{{ store.dashboard()!.dishCount }}</strong></div>

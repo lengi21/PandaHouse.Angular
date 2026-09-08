@@ -12,10 +12,11 @@ import { AdminDishesStore } from './admin-dishes.store';
 import { AdminDishSummary, DishDraft } from '../../../shared/models/admin-menu.model';
 import { DishEditorDialog } from './dish-editor-dialog';
 import { Pagination } from '../../../shared/ui/pagination/pagination';
+import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
 
 @Component({
   selector: 'app-admin-dishes-page',
-  imports: [CdkDrag, CdkDropList, DishEditorDialog, MatIcon, Pagination, Price, SearchField, SelectField, TranslatePipe],
+  imports: [CdkDrag, CdkDropList, DishEditorDialog, MatIcon, PageSkeleton, Pagination, Price, SearchField, SelectField, TranslatePipe],
   providers: [AdminDishesStore],
   styles: `
     main { max-inline-size: 90rem; margin: 0 auto; padding: clamp(1rem, 3vw, 2.5rem); }
@@ -73,7 +74,9 @@ import { Pagination } from '../../../shared/ui/pagination/pagination';
       </div>
       <p class="reorder-note">{{ 'ADMIN.DISHES.REORDER_NOTE' | translate }}</p>
       @if (store.loading()) {
-        <div class="state">{{ 'COMMON.LOADING' | translate }}</div>
+        <app-page-skeleton [columns]="1" />
+      } @else if (store.hasError()) {
+        <div class="state">{{ 'ADMIN.FEEDBACK.PAGE_LOAD_ERROR' | translate }}<button type="button" (click)="store.load()">{{ 'ADMIN.FEEDBACK.RETRY' | translate }}</button></div>
       } @else {
         <div class="table-wrap">
           <table>

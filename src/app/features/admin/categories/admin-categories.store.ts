@@ -4,10 +4,12 @@ import { AdminCategorySummary } from '../../../shared/models/admin-menu.model';
 import { CategoryDraft } from '../../../shared/models/admin-menu.model';
 import { Category, CategoryId } from '../../../shared/models/menu.model';
 import { DEFAULT_RESTAURANT_ID } from '../../customer/menu/customer-menu.store';
+import { RequestExecutor } from '../../../core/http/request-executor.service';
 
 @Service()
 export class AdminCategoriesStore {
   private readonly repository = inject(ADMIN_MENU_REPOSITORY);
+  private readonly requests = inject(RequestExecutor);
   private readonly categoryList = signal<readonly AdminCategorySummary[]>([]);
   private readonly loadingState = signal(false);
   private readonly errorState = signal(false);
@@ -23,22 +25,21 @@ export class AdminCategoriesStore {
 
     this.loadingState.set(true);
     this.errorState.set(false);
-    void this.repository
-      .getCategories(DEFAULT_RESTAURANT_ID)
+    void this.requests.run(() => this.repository.getCategories(DEFAULT_RESTAURANT_ID))
       .then((categories) => this.categoryList.set(categories))
       .catch(() => this.errorState.set(true))
       .finally(() => this.loadingState.set(false));
   }
 
   create(draft: CategoryDraft): Promise<Category> {
-    return this.repository.createCategory(DEFAULT_RESTAURANT_ID, draft).then((category) => {
+    return this.requests.run(() => this.repository.createCategory(DEFAULT_RESTAURANT_ID, draft), { action: true, successKey: 'ADMIN.FEEDBACK.SAVED' }).then((category) => {
       this.loadFresh();
       return category;
     });
   }
 
   update(categoryId: CategoryId, draft: CategoryDraft): Promise<Category> {
-    return this.repository.updateCategory(DEFAULT_RESTAURANT_ID, categoryId, draft).then((category) => {
+    return this.requests.run(() => this.repository.updateCategory(DEFAULT_RESTAURANT_ID, categoryId, draft), { action: true, successKey: 'ADMIN.FEEDBACK.SAVED' }).then((category) => {
       this.loadFresh();
       return category;
     });
@@ -64,7 +65,7 @@ export class AdminCategoriesStore {
       return { ...summary, category: { ...summary.category, sortOrder: index + 1 } };
     });
     this.categoryList.set(reordered);
-    return this.repository.reorderCategories(DEFAULT_RESTAURANT_ID, categoryIds).catch((error: unknown) => {
+    return this.requests.run(() => this.repository.reorderCategories(DEFAULT_RESTAURANT_ID, categoryIds), { successKey: 'ADMIN.FEEDBACK.ORDER_SAVED' }).catch((error: unknown) => {
       this.loadFresh();
       throw error;
     });
