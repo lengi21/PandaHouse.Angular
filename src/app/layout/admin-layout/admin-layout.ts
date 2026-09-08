@@ -5,10 +5,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AdminAuthService } from '../../core/auth/admin-auth.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { LanguagePicker } from '../../shared/ui/language-picker/language-picker';
+import { AdminAccountMenu } from '../../shared/ui/admin-account-menu/admin-account-menu';
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [LanguagePicker, MatIcon, RouterLink, RouterLinkActive, RouterOutlet, TranslatePipe],
+  imports: [AdminAccountMenu, LanguagePicker, MatIcon, RouterLink, RouterLinkActive, RouterOutlet, TranslatePipe],
   styles: `
     :host { display: block; min-block-size: 100dvh; background: var(--color-background); color: var(--color-text); }
     .layout { display: grid; grid-template-columns: 15rem minmax(0, 1fr); min-block-size: 100dvh; }
@@ -21,7 +22,7 @@ import { LanguagePicker } from '../../shared/ui/language-picker/language-picker'
     nav a { display: flex; align-items: center; gap: .7rem; min-block-size: 2.65rem; padding: .45rem .7rem; border-radius: .5rem; color: color-mix(in srgb, var(--color-shell-text) 72%, transparent); font-size: .76rem; text-decoration: none; }
     nav a mat-icon { inline-size: 1.05rem; block-size: 1.05rem; font-size: 1.05rem; }
     nav a.active, nav a:hover { background: color-mix(in srgb, var(--color-primary) 72%, transparent); color: #fff; }
-    .account { display: flex; align-items: center; gap: .55rem; margin-block-start: auto; padding: 1rem .45rem .25rem; border-block-start: 1px solid rgb(255 255 255 / 14%); }
+    .account { margin-block-start: auto; padding: 1rem .45rem .25rem; border-block-start: 1px solid rgb(255 255 255 / 14%); }
     .avatar { display: grid; inline-size: 1.8rem; block-size: 1.8rem; place-items: center; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: .7rem; font-weight: 700; }
     .account-email { overflow: hidden; flex: 1; color: color-mix(in srgb, var(--color-shell-text) 75%, transparent); font-size: .67rem; text-overflow: ellipsis; white-space: nowrap; }
     .sign-out { display: grid; inline-size: 2rem; block-size: 2rem; place-items: center; border: 0; border-radius: .45rem; background: transparent; color: var(--color-shell-text); cursor: pointer; }
@@ -40,7 +41,7 @@ import { LanguagePicker } from '../../shared/ui/language-picker/language-picker'
       .account { display: none; }
       header { min-block-size: 3.65rem; padding-inline: max(1rem, env(safe-area-inset-left)); }
     }
-    @media (max-width: 32rem) { .brand span { font-size: .76rem; } .brand img { inline-size: 2.05rem; block-size: 2.05rem; } nav a { inline-size: 2.55rem; justify-content: center; padding: .4rem; font-size: 0; } nav a mat-icon { inline-size: 1.2rem; block-size: 1.2rem; font-size: 1.2rem; } .user { display: none; } header { min-block-size: 3.35rem; } }
+    @media (max-width: 32rem) { .brand span { font-size: .76rem; } .brand img { inline-size: 2.05rem; block-size: 2.05rem; } nav a { inline-size: 2.55rem; justify-content: center; padding: .4rem; font-size: 0; } nav a mat-icon { inline-size: 1.2rem; block-size: 1.2rem; font-size: 1.2rem; } .user { display: block; } header { min-block-size: 3.35rem; } }
   `,
   template: `
     <div class="layout">
@@ -57,15 +58,13 @@ import { LanguagePicker } from '../../shared/ui/language-picker/language-picker'
           <a routerLink="/categories"><mat-icon aria-hidden="true">open_in_new</mat-icon>{{ 'ADMIN.NAVIGATION.BACK_TO_MENU' | translate }}</a>
         </nav>
         <div class="account">
-          <span class="avatar">{{ auth.session()?.email?.charAt(0)?.toUpperCase() }}</span>
-          <span class="account-email">{{ auth.session()?.email }}</span>
-          <button class="sign-out" type="button" [attr.aria-label]="'ADMIN.NAVIGATION.SIGN_OUT' | translate" (click)="signOut()"><mat-icon aria-hidden="true">logout</mat-icon></button>
+          <app-admin-account-menu [email]="auth.session()?.email ?? ''" (signOut)="signOut()" />
         </div>
       </aside>
       <section>
         <header>
           <app-language-picker [label]="'HEADER.LANGUAGE' | translate" [languages]="languageService.availableLanguages" [value]="languageService.currentLanguage()" (valueChange)="languageService.changeLanguage($event)" />
-          <div class="user"><span class="avatar">{{ auth.session()?.email?.charAt(0)?.toUpperCase() }}</span>{{ auth.session()?.email }}</div>
+          <div class="user"><app-admin-account-menu [email]="auth.session()?.email ?? ''" [compact]="true" (signOut)="signOut()" /></div>
         </header>
         <router-outlet />
       </section>

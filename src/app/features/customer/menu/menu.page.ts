@@ -1,7 +1,7 @@
 import { Component, effect, inject, signal, untracked } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../../core/i18n/language.service';
 import { CategorySelector } from '../../../shared/menu/category-selector/category-selector';
@@ -32,7 +32,7 @@ import { DishDetailsSheet } from '../../../shared/menu/dish-details-sheet/dish-d
   template: `
     <main>
       <h1>{{ 'CUSTOMER.MENU.TITLE' | translate }}</h1>
-      @if (menuStore.isLoading()) {
+      @if (menuStore.isLoading() || menuStore.isDishesLoading()) {
         <p class="status" role="status">{{ 'COMMON.LOADING' | translate }}</p>
       } @else {
         <div class="menu-top">
@@ -46,7 +46,7 @@ import { DishDetailsSheet } from '../../../shared/menu/dish-details-sheet/dish-d
                 <h2>{{ categoryName(menuCategory.category.translations) }}</h2>
                 <div class="dishes" role="list">
                   @for (dish of menuCategory.dishes; track dish.id) {
-                    <app-dish-card [addLabel]="'CART.ADD' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" (add)="cartStore.add(dish.id)" (decrement)="cartStore.decrement(dish.id)" (detailsRequested)="selectedDish.set(dish)" (increment)="cartStore.increment(dish.id)" />
+                    <app-dish-card [addLabel]="'CART.ADD' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" (add)="cartStore.add(dish)" (decrement)="cartStore.decrement(dish.id)" (detailsRequested)="selectedDish.set(dish)" (increment)="cartStore.increment(dish.id)" />
                   }
                 </div>
               </section>
@@ -54,7 +54,7 @@ import { DishDetailsSheet } from '../../../shared/menu/dish-details-sheet/dish-d
           </div>
         </div>
         @if (selectedDish(); as dish) {
-          <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish.id)" />
+          <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish)" />
         }
       }
     </main>
@@ -74,6 +74,7 @@ export class MenuPage {
   private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
+    this.menuStore.loadDishes();
     this.destroyRef.onDestroy(() => {
       if (this.categoryScrollTimer) {
         clearTimeout(this.categoryScrollTimer);
@@ -135,8 +136,8 @@ export class MenuPage {
     if (this.categoryScrollTimer) {
       clearTimeout(this.categoryScrollTimer);
     }
-    const categorySection = document.getElementById(categoryId);
     const menuPanel = document.querySelector<HTMLElement>('.menu-panel');
+    const categorySection = document.getElementById(categoryId);
     if (categorySection && menuPanel) {
       const targetTop = menuPanel.scrollTop
         + categorySection.getBoundingClientRect().top
@@ -147,13 +148,13 @@ export class MenuPage {
     this.categoryScrollTimer = setTimeout(() => this.isProgrammaticCategoryScroll.set(false), 650);
   }
 
-  protected addOrIncrement(dishId: string): void {
-    if (this.cartStore.quantityFor(dishId) === 0) {
-      this.cartStore.add(dishId);
+  protected addOrIncrement(dish: Dish): void {
+    if (this.cartStore.quantityFor(dish.id) === 0) {
+      this.cartStore.add(dish);
       return;
     }
 
-    this.cartStore.increment(dishId);
+    this.cartStore.increment(dish.id);
   }
 
   protected categoryName(translations: readonly CategoryTranslation[]): string {

@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   Category,
   CustomerMenu,
+  CustomerMenuOverview,
   Dish,
   DishTranslation,
   MenuCategory,
@@ -196,14 +197,29 @@ export function replaceMockRestaurant(restaurant: CustomerMenu['restaurant']): v
 export class MockMenuRepository implements MenuRepository {
   private readonly http = inject(MockHttpClient);
 
-  getCustomerMenu(id: RestaurantId): Promise<CustomerMenu> {
+  getCustomerMenuOverview(id: RestaurantId): Promise<CustomerMenuOverview> {
     return firstValueFrom(
-      this.http.get(apiUrl(`/api/restaurants/${id}/customer-menu`), () => {
+      this.http.get(apiUrl(`/api/restaurants/${id}/menu-overview`), () => {
         if (id !== pandaHouseMenu.restaurant.id) {
           throw new Error(`Restaurant \"${id}\" was not found.`);
         }
 
-        return pandaHouseMenu;
+        return {
+          restaurant: pandaHouseMenu.restaurant,
+          categories: pandaHouseMenu.categories.map(({ category }) => category),
+        };
+      }),
+    );
+  }
+
+  getMenuDishes(restaurantId: RestaurantId): Promise<readonly Dish[]> {
+    return firstValueFrom(
+      this.http.get(apiUrl(`/api/restaurants/${restaurantId}/dishes`), () => {
+        if (restaurantId !== pandaHouseMenu.restaurant.id) {
+          throw new Error(`Restaurant \"${restaurantId}\" was not found.`);
+        }
+
+        return pandaHouseMenu.categories.flatMap(({ dishes }) => dishes);
       }),
     );
   }

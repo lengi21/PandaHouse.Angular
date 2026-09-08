@@ -8,6 +8,8 @@ import { CustomerMenuStore } from '../menu/customer-menu.store';
 interface CartEntry {
   readonly dishId: DishId;
   readonly quantity: number;
+  /** Keeps the cart usable when its category is not currently open. */
+  readonly dish?: Dish;
 }
 
 export interface CartLine {
@@ -24,10 +26,9 @@ export class CartStore {
   private readonly entries = signal<readonly CartEntry[]>(this.restoreEntries());
 
   readonly lines = computed<readonly CartLine[]>(() => {
-    const dishes = this.menuStore.categories().flatMap(({ dishes: categoryDishes }) => categoryDishes);
     return this.entries()
       .map((entry) => {
-        const dish = dishes.find(({ id }) => id === entry.dishId);
+        const dish = this.menuStore.findDish(entry.dishId) ?? entry.dish;
         return dish ? { dish, quantity: entry.quantity } : null;
       })
       .filter((line): line is CartLine => line !== null);
@@ -49,9 +50,9 @@ export class CartStore {
     return this.entries().find((entry) => entry.dishId === dishId)?.quantity ?? 0;
   }
 
-  add(dishId: DishId): void {
-    if (this.quantityFor(dishId) === 0) {
-      this.entries.update((entries) => [...entries, { dishId, quantity: 1 }]);
+  add(dish: Dish): void {
+    if (this.quantityFor(dish.id) === 0) {
+      this.entries.update((entries) => [...entries, { dishId: dish.id, quantity: 1, dish }]);
     }
   }
 

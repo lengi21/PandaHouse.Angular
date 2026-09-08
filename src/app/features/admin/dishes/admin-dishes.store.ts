@@ -43,14 +43,25 @@ export class AdminDishesStore {
     if (this.loadingState()) return;
     this.loadingState.set(true);
     this.errorState.set(false);
-    void Promise.all([
-      this.categoryList().length ? Promise.resolve(this.categoryList()) : this.requests.run(() => this.repository.getCategories(DEFAULT_RESTAURANT_ID)).then((items) => items.map(({ category }) => category)),
-      this.requests.run(() => this.repository.getDishes(DEFAULT_RESTAURANT_ID, { page: this.pageState(), pageSize, query: this.queryState(), categoryId: this.categoryIdState(), status: this.statusState() })),
-    ]).then(([categories, result]) => {
-      this.categoryList.set(categories);
+    void this.requests.run(() => this.repository.getDishes(DEFAULT_RESTAURANT_ID, {
+      page: this.pageState(),
+      pageSize,
+      query: this.queryState(),
+      categoryId: this.categoryIdState(),
+      status: this.statusState(),
+    })).then((result) => {
       this.dishList.set(result.items);
       this.totalItemsState.set(result.totalItems);
     }).catch(() => this.errorState.set(true)).finally(() => this.loadingState.set(false));
+  }
+
+  ensureCategories(): Promise<void> {
+    if (this.categoryList().length) {
+      return Promise.resolve();
+    }
+
+    return this.requests.run(() => this.repository.getCategories(DEFAULT_RESTAURANT_ID))
+      .then((items) => this.categoryList.set(items.map(({ category }) => category)));
   }
 
   create(draft: DishDraft): Promise<Dish> { return this.requests.run(() => this.repository.createDish(DEFAULT_RESTAURANT_ID, draft), { action: true, successKey: 'ADMIN.FEEDBACK.SAVED' }).then((dish) => { this.resetAndLoad(); return dish; }); }

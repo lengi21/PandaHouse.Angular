@@ -124,9 +124,11 @@ export class AdminDishesPage {
   constructor() { this.store.load(); }
 
   protected openEditor(dish: AdminDishSummary | null = null): void {
-    this.editingDish.set(dish);
-    this.saveFailed.set(false);
-    this.editorOpen.set(true);
+    void this.store.ensureCategories().then(() => {
+      this.editingDish.set(dish);
+      this.saveFailed.set(false);
+      this.editorOpen.set(true);
+    });
   }
 
   protected closeEditor(): void {

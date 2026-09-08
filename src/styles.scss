@@ -214,3 +214,44 @@ body {
   padding: 0;
   background: var(--color-shell);
 }
+
+// Material menus are rendered in the global overlay container, outside the component tree.
+// These styles keep the admin account menu aligned with the active Panda House palette.
+.cdk-overlay-container .admin-context-menu.mat-mdc-menu-panel {
+  min-inline-size: 14rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-text) 14%, transparent);
+  border-radius: .85rem;
+  background: var(--color-panel) !important;
+  box-shadow: 0 .9rem 2.2rem rgb(0 0 0 / 24%);
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-content {
+  padding: .35rem;
+  background: var(--color-panel);
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item {
+  min-block-size: 2.7rem;
+  border-radius: .55rem;
+  color: var(--color-text);
+  font-family: 'FiraGO', system-ui, sans-serif;
+  font-size: .78rem;
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item:hover,
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item:focus {
+  background: color-mix(in srgb, var(--color-primary) 13%, transparent);
+}
+
+.cdk-overlay-container .admin-context-menu .mat-icon {
+  color: var(--color-primary);
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item.sign-out-item {
+  color: #bd493a;
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item.sign-out-item .mat-icon {
+  color: #bd493a;
+}

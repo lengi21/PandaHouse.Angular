@@ -1,8 +1,13 @@
 import { InjectionToken } from '@angular/core';
-import { CustomerMenu, RestaurantId } from '../../../shared/models/menu.model';
+import {
+  CustomerMenuOverview,
+  Dish,
+  RestaurantId,
+} from '../../../shared/models/menu.model';
 
 export interface MenuRepository {
-  getCustomerMenu(restaurantId: RestaurantId): Promise<CustomerMenu>;
+  getCustomerMenuOverview(restaurantId: RestaurantId): Promise<CustomerMenuOverview>;
+  getMenuDishes(restaurantId: RestaurantId): Promise<readonly Dish[]>;
 }
 
 export const MENU_REPOSITORY = new InjectionToken<MenuRepository>('MENU_REPOSITORY');

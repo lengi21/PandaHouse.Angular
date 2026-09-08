@@ -78,3 +78,9 @@ export interface CustomerMenu {
   readonly restaurant: Restaurant;
   readonly categories: readonly MenuCategory[];
 }
+
+/** Public data needed before a visitor opens a category's dishes. */
+export interface CustomerMenuOverview {
+  readonly restaurant: Restaurant;
+  readonly categories: readonly Category[];
+}
