@@ -1,6 +1,6 @@
-/** Temporary API origin. Replace with the deployed API origin through environment configuration later. */
-export const MOCK_API_ORIGIN = 'https://api.pandahouse.local';
+/** Local NestJS API. Replace this one value with the production API origin at deployment time. */
+export const API_ORIGIN = 'http://localhost:3000';
 
 export function apiUrl(path: string): string {
-  return `${MOCK_API_ORIGIN}${path}`;
+  return `${API_ORIGIN}${path}`;
 }
