@@ -4,16 +4,13 @@ import { LanguageCode } from '../../models/language.model';
 import { Dish } from '../../models/menu.model';
 import { Price } from '../../ui/price/price';
 import { QuantityControl } from '../../ui/quantity-control/quantity-control';
+import { BottomSheet } from '../../ui/bottom-sheet/bottom-sheet';
 import { getTranslation } from '../../utils/get-translation';
 
 @Component({
   selector: 'app-dish-details-sheet',
-  imports: [MatIcon, Price, QuantityControl],
+  imports: [BottomSheet, MatIcon, Price, QuantityControl],
   styles: `
-    :host { position: absolute; z-index: 8; inset: 0; display: block; }
-    .backdrop { position: absolute; inset: 0; background: rgb(0 0 0 / 22%); }
-    article { position: absolute; inset: auto 0 0; max-block-size: 100%; overflow-y: auto; padding: 1rem 1rem calc(var(--customer-navigation-height) + 1.5rem); border-radius: 1.2rem 1.2rem 0 0; background: var(--color-panel); box-shadow: 0 -1rem 2rem rgb(0 0 0 / 18%); animation: slide-up .24s ease-out both; }
-    @keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .handle { inline-size: 2.5rem; block-size: .28rem; margin: 0 auto .9rem; border-radius: 999px; background: color-mix(in srgb, var(--color-text) 20%, transparent); }
     .close { position: absolute; inset: .75rem .75rem auto auto; display: grid; inline-size: 2.5rem; block-size: 2.5rem; place-items: center; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--color-text) 8%, transparent); color: var(--color-text); }
     .close mat-icon { inline-size: 1.25rem; block-size: 1.25rem; font-size: 1.25rem; }
@@ -27,8 +24,7 @@ import { getTranslation } from '../../utils/get-translation';
     .quantity { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-block-start: 1.25rem; } .quantity span { color: var(--color-muted-text); font-size: .85rem; font-weight: 700; }
   `,
   template: `
-    <div class="backdrop" (click)="closed.emit()"></div>
-    <article aria-modal="true" role="dialog" [attr.aria-label]="name()">
+    <app-bottom-sheet [ariaLabel]="name()" (closed)="closed.emit()">
       <div aria-hidden="true" class="handle"></div>
       <button class="close" type="button" [attr.aria-label]="closeLabel()" (click)="closed.emit()"><mat-icon aria-hidden="true">close</mat-icon></button>
       @if (dish().image; as image) { <img [alt]="name()" [height]="image.height" [src]="image.url" [width]="image.width" /> }
@@ -37,7 +33,7 @@ import { getTranslation } from '../../utils/get-translation';
       <div class="facts"><app-price [language]="language()" [money]="dish().price" /> @if (dish().calories; as calories) { <span class="calories"><mat-icon aria-hidden="true">local_fire_department</mat-icon>{{ calories }} {{ caloriesLabel() }}</span> }</div>
       @if (recipe(); as recipe) { <section class="recipe"><h3>{{ recipeLabel() }}</h3><p>{{ recipe }}</p></section> }
       <div class="quantity"><span>{{ quantityLabel() }}</span><app-quantity-control [quantity]="quantity()" (decrement)="decrement.emit()" (increment)="increment.emit()" /></div>
-    </article>
+    </app-bottom-sheet>
   `,
 })
 export class DishDetailsSheet {

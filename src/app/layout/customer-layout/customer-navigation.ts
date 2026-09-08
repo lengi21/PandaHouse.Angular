@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
@@ -64,19 +64,25 @@ import { MatIcon } from '@angular/material/icon';
       border-radius: 50%;
       background: var(--color-panel);
       color: var(--color-primary);
+      font-family: inherit;
       font-size: .75rem;
       font-weight: 800;
       letter-spacing: .05em;
+      cursor: pointer;
     }
+
+    .brand:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
   `,
   template: `
     <nav [attr.aria-label]="'NAVIGATION.LABEL' | translate">
       <a routerLink="/categories" routerLinkActive="active"><mat-icon aria-hidden="true">home</mat-icon>{{ 'NAVIGATION.CATEGORIES' | translate }}</a>
       <a routerLink="/menu" routerLinkActive="active"><mat-icon aria-hidden="true">restaurant_menu</mat-icon>{{ 'NAVIGATION.MENU' | translate }}</a>
-      <div aria-hidden="true" class="brand-slot"><span class="brand">PH</span></div>
+      <div class="brand-slot"><button class="brand" type="button" [attr.aria-label]="'CUSTOMER.APPEARANCE.OPEN' | translate" (click)="appearanceRequested.emit()">PH</button></div>
       <a routerLink="/info" routerLinkActive="active"><mat-icon aria-hidden="true">info</mat-icon>{{ 'NAVIGATION.INFO' | translate }}</a>
       <a routerLink="/cart" routerLinkActive="active"><mat-icon aria-hidden="true">shopping_cart</mat-icon>{{ 'NAVIGATION.CART' | translate }}</a>
     </nav>
   `,
 })
-export class CustomerNavigation {}
+export class CustomerNavigation {
+  readonly appearanceRequested = output<void>();
+}

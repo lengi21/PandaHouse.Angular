@@ -46,6 +46,16 @@
         "SATURDAY": "Saturday",
         "SUNDAY": "Sunday"
       }
+    },
+    "APPEARANCE": {
+      "TITLE": "Appearance",
+      "OPEN": "Open appearance settings",
+      "CLOSE": "Close appearance settings",
+      "PALETTE": "Color palette",
+      "MODE": "Mode",
+      "LIGHT": "Light",
+      "DARK": "Dark",
+      "LANGUAGE": "Language"
     }
   },
   "CART": {

@@ -52,10 +52,10 @@ import { DishDetailsSheet } from '../../../shared/menu/dish-details-sheet/dish-d
               </section>
             } @empty { <p class="status">No dishes match your search.</p> }
           </div>
-          @if (selectedDish(); as dish) {
-            <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish.id)" />
-          }
         </div>
+        @if (selectedDish(); as dish) {
+          <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish.id)" />
+        }
       }
     </main>
   `,

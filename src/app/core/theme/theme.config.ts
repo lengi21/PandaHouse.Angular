@@ -1,4 +1,4 @@
-export const PALETTES = ['olive', 'wine'] as const;
+export const PALETTES = ['olive', 'wine', 'ocean', 'sunset', 'forest', 'royal'] as const;
 export const COLOR_MODES = ['light', 'dark'] as const;
 
 export type PaletteName = (typeof PALETTES)[number];
