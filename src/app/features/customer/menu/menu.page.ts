@@ -16,12 +16,10 @@ import { SearchField } from '../../../shared/ui/search-field/search-field';
   selector: 'app-menu-page',
   imports: [CategorySelector, DishCard, SearchField, TranslatePipe],
   styles: `
-    main { max-inline-size: 36rem; margin: 0 auto; padding: .7rem 0 calc(var(--customer-navigation-height) + .75rem); color: var(--color-text); }
-    .menu-top { position: sticky; z-index: 5; top: var(--customer-header-height); display: grid; gap: .65rem; padding: .65rem 1rem .2rem; background: var(--color-shell); } h1, h2 { margin: 0; } h1 { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); } h2 { padding-bottom: .65rem; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent); font-size: 1.15rem; }
-    .menu-panel { min-block-size: calc(100dvh - var(--customer-header-height) - var(--customer-navigation-height)); margin-top: .2rem; padding: 1rem; border-radius: 1.1rem 1.1rem 0 0; background: var(--color-panel); }
-    .menu-panel-corner { position: sticky; z-index: 4; top: calc(var(--customer-header-height) + 10rem); display: block; block-size: 0; pointer-events: none; }
-    .menu-panel-corner::before { position: absolute; inset: 0 -1rem auto; block-size: 1.1rem; border-radius: 1.1rem; background: var(--color-panel); content: ''; }
-    section { scroll-margin-top: calc(var(--customer-header-height) + 1rem); margin-block-start: 1.4rem; }
+    main { display: flex; flex-direction: column; max-inline-size: 36rem; block-size: calc(100dvh - var(--customer-header-height)); margin: 0 auto; padding: .7rem 0 0; overflow: hidden; color: var(--color-text); }
+    .menu-top { z-index: 5; display: grid; flex: 0 0 auto; gap: .65rem; padding: .65rem 1rem .2rem; background: var(--color-shell); } h1, h2 { margin: 0; } h1 { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); } h2 { padding-bottom: .65rem; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent); font-size: 1.15rem; }
+    .menu-panel { flex: 1 1 auto; min-block-size: 0; margin-top: .2rem; padding: 1rem 1rem calc(var(--customer-navigation-height) + 1.5rem); overflow-y: auto; overscroll-behavior: contain; border-radius: 1.1rem 1.1rem 0 0; background: var(--color-panel); }
+    section { margin-block-start: 1.4rem; }
     section:first-child { margin-block-start: 0; } .dishes { display: grid; grid-template-columns: minmax(0, 1fr); gap: .2rem; margin-block-start: .15rem; }
     .status { color: var(--color-muted-text); }
   `,
@@ -36,7 +34,6 @@ import { SearchField } from '../../../shared/ui/search-field/search-field';
           <app-category-selector [activeCategoryId]="activeCategoryId()" [categories]="menuStore.categories()" [firstCategoryId]="carouselFirstCategoryId()" [label]="'CUSTOMER.CATEGORIES.TITLE' | translate" [language]="languageService.currentLanguage()" (selected)="scrollToCategory($event)" />
         </div>
         <div class="menu-panel">
-          <span aria-hidden="true" class="menu-panel-corner"></span>
           @for (menuCategory of menuStore.filteredCategories(); track menuCategory.category.id) {
             <section [id]="menuCategory.category.id">
               <h2>{{ categoryName(menuCategory.category.translations) }}</h2>
@@ -93,6 +90,8 @@ export class MenuPage {
       const categoryIds = this.menuStore.filteredCategories().map(({ category }) => category.id);
       let observer: IntersectionObserver | null = null;
       const observerTimer = setTimeout(() => {
+        const menuPanel = document.querySelector<HTMLElement>('.menu-panel');
+        if (!menuPanel) return;
         observer = new IntersectionObserver(
           (entries) => {
             const visibleSection = entries
@@ -103,7 +102,7 @@ export class MenuPage {
               this.activeCategoryId.set(visibleSection.target.id);
             }
           },
-          { rootMargin: '-190px 0px -55% 0px', threshold: 0.05 },
+          { root: menuPanel, rootMargin: '-8px 0px -55% 0px', threshold: 0.05 },
         );
         categoryIds.forEach((categoryId) => {
           const section = document.getElementById(categoryId);
@@ -125,10 +124,13 @@ export class MenuPage {
       clearTimeout(this.categoryScrollTimer);
     }
     const categorySection = document.getElementById(categoryId);
-    if (categorySection) {
-      const stickyMenuBottom = document.querySelector<HTMLElement>('.menu-top')?.getBoundingClientRect().bottom ?? 72;
-      const targetTop = categorySection.getBoundingClientRect().top + window.scrollY - stickyMenuBottom - 12;
-      window.scrollTo({ behavior: 'smooth', top: targetTop });
+    const menuPanel = document.querySelector<HTMLElement>('.menu-panel');
+    if (categorySection && menuPanel) {
+      const targetTop = menuPanel.scrollTop
+        + categorySection.getBoundingClientRect().top
+        - menuPanel.getBoundingClientRect().top
+        - 12;
+      menuPanel.scrollTo({ behavior: 'smooth', top: targetTop });
     }
     this.categoryScrollTimer = setTimeout(() => this.isProgrammaticCategoryScroll.set(false), 650);
   }
