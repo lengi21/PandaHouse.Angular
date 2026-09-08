@@ -2,6 +2,7 @@ import { Component, inject, output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { AdminAuthService } from '../../../core/auth/admin-auth.service';
 import { LanguageService } from '../../../core/i18n/language.service';
 import { PaletteName } from '../../../core/theme/theme.config';
 import { ThemeService } from '../../../core/theme/theme.service';
@@ -70,12 +71,13 @@ const paletteOptions: readonly PaletteOption[] = [
 export class AppearanceSheet {
   protected readonly themeService = inject(ThemeService);
   protected readonly languageService = inject(LanguageService);
+  private readonly adminAuth = inject(AdminAuthService);
   private readonly router = inject(Router);
   protected readonly paletteOptions = paletteOptions;
   readonly closed = output<void>();
 
   protected openAdminLogin(): void {
     this.closed.emit();
-    void this.router.navigate(['/admin/sign-in']);
+    void this.router.navigateByUrl(this.adminAuth.isAuthenticated() ? '/admin/dashboard' : '/admin/sign-in');
   }
 }
