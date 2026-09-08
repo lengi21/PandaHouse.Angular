@@ -58,17 +58,20 @@ import { MatIcon } from '@angular/material/icon';
       display: grid;
       inline-size: 3.65rem;
       block-size: 3.65rem;
-      place-items: center;
       transform: translateY(-1.6rem);
       border: .25rem solid var(--color-shell);
       border-radius: 50%;
-      background: var(--color-panel);
-      color: var(--color-primary);
-      font-family: inherit;
-      font-size: .75rem;
-      font-weight: 800;
-      letter-spacing: .05em;
+      overflow: hidden;
+      padding: 0;
+      background: #eff5d6;
       cursor: pointer;
+    }
+
+    .brand img {
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+      object-position: center 34%;
     }
 
     .brand:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
@@ -77,7 +80,7 @@ import { MatIcon } from '@angular/material/icon';
     <nav [attr.aria-label]="'NAVIGATION.LABEL' | translate">
       <a routerLink="/categories" routerLinkActive="active"><mat-icon aria-hidden="true">home</mat-icon>{{ 'NAVIGATION.CATEGORIES' | translate }}</a>
       <a routerLink="/menu" routerLinkActive="active"><mat-icon aria-hidden="true">restaurant_menu</mat-icon>{{ 'NAVIGATION.MENU' | translate }}</a>
-      <div class="brand-slot"><button class="brand" type="button" [attr.aria-label]="'CUSTOMER.APPEARANCE.OPEN' | translate" (click)="appearanceRequested.emit()">PH</button></div>
+      <div class="brand-slot"><button class="brand" type="button" [attr.aria-label]="'CUSTOMER.APPEARANCE.OPEN' | translate" (click)="appearanceRequested.emit()"><img src="/brand/panda-house-logo.jpeg" alt="" /></button></div>
       <a routerLink="/info" routerLinkActive="active"><mat-icon aria-hidden="true">info</mat-icon>{{ 'NAVIGATION.INFO' | translate }}</a>
       <a routerLink="/cart" routerLinkActive="active"><mat-icon aria-hidden="true">shopping_cart</mat-icon>{{ 'NAVIGATION.CART' | translate }}</a>
     </nav>

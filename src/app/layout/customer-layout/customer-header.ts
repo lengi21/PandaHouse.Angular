@@ -37,17 +37,14 @@ import { getTranslation } from '../../shared/utils/get-translation';
     }
 
     .mark {
-      display: grid;
+      display: block;
       flex: 0 0 auto;
       inline-size: 2.25rem;
       block-size: 2.25rem;
-      place-items: center;
       border-radius: 50%;
-      background: var(--color-panel);
-      color: var(--color-primary);
-      font-size: .75rem;
-      font-weight: 800;
-      letter-spacing: .05em;
+      object-fit: cover;
+      object-position: center 34%;
+      background: #eff5d6;
     }
 
     .restaurant-name {
@@ -99,7 +96,7 @@ import { getTranslation } from '../../shared/utils/get-translation';
   template: `
     <header>
       <a class="brand" routerLink="/categories">
-        <span aria-hidden="true" class="mark">PH</span>
+        <img class="mark" src="/brand/panda-house-logo.jpeg" alt="" />
         <span class="restaurant-name">{{ restaurantName() }}<small>GEORGIAN KITCHEN</small></span>
       </a>
 
