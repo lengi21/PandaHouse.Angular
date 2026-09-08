@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-customer-navigation',
-  imports: [RouterLink, RouterLinkActive, TranslatePipe],
+  imports: [MatIcon, RouterLink, RouterLinkActive, TranslatePipe],
   styles: `
     nav {
       position: fixed;
@@ -40,7 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       color: var(--color-primary);
     }
 
-    a span { font-family: system-ui, sans-serif; font-size: 1.25rem; line-height: 1; }
+    a mat-icon { inline-size: 1.25rem; block-size: 1.25rem; font-size: 1.25rem; line-height: 1; }
 
     a:focus-visible {
       outline: 3px solid var(--color-focus);
@@ -70,11 +71,11 @@ import { TranslatePipe } from '@ngx-translate/core';
   `,
   template: `
     <nav [attr.aria-label]="'NAVIGATION.LABEL' | translate">
-      <a routerLink="/categories" routerLinkActive="active"><span aria-hidden="true">⌂</span>{{ 'NAVIGATION.CATEGORIES' | translate }}</a>
-      <a routerLink="/menu" routerLinkActive="active"><span aria-hidden="true">♨</span>{{ 'NAVIGATION.MENU' | translate }}</a>
+      <a routerLink="/categories" routerLinkActive="active"><mat-icon aria-hidden="true">home</mat-icon>{{ 'NAVIGATION.CATEGORIES' | translate }}</a>
+      <a routerLink="/menu" routerLinkActive="active"><mat-icon aria-hidden="true">restaurant_menu</mat-icon>{{ 'NAVIGATION.MENU' | translate }}</a>
       <div aria-hidden="true" class="brand-slot"><span class="brand">PH</span></div>
-      <a routerLink="/info" routerLinkActive="active"><span aria-hidden="true">ⓘ</span>{{ 'NAVIGATION.INFO' | translate }}</a>
-      <a routerLink="/cart" routerLinkActive="active"><span aria-hidden="true">🛒</span>{{ 'NAVIGATION.CART' | translate }}</a>
+      <a routerLink="/info" routerLinkActive="active"><mat-icon aria-hidden="true">info</mat-icon>{{ 'NAVIGATION.INFO' | translate }}</a>
+      <a routerLink="/cart" routerLinkActive="active"><mat-icon aria-hidden="true">shopping_cart</mat-icon>{{ 'NAVIGATION.CART' | translate }}</a>
     </nav>
   `,
 })

@@ -3,9 +3,9 @@ import { LanguageCode, SupportedLanguage } from '../../shared/models/language.mo
 export const DEFAULT_LANGUAGE: LanguageCode = 'ka';
 
 export const SUPPORTED_LANGUAGES = [
-  { code: 'ka', label: 'ქართული' },
-  { code: 'en', label: 'English' },
-  { code: 'ru', label: 'Русский' },
+  { code: 'ka', label: 'ქართული', flagUrl: '/flags/georgia.svg' },
+  { code: 'en', label: 'English', flagUrl: '/flags/united-kingdom.svg' },
+  { code: 'ru', label: 'Русский', flagUrl: '/flags/russia.svg' },
 ] as const satisfies readonly SupportedLanguage[];
 
 export function isSupportedLanguage(language: string): language is LanguageCode {

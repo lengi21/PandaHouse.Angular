@@ -1,16 +1,17 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 import { LanguageService } from '../../core/i18n/language.service';
 import { ThemeService } from '../../core/theme/theme.service';
 import { CustomerMenuStore } from '../../features/customer/menu/customer-menu.store';
 import { CartStore } from '../../features/customer/cart/cart.store';
-import { SelectField, SelectOption } from '../../shared/ui/select-field/select-field';
+import { LanguagePicker } from '../../shared/ui/language-picker/language-picker';
 import { getTranslation } from '../../shared/utils/get-translation';
 
 @Component({
   selector: 'app-customer-header',
-  imports: [RouterLink, SelectField, TranslatePipe],
+  imports: [LanguagePicker, MatIcon, RouterLink, TranslatePipe],
   styles: `
     header {
       position: fixed;
@@ -82,6 +83,9 @@ import { getTranslation } from '../../shared/utils/get-translation';
       text-decoration: none;
     }
 
+    .icon-link mat-icon,
+    .icon-button mat-icon { inline-size: 1.45rem; block-size: 1.45rem; font-size: 1.45rem; }
+
     .count { position: absolute; inset: .1rem .1rem auto auto; display: grid; min-inline-size: 1.05rem; block-size: 1.05rem; place-items: center; border-radius: 50%; background: #e94747; color: #fff; font-size: .6rem; font-weight: 700; }
 
     .icon-link:focus-visible,
@@ -91,11 +95,6 @@ import { getTranslation } from '../../shared/utils/get-translation';
       outline-offset: 2px;
     }
 
-    @media (max-width: 28rem) {
-      .actions app-select-field {
-        display: none;
-      }
-    }
   `,
   template: `
     <header>
@@ -105,19 +104,18 @@ import { getTranslation } from '../../shared/utils/get-translation';
       </a>
 
       <div class="actions">
-        <a class="icon-link" [attr.aria-label]="'HEADER.SEARCH' | translate" routerLink="/menu">⌕</a>
         <button
           class="icon-button"
           type="button"
           [attr.aria-label]="'HEADER.TOGGLE_THEME' | translate"
           (click)="themeService.toggleColorMode()"
         >
-          ◐
+          <mat-icon aria-hidden="true">brightness_4</mat-icon>
         </button>
-        <a class="icon-link" [attr.aria-label]="'HEADER.CART' | translate" routerLink="/cart">🛒 @if (cartStore.itemCount() > 0) { <span class="count">{{ cartStore.itemCount() }}</span> }</a>
-        <app-select-field
+        <a class="icon-link" [attr.aria-label]="'HEADER.CART' | translate" routerLink="/cart"><mat-icon aria-hidden="true">shopping_cart</mat-icon> @if (cartStore.itemCount() > 0) { <span class="count">{{ cartStore.itemCount() }}</span> }</a>
+        <app-language-picker
           [label]="'HEADER.LANGUAGE' | translate"
-          [options]="languageOptions()"
+          [languages]="languageService.availableLanguages"
           [value]="languageService.currentLanguage()"
           (valueChange)="languageService.changeLanguage($event)"
         />
@@ -130,9 +128,6 @@ export class CustomerHeader {
   protected readonly menuStore = inject(CustomerMenuStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly themeService = inject(ThemeService);
-  protected readonly languageOptions = computed<readonly SelectOption[]>(() =>
-    this.languageService.availableLanguages.map(({ code, label }) => ({ value: code, label })),
-  );
   protected readonly restaurantName = computed(
     () =>
       getTranslation(
