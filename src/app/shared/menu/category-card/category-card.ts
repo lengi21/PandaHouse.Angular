@@ -63,7 +63,7 @@ import { getTranslation } from '../../utils/get-translation';
     <a
       class="card"
       [attr.aria-label]="name()"
-      [queryParams]="{ category: category().id }"
+      [queryParams]="{ category: category().id, source: 'category-list' }"
       [routerLink]="['/menu']"
     >
       @if (category().image; as image) {

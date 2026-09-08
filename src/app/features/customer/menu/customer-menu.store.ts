@@ -23,6 +23,10 @@ export class CustomerMenuStore {
   readonly categories = computed<readonly MenuCategory[]>(() =>
     [...(this.menu()?.categories ?? [])]
       .filter(({ category }) => category.isVisible)
+      .map((menuCategory) => ({
+        ...menuCategory,
+        dishes: [...menuCategory.dishes].sort((first, second) => first.sortOrder - second.sortOrder),
+      }))
       .sort((first, second) => first.category.sortOrder - second.category.sortOrder),
   );
   readonly filteredCategories = computed<readonly MenuCategory[]>(() => {

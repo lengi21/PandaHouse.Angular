@@ -34,13 +34,14 @@ export class CategorySelector {
   readonly language = input.required<LanguageCode>();
   readonly label = input.required<string>();
   readonly activeCategoryId = input.required<CategoryId | null>();
+  readonly firstCategoryId = input<CategoryId | null>(null);
   readonly selected = output<CategoryId>();
   private readonly names = computed(() => new Map(this.categories().map((menuCategory) => [menuCategory.category.id, getTranslation(menuCategory.category.translations, this.language())?.name ?? ''])));
   protected readonly orderedCategories = computed(() => {
-    const activeCategoryId = this.activeCategoryId();
+    const firstCategoryId = this.firstCategoryId();
     return [...this.categories()].sort((first, second) => {
-      if (first.category.id === activeCategoryId) return -1;
-      if (second.category.id === activeCategoryId) return 1;
+      if (first.category.id === firstCategoryId) return -1;
+      if (second.category.id === firstCategoryId) return 1;
       return 0;
     });
   });

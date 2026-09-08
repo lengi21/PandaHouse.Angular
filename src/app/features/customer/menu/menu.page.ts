@@ -6,7 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../../core/i18n/language.service';
 import { CategorySelector } from '../../../shared/menu/category-selector/category-selector';
 import { DishCard } from '../../../shared/menu/dish-card/dish-card';
-import { CategoryTranslation } from '../../../shared/models/menu.model';
+import { CategoryId, CategoryTranslation } from '../../../shared/models/menu.model';
 import { getTranslation } from '../../../shared/utils/get-translation';
 import { CartStore } from '../cart/cart.store';
 import { CustomerMenuStore } from './customer-menu.store';
@@ -31,7 +31,7 @@ import { SearchField } from '../../../shared/ui/search-field/search-field';
       } @else {
         <div class="menu-top">
           <app-search-field [label]="'HEADER.SEARCH' | translate" [placeholder]="'HEADER.SEARCH' | translate" [value]="menuStore.searchQuery()" (valueChange)="menuStore.setSearchQuery($event)" />
-          <app-category-selector [activeCategoryId]="activeCategoryId()" [categories]="menuStore.categories()" [label]="'CUSTOMER.CATEGORIES.TITLE' | translate" [language]="languageService.currentLanguage()" (selected)="scrollToCategory($event)" />
+          <app-category-selector [activeCategoryId]="activeCategoryId()" [categories]="menuStore.categories()" [firstCategoryId]="carouselFirstCategoryId()" [label]="'CUSTOMER.CATEGORIES.TITLE' | translate" [language]="languageService.currentLanguage()" (selected)="scrollToCategory($event)" />
         </div>
         <div class="menu-panel">
           @for (menuCategory of menuStore.filteredCategories(); track menuCategory.category.id) {
@@ -54,6 +54,7 @@ export class MenuPage {
   protected readonly languageService = inject(LanguageService);
   protected readonly menuStore = inject(CustomerMenuStore);
   protected readonly activeCategoryId = signal<string | null>(null);
+  protected readonly carouselFirstCategoryId = signal<CategoryId | null>(null);
   private readonly requestedCategoryId = signal<string | null>(null);
   private readonly isProgrammaticCategoryScroll = signal(false);
   private categoryScrollTimer: ReturnType<typeof setTimeout> | null = null;
@@ -67,7 +68,9 @@ export class MenuPage {
       }
     });
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.requestedCategoryId.set(params.get('category'));
+      const categoryId = params.get('category');
+      this.requestedCategoryId.set(categoryId);
+      this.carouselFirstCategoryId.set(params.get('source') === 'category-list' ? categoryId : null);
     });
     effect((onCleanup) => {
       const availableCategories = this.menuStore.filteredCategories();
@@ -120,8 +123,8 @@ export class MenuPage {
     }
     const categorySection = document.getElementById(categoryId);
     if (categorySection) {
-      const headerOffset = 72;
-      const targetTop = categorySection.getBoundingClientRect().top + window.scrollY - headerOffset;
+      const stickyMenuBottom = document.querySelector<HTMLElement>('.menu-top')?.getBoundingClientRect().bottom ?? 72;
+      const targetTop = categorySection.getBoundingClientRect().top + window.scrollY - stickyMenuBottom - 12;
       window.scrollTo({ behavior: 'smooth', top: targetTop });
     }
     this.categoryScrollTimer = setTimeout(() => this.isProgrammaticCategoryScroll.set(false), 650);
