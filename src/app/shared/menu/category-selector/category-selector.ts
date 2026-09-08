@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, effect, ElementRef, input, output, viewChild } from '@angular/core';
 import { LanguageCode } from '../../models/language.model';
 import { CategoryId, MenuCategory } from '../../models/menu.model';
 import { getTranslation } from '../../utils/get-translation';
@@ -19,9 +19,9 @@ import { getTranslation } from '../../utils/get-translation';
     button:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; border-radius: .5rem; }
   `,
   template: `
-    <nav [attr.aria-label]="label()">
+    <nav #carousel [attr.aria-label]="label()">
       @for (menuCategory of orderedCategories(); track menuCategory.category.id) {
-        <button type="button" [attr.aria-pressed]="menuCategory.category.id === activeCategoryId()" [class.active]="menuCategory.category.id === activeCategoryId()" (click)="selected.emit(menuCategory.category.id)">
+        <button type="button" [attr.aria-pressed]="menuCategory.category.id === activeCategoryId()" [class.active]="menuCategory.category.id === activeCategoryId()" [attr.data-category-id]="menuCategory.category.id" (click)="selected.emit(menuCategory.category.id)">
           @if (menuCategory.category.image; as image) { <img [alt]="''" [height]="image.height" [src]="image.url" [width]="image.width" loading="lazy" /> } @else { <span class="fallback"></span> }
           <span>{{ categoryName(menuCategory) }}</span>
         </button>
@@ -36,6 +36,7 @@ export class CategorySelector {
   readonly activeCategoryId = input.required<CategoryId | null>();
   readonly firstCategoryId = input<CategoryId | null>(null);
   readonly selected = output<CategoryId>();
+  private readonly carousel = viewChild<ElementRef<HTMLElement>>('carousel');
   private readonly names = computed(() => new Map(this.categories().map((menuCategory) => [menuCategory.category.id, getTranslation(menuCategory.category.translations, this.language())?.name ?? ''])));
   protected readonly orderedCategories = computed(() => {
     const firstCategoryId = this.firstCategoryId();
@@ -45,6 +46,29 @@ export class CategorySelector {
       return 0;
     });
   });
+
+  constructor() {
+    effect(() => {
+      const activeCategoryId = this.activeCategoryId();
+      this.orderedCategories();
+      const carousel = this.carousel()?.nativeElement;
+      if (!activeCategoryId || !carousel) return;
+
+      const activeButton = Array.from(carousel.querySelectorAll<HTMLButtonElement>('[data-category-id]'))
+        .find((button) => button.dataset['categoryId'] === activeCategoryId);
+      if (!activeButton) return;
+
+      const carouselBounds = carousel.getBoundingClientRect();
+      const buttonBounds = activeButton.getBoundingClientRect();
+      const isOutsideView = buttonBounds.left < carouselBounds.left || buttonBounds.right > carouselBounds.right;
+      if (isOutsideView) {
+        carousel.scrollTo({
+          behavior: 'smooth',
+          left: activeButton.offsetLeft - (carousel.clientWidth - activeButton.offsetWidth) / 2,
+        });
+      }
+    });
+  }
 
   protected categoryName(menuCategory: MenuCategory): string {
     return this.names().get(menuCategory.category.id) ?? '';

@@ -9,25 +9,28 @@ import { TranslatePipe } from '@ngx-translate/core';
     nav {
       position: fixed;
       z-index: 10;
-      inset: auto 0 0 0;
-      margin: 0;
+      inset: auto .75rem max(.75rem, env(safe-area-inset-bottom));
+      max-inline-size: 38rem;
+      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      align-items: end;
-      min-block-size: var(--customer-navigation-height);
-      padding: .5rem 1rem max(.5rem, env(safe-area-inset-bottom));
-      border-top: 1px solid rgb(255 255 255 / 12%);
+      align-items: center;
+      min-block-size: 4.2rem;
+      padding: .35rem .6rem;
+      border: 1px solid rgb(255 255 255 / 14%);
+      border-radius: 1.6rem;
       background: var(--color-shell);
+      box-shadow: 0 .8rem 2rem rgb(0 0 0 / 32%);
     }
 
     a {
       display: grid;
-      min-block-size: 3.25rem;
+      min-block-size: 3.1rem;
       place-items: center;
       border-radius: .75rem;
       color: color-mix(in srgb, var(--color-shell-text) 66%, transparent);
-      gap: .2rem;
-      font-size: .65rem;
+      gap: .15rem;
+      font-size: .6rem;
       font-weight: 700;
       text-align: center;
       text-decoration: none;
@@ -37,7 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       color: var(--color-primary);
     }
 
-    a span { font-family: system-ui, sans-serif; font-size: 1.4rem; line-height: 1; }
+    a span { font-family: system-ui, sans-serif; font-size: 1.25rem; line-height: 1; }
 
     a:focus-visible {
       outline: 3px solid var(--color-focus);
@@ -46,17 +49,17 @@ import { TranslatePipe } from '@ngx-translate/core';
 
     .brand-slot {
       display: grid;
-      min-block-size: 3.25rem;
+      min-block-size: 3.1rem;
       place-items: start center;
     }
 
     .brand {
       display: grid;
-      inline-size: 3.75rem;
-      block-size: 3.75rem;
+      inline-size: 3.65rem;
+      block-size: 3.65rem;
       place-items: center;
-      transform: translateY(-1.75rem);
-      border: .3rem solid var(--color-shell);
+      transform: translateY(-1.6rem);
+      border: .25rem solid var(--color-shell);
       border-radius: 50%;
       background: var(--color-panel);
       color: var(--color-primary);
