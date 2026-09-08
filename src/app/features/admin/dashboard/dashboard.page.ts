@@ -47,7 +47,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
           <div class="stat"><mat-icon aria-hidden="true">check_circle</mat-icon><span>{{ 'ADMIN.DASHBOARD.AVAILABLE' | translate }}</span><strong>{{ store.dashboard()!.availableDishCount }}</strong></div>
         </div>
         <section class="section"><div class="section-heading"><h2>{{ 'ADMIN.DASHBOARD.RECENT_DISHES' | translate }}</h2><a class="view-all" routerLink="/admin/dishes">{{ 'ADMIN.DASHBOARD.VIEW_ALL' | translate }}</a></div><div class="recent">
-          @for (summary of store.dashboard()!.recentDishes; track summary.dish.id) { <article>@if (summary.dish.image; as image) { <img [alt]="''" [src]="image.url" /> } @else { <span class="image-placeholder"></span> }<div><strong>{{ name(summary.dish.translations) }}</strong><span><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></span></div></article> }
+          @for (summary of store.dashboard()!.recentDishes; track summary.dish.id) { <article>@if (summary.dish.image; as image) { <img [alt]="''" [src]="image.url" loading="lazy" /> } @else { <span class="image-placeholder"></span> }<div><strong>{{ name(summary.dish.translations) }}</strong><span><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></span></div></article> }
         </div></section>
       }
     </main>

@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,10 +9,12 @@ import { AdminAuthService } from '../../../core/auth/admin-auth.service';
 import { TextInput } from '../../../shared/ui/text-input/text-input';
 import { ActionLoaderService } from '../../../core/feedback/action-loader.service';
 import { ToastService } from '../../../core/feedback/toast.service';
+import { FullPageLoader } from '../../../shared/ui/full-page-loader/full-page-loader';
+import { ToastContainer } from '../../../shared/ui/toast-container/toast-container';
 
 @Component({
   selector: 'app-admin-sign-in-page',
-  imports: [ReactiveFormsModule, TextInput, TranslatePipe],
+  imports: [FullPageLoader, NgOptimizedImage, ReactiveFormsModule, TextInput, ToastContainer, TranslatePipe],
   styles: `
     :host { display: grid; min-block-size: 100dvh; place-items: center; padding: 1rem; background: var(--color-shell); }
     main { inline-size: min(100%, 27rem); padding: 2rem; border: 1px solid rgb(255 255 255 / 12%); border-radius: 1.25rem; background: var(--color-panel); box-shadow: 0 1rem 3rem rgb(0 0 0 / 28%); }
@@ -30,7 +33,7 @@ import { ToastService } from '../../../core/feedback/toast.service';
   template: `
     <main>
       <div class="brand">
-        <img src="/brand/panda-house-logo.jpeg" alt="" />
+        <img ngSrc="/brand/panda-house-logo.jpeg" width="48" height="48" priority alt="" />
         <span>Panda House <small>ADMINISTRATION</small></span>
       </div>
       <h1>{{ 'ADMIN.SIGN_IN.TITLE' | translate }}</h1>
@@ -56,6 +59,8 @@ import { ToastService } from '../../../core/feedback/toast.service';
         <button type="submit" [disabled]="form.invalid || submitting()">{{ (submitting() ? 'ADMIN.SIGN_IN.SUBMITTING' : 'ADMIN.SIGN_IN.SUBMIT') | translate }}</button>
       </form>
     </main>
+    <app-full-page-loader />
+    <app-toast-container />
   `,
 })
 export class AdminSignInPage {

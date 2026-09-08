@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -11,7 +12,7 @@ import { getTranslation } from '../../shared/utils/get-translation';
 
 @Component({
   selector: 'app-customer-header',
-  imports: [LanguagePicker, MatIcon, RouterLink, TranslatePipe],
+  imports: [LanguagePicker, MatIcon, NgOptimizedImage, RouterLink, TranslatePipe],
   styles: `
     header {
       position: fixed;
@@ -96,7 +97,7 @@ import { getTranslation } from '../../shared/utils/get-translation';
   template: `
     <header>
       <a class="brand" routerLink="/categories">
-        <img class="mark" src="/brand/panda-house-logo.jpeg" alt="" />
+        <img class="mark" ngSrc="/brand/panda-house-logo.jpeg" width="36" height="36" priority alt="" />
         <span class="restaurant-name">{{ restaurantName() }}<small>GEORGIAN KITCHEN</small></span>
       </a>
 

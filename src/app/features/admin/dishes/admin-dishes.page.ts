@@ -86,7 +86,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
             <tbody cdkDropList [cdkDropListData]="store.dishes()" [cdkDropListDisabled]="store.categoryId() === 'all'" (cdkDropListDropped)="drop($event)">
               @for (summary of store.dishes(); track summary.dish.id) {
                 <tr cdkDrag [cdkDragData]="summary">
-                  <td data-label="Dish"><div class="dish">@if (summary.dish.image; as image) { <img [alt]="''" [src]="image.url" /> } @else { <span class="placeholder" aria-hidden="true"></span> }<span><span class="dish-name">{{ name(summary.dish.translations) }}</span><br /><span class="order">#{{ summary.dish.sortOrder }}</span></span></div></td>
+                  <td data-label="Dish"><div class="dish">@if (summary.dish.image; as image) { <img [alt]="''" [src]="image.url" loading="lazy" /> } @else { <span class="placeholder" aria-hidden="true"></span> }<span><span class="dish-name">{{ name(summary.dish.translations) }}</span><br /><span class="order">#{{ summary.dish.sortOrder }}</span></span></div></td>
                   <td data-label="Category">{{ name(summary.category.translations) }}</td>
                   <td data-label="Price"><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></td>
                   <td data-label="Status"><span class="badge" [class.paused]="!summary.dish.isPublished || !summary.dish.isAvailable">{{ (summary.dish.isPublished && summary.dish.isAvailable ? 'ADMIN.DISHES.ACTIVE' : 'ADMIN.DISHES.PAUSED') | translate }}</span></td>

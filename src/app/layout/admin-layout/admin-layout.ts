@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
@@ -6,10 +7,23 @@ import { AdminAuthService } from '../../core/auth/admin-auth.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { LanguagePicker } from '../../shared/ui/language-picker/language-picker';
 import { AdminAccountMenu } from '../../shared/ui/admin-account-menu/admin-account-menu';
+import { FullPageLoader } from '../../shared/ui/full-page-loader/full-page-loader';
+import { ToastContainer } from '../../shared/ui/toast-container/toast-container';
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [AdminAccountMenu, LanguagePicker, MatIcon, RouterLink, RouterLinkActive, RouterOutlet, TranslatePipe],
+  imports: [
+    AdminAccountMenu,
+    FullPageLoader,
+    LanguagePicker,
+    MatIcon,
+    NgOptimizedImage,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    ToastContainer,
+    TranslatePipe,
+  ],
   styles: `
     :host { display: block; min-block-size: 100dvh; background: var(--color-background); color: var(--color-text); }
     .layout { display: grid; grid-template-columns: 15rem minmax(0, 1fr); min-block-size: 100dvh; }
@@ -47,7 +61,7 @@ import { AdminAccountMenu } from '../../shared/ui/admin-account-menu/admin-accou
     <div class="layout">
       <aside>
         <a class="brand" routerLink="/admin/dashboard">
-          <img src="/brand/panda-house-logo.jpeg" alt="" />
+          <img ngSrc="/brand/panda-house-logo.jpeg" width="38" height="38" priority alt="" />
           <span>PANDA HOUSE <small>RESTAURANT ADMIN</small></span>
         </a>
         <nav [attr.aria-label]="'ADMIN.NAVIGATION.LABEL' | translate">
@@ -69,6 +83,8 @@ import { AdminAccountMenu } from '../../shared/ui/admin-account-menu/admin-accou
         <router-outlet />
       </section>
     </div>
+    <app-full-page-loader />
+    <app-toast-container />
   `,
 })
 export class AdminLayout {

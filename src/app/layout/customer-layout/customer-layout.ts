@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CustomerMenuStore } from '../../features/customer/menu/customer-menu.store';
+import { CartStore } from '../../features/customer/cart/cart.store';
 import { CustomerHeader } from './customer-header';
 import { CustomerNavigation } from './customer-navigation';
 import { AppearanceSheet } from '../../shared/ui/appearance-sheet/appearance-sheet';
@@ -8,6 +9,7 @@ import { AppearanceSheet } from '../../shared/ui/appearance-sheet/appearance-she
 @Component({
   selector: 'app-customer-layout',
   imports: [AppearanceSheet, CustomerHeader, CustomerNavigation, RouterOutlet],
+  providers: [CartStore, CustomerMenuStore],
   styles: `
     :host { display: block; min-block-size: 100dvh; background: var(--color-shell); }
     .content {

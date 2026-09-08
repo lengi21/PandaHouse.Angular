@@ -1,10 +1,13 @@
 import { Routes } from '@angular/router';
 import { CustomerLayout } from '../../layout/customer-layout/customer-layout';
+import { MENU_REPOSITORY } from '../../core/data-access/menu/menu.repository';
+import { HttpMenuRepository } from '../../core/data-access/menu/http-menu.repository';
 
 export const customerRoutes: Routes = [
   {
     path: '',
     component: CustomerLayout,
+    providers: [{ provide: MENU_REPOSITORY, useClass: HttpMenuRepository }],
     children: [
       {
         path: '',

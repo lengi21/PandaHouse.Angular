@@ -41,10 +41,11 @@ import { CustomerMenuStore } from '../menu/customer-menu.store';
         <p class="status" role="alert">{{ error }}</p>
       } @else {
         <section [attr.aria-label]="'CUSTOMER.CATEGORIES.TITLE' | translate" class="category-grid">
-          @for (menuCategory of menuStore.categories(); track menuCategory.category.id) {
+          @for (menuCategory of menuStore.categories(); track menuCategory.category.id; let index = $index) {
             <app-category-card
               [category]="menuCategory.category"
               [language]="languageService.currentLanguage()"
+              [priority]="index < 2"
             />
           }
         </section>

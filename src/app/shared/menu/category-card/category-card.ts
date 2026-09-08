@@ -67,7 +67,14 @@ import { getTranslation } from '../../utils/get-translation';
       [routerLink]="['/menu']"
     >
       @if (category().image; as image) {
-        <img [alt]="''" [height]="image.height" [src]="image.url" [width]="image.width" loading="lazy" />
+        <img
+          [alt]="''"
+          [attr.fetchpriority]="priority() ? 'high' : null"
+          [attr.loading]="priority() ? 'eager' : 'lazy'"
+          [height]="image.height"
+          [src]="image.url"
+          [width]="image.width"
+        />
       }
       <span class="name">{{ name() }}</span>
     </a>
@@ -76,6 +83,7 @@ import { getTranslation } from '../../utils/get-translation';
 export class CategoryCard {
   readonly category = input.required<Category>();
   readonly language = input.required<LanguageCode>();
+  readonly priority = input(false);
   readonly name = computed(
     () => getTranslation(this.category().translations, this.language())?.name ?? '',
   );
