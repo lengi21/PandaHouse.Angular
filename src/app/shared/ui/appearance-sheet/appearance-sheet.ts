@@ -1,6 +1,7 @@
 import { Component, inject, output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 import { LanguageService } from '../../../core/i18n/language.service';
 import { PaletteName } from '../../../core/theme/theme.config';
 import { ThemeService } from '../../../core/theme/theme.service';
@@ -38,6 +39,8 @@ const paletteOptions: readonly PaletteOption[] = [
     .languages { display: grid; margin-block-start: .7rem; border: 1px solid color-mix(in srgb, var(--color-text) 11%, transparent); border-radius: .75rem; overflow: hidden; }
     .language { display: grid; grid-template-columns: 2rem minmax(0, 1fr) 1.4rem; align-items: center; min-block-size: 3.1rem; gap: .55rem; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 9%, transparent); padding: .4rem .7rem; background: transparent; color: var(--color-text); font: inherit; text-align: start; }
     .language:last-child { border-bottom: 0; } .flag { inline-size: 1.55rem; block-size: 1.05rem; border-radius: .12rem; box-shadow: 0 0 0 1px rgb(0 0 0 / 12%); object-fit: cover; } .language mat-icon { color: var(--color-primary); font-size: 1.2rem; }
+    .admin-login { display: flex; align-items: center; justify-content: center; gap: .5rem; inline-size: 100%; min-block-size: 2.9rem; margin-block-start: 1.2rem; border: 1px solid var(--color-primary); border-radius: .7rem; background: transparent; color: var(--color-primary); font: inherit; font-size: .85rem; font-weight: 700; }
+    .admin-login mat-icon { inline-size: 1.2rem; block-size: 1.2rem; font-size: 1.2rem; }
   `,
   template: `
     <app-bottom-sheet [ariaLabel]="'CUSTOMER.APPEARANCE.TITLE' | translate" (closed)="closed.emit()">
@@ -60,12 +63,19 @@ const paletteOptions: readonly PaletteOption[] = [
           <button class="language" type="button" [attr.aria-pressed]="language.code === languageService.currentLanguage()" (click)="languageService.changeLanguage(language.code)"><img [alt]="''" class="flag" [src]="language.flagUrl" /><span>{{ language.label }}</span>@if (language.code === languageService.currentLanguage()) { <mat-icon aria-label="Selected">check_circle</mat-icon> }</button>
         }
       </div>
+      <button class="admin-login" type="button" (click)="openAdminLogin()"><mat-icon aria-hidden="true">admin_panel_settings</mat-icon>{{ 'CUSTOMER.APPEARANCE.ADMIN_LOGIN' | translate }}</button>
     </app-bottom-sheet>
   `,
 })
 export class AppearanceSheet {
   protected readonly themeService = inject(ThemeService);
   protected readonly languageService = inject(LanguageService);
+  private readonly router = inject(Router);
   protected readonly paletteOptions = paletteOptions;
   readonly closed = output<void>();
+
+  protected openAdminLogin(): void {
+    this.closed.emit();
+    void this.router.navigate(['/admin/sign-in']);
+  }
 }

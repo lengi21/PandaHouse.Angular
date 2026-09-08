@@ -55,7 +55,8 @@
       "MODE": "Mode",
       "LIGHT": "Light",
       "DARK": "Dark",
-      "LANGUAGE": "Language"
+      "LANGUAGE": "Language",
+      "ADMIN_LOGIN": "Admin login"
     }
   },
   "CART": {
