@@ -1,0 +1,92 @@
+name: Deploy Angular release
+
+on:
+  push:
+    tags:
+      - 'release/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: panda-house-production-web
+  cancel-in-progress: false
+
+jobs:
+  validate-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate tag and release branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag_name="${GITHUB_REF_NAME}"
+
+          if [[ ! "$tag_name" =~ ^release/([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "Tags must use release/x.y.z, for example release/1.0.0."
+            exit 1
+          fi
+
+          major="${BASH_REMATCH[1]}"
+          minor="${BASH_REMATCH[2]}"
+          version="$major.$minor.${BASH_REMATCH[3]}"
+          release_branch="release/$major.$minor"
+
+          git fetch --no-tags origin "refs/heads/$release_branch:refs/remotes/origin/$release_branch"
+          tag_commit="$(git rev-list -n 1 "$tag_name")"
+          branch_commit="$(git rev-parse "origin/$release_branch")"
+
+          if [[ "$tag_commit" != "$branch_commit" ]]; then
+            echo "$tag_name must point to the current head of $release_branch."
+            exit 1
+          fi
+
+          latest_version="$(git tag -l 'release/*' \
+            | grep -E '^release/[0-9]+\.[0-9]+\.[0-9]+$' \
+            | grep -Fvx "$tag_name" \
+            | sed 's#^release/##' \
+            | sort -V \
+            | tail -n 1 || true)"
+
+          if [[ -n "$latest_version" ]] && [[ "$(printf '%s\n%s\n' "$latest_version" "$version" | sort -V | tail -n 1)" != "$version" ]]; then
+            echo "$version is not newer than the latest release, $latest_version."
+            exit 1
+          fi
+
+  deploy:
+    needs: validate-release
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure deployment SSH key
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Deploy Angular application
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          tar --exclude-vcs -cf /tmp/panda-house-web.tar .
+          scp /tmp/panda-house-web.tar "$VPS_USER@$VPS_HOST:/tmp/panda-house-web.tar"
+          ssh "$VPS_USER@$VPS_HOST" 'bash -s' <<'REMOTE'
+            set -euo pipefail
+            stage_directory=$(mktemp -d)
+            trap 'rm -rf "$stage_directory" /tmp/panda-house-web.tar' EXIT
+            tar -xf /tmp/panda-house-web.tar -C "$stage_directory"
+            rsync -a --delete "$stage_directory/" /opt/panda-house/panda_house/
+            cd /opt/panda-house/panda_house.NodeTS
+            docker compose --env-file deploy/.env.production -f deploy/docker-compose.production.yml build web
+            docker compose --env-file deploy/.env.production -f deploy/docker-compose.production.yml up -d --no-deps web
+          REMOTE
