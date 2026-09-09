@@ -12,6 +12,8 @@
   --color-shell: #121513;
   --color-shell-text: #f7f3e9;
   --color-panel: #f7f3e9;
+  --color-status-open: #76ba7b;
+  --color-status-closed: #ec776d;
   --customer-header-height: 4rem;
   --customer-navigation-height: 4.5rem;
   background-color: var(--color-background);
@@ -62,6 +64,8 @@
 
 :root[data-palette='wine'] {
   --color-shell: #2a151a;
+  --color-status-open: #8bbf88;
+  --color-status-closed: #ee8185;
 }
 
 :root[data-palette='ocean'][data-color-mode='light'] {
@@ -75,6 +79,8 @@
   --color-focus: #174a7a;
   --color-shell: #112a43;
   --color-panel: #f3f7fb;
+  --color-status-open: #70ba9e;
+  --color-status-closed: #e98176;
 }
 
 :root[data-palette='ocean'][data-color-mode='dark'] {
@@ -89,6 +95,8 @@
   --color-focus: #b2d8f7;
   --color-shell: #0b1725;
   --color-panel: #14263a;
+  --color-status-open: #75c8a8;
+  --color-status-closed: #ef8d82;
 }
 
 :root[data-palette='sunset'][data-color-mode='light'] {
@@ -102,6 +110,8 @@
   --color-focus: #c54d32;
   --color-shell: #3b1e22;
   --color-panel: #fff7f0;
+  --color-status-open: #75b982;
+  --color-status-closed: #e77865;
 }
 
 :root[data-palette='sunset'][data-color-mode='dark'] {
@@ -116,6 +126,8 @@
   --color-focus: #ffc0a1;
   --color-shell: #211317;
   --color-panel: #321d20;
+  --color-status-open: #85c591;
+  --color-status-closed: #f08c76;
 }
 
 :root[data-palette='forest'][data-color-mode='light'] {
@@ -129,6 +141,8 @@
   --color-focus: #16603d;
   --color-shell: #10291d;
   --color-panel: #f4f8f3;
+  --color-status-open: #71bd84;
+  --color-status-closed: #e57870;
 }
 
 :root[data-palette='forest'][data-color-mode='dark'] {
@@ -143,6 +157,8 @@
   --color-focus: #b6e2c0;
   --color-shell: #0e1812;
   --color-panel: #152a1d;
+  --color-status-open: #82cc97;
+  --color-status-closed: #ed887e;
 }
 
 :root[data-palette='royal'][data-color-mode='light'] {
@@ -156,6 +172,8 @@
   --color-focus: #4b2d8e;
   --color-shell: #251640;
   --color-panel: #f7f4fc;
+  --color-status-open: #82b995;
+  --color-status-closed: #df7f8b;
 }
 
 :root[data-palette='royal'][data-color-mode='dark'] {
@@ -170,4 +188,6 @@
   --color-focus: #d4c4fb;
   --color-shell: #161022;
   --color-panel: #241a3a;
+  --color-status-open: #96c7a2;
+  --color-status-closed: #e58d9a;
 }

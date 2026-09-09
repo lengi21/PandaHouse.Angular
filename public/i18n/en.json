@@ -57,6 +57,10 @@
       "DARK": "Dark",
       "LANGUAGE": "Language",
       "ADMIN_LOGIN": "Admin login"
+    },
+    "STATUS": {
+      "OPEN": "Restaurant is open",
+      "CLOSED": "Restaurant is closed"
     }
   },
   "CART": {

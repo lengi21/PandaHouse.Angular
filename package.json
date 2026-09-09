@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "start:mobile": "ng serve --configuration mobile --host 0.0.0.0 --port 4201 --allowed-hosts --proxy-config proxy.mobile.conf.json"
   },
   "private": true,
   "packageManager": "pnpm@11.23.0",

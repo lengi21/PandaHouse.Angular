@@ -1,8 +1,10 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, output } from '@angular/core';
+import { Component, computed, DestroyRef, inject, output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
+import { CustomerMenuStore } from '../../features/customer/menu/customer-menu.store';
+import { isRestaurantOpen } from '../../shared/utils/restaurant-opening-state';
 
 @Component({
   selector: 'app-customer-navigation',
@@ -65,7 +67,18 @@ import { MatIcon } from '@angular/material/icon';
       overflow: hidden;
       padding: 0;
       background: #eff5d6;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
       cursor: pointer;
+    }
+
+    .brand.is-open {
+      border-color: var(--color-status-open);
+      box-shadow: 0 0 0 .1rem color-mix(in srgb, var(--color-status-open) 35%, transparent), 0 .35rem .8rem rgb(0 0 0 / 28%);
+    }
+
+    .brand.is-closed {
+      border-color: var(--color-status-closed);
+      box-shadow: 0 0 0 .1rem color-mix(in srgb, var(--color-status-closed) 35%, transparent), 0 .35rem .8rem rgb(0 0 0 / 28%);
     }
 
     .brand img {
@@ -81,12 +94,38 @@ import { MatIcon } from '@angular/material/icon';
     <nav [attr.aria-label]="'NAVIGATION.LABEL' | translate">
       <a routerLink="/categories" routerLinkActive="active"><mat-icon aria-hidden="true">home</mat-icon>{{ 'NAVIGATION.CATEGORIES' | translate }}</a>
       <a routerLink="/menu" routerLinkActive="active"><mat-icon aria-hidden="true">restaurant_menu</mat-icon>{{ 'NAVIGATION.MENU' | translate }}</a>
-      <div class="brand-slot"><button class="brand" type="button" [attr.aria-label]="'CUSTOMER.APPEARANCE.OPEN' | translate" (click)="appearanceRequested.emit()"><img ngSrc="/brand/panda-house-logo-112.jpeg" width="56" height="56" alt="" /></button></div>
+      <div class="brand-slot">
+        <button
+          class="brand"
+          [class.is-open]="openingState() === 'open'"
+          [class.is-closed]="openingState() === 'closed'"
+          type="button"
+          [attr.aria-label]="(openingState() === 'open' ? 'CUSTOMER.STATUS.OPEN' : openingState() === 'closed' ? 'CUSTOMER.STATUS.CLOSED' : 'CUSTOMER.APPEARANCE.OPEN') | translate"
+          (click)="appearanceRequested.emit()"
+        ><img ngSrc="/brand/panda-house-logo-112.jpeg" width="56" height="56" alt="" /></button>
+      </div>
       <a routerLink="/info" routerLinkActive="active"><mat-icon aria-hidden="true">info</mat-icon>{{ 'NAVIGATION.INFO' | translate }}</a>
       <a routerLink="/cart" routerLinkActive="active"><mat-icon aria-hidden="true">shopping_cart</mat-icon>{{ 'NAVIGATION.CART' | translate }}</a>
     </nav>
   `,
 })
 export class CustomerNavigation {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly menuStore = inject(CustomerMenuStore);
+  private readonly now = signal(new Date());
   readonly appearanceRequested = output<void>();
+  protected readonly openingState = computed<'open' | 'closed' | 'unknown'>(() => {
+    const restaurant = this.menuStore.restaurant();
+
+    if (!restaurant) {
+      return 'unknown';
+    }
+
+    return isRestaurantOpen(restaurant.openingHours, this.now()) ? 'open' : 'closed';
+  });
+
+  constructor() {
+    const clock = setInterval(() => this.now.set(new Date()), 60_000);
+    this.destroyRef.onDestroy(() => clearInterval(clock));
+  }
 }
