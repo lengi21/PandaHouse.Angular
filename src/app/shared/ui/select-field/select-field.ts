@@ -11,14 +11,16 @@ export interface SelectOption {
   imports: [MatIcon],
   styles: `
     :host {
-      display: inline-block;
+      display: block;
+      inline-size: 100%;
+      min-inline-size: 0;
     }
 
-    label { display: grid; }
-    .control { position: relative; display: grid; }
+    label, .control { display: grid; inline-size: 100%; }
+    .control { position: relative; }
 
     select {
-      inline-size: 100%; min-inline-size: 10rem; max-inline-size: 14rem;
+      inline-size: 100%; min-inline-size: 0;
       min-block-size: 2.7rem;
       appearance: none;
       border: 1px solid color-mix(in srgb, var(--color-text) 14%, transparent);

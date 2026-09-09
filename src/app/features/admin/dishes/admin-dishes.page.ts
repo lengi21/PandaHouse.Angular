@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { LanguageService } from '../../../core/i18n/language.service';
@@ -16,7 +16,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
 
 @Component({
   selector: 'app-admin-dishes-page',
-  imports: [CdkDrag, CdkDropList, DishEditorDialog, MatIcon, PageSkeleton, Pagination, Price, SearchField, SelectField, TranslatePipe],
+  imports: [CdkDrag, CdkDragHandle, CdkDragPreview, CdkDropList, DishEditorDialog, MatIcon, PageSkeleton, Pagination, Price, SearchField, SelectField, TranslatePipe],
   providers: [AdminDishesStore],
   styles: `
     main { max-inline-size: 90rem; margin: 0 auto; padding: clamp(1rem, 3vw, 2.5rem); }
@@ -41,7 +41,9 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
     .order { color: var(--color-muted-text); font-size: .66rem; }
     .badge { display: inline-flex; padding: .23rem .45rem; border-radius: 2rem; background: color-mix(in srgb, #55bd77 18%, transparent); color: #16733c; font-size: .62rem; font-weight: 700; }
     .badge.paused { background: color-mix(in srgb, #d77354 18%, transparent); color: #a13d28; }
-    .actions { display: flex; align-items: center; gap: .25rem; }
+    .actions { display: grid; inline-size: 100%; gap: .45rem; }
+    .actions .drag-handle { inline-size: 100%; margin: 0; }
+    .quick-actions { display: flex; align-items: center; gap: .25rem; }
     .more { display: grid; inline-size: 2rem; block-size: 2rem; place-items: center; border: 0; border-radius: .45rem; background: var(--color-surface); color: var(--color-text); }
     .more.primary { color: var(--color-primary); } .more.danger { color: #b53d35; }
     .more mat-icon { inline-size: 1.1rem; block-size: 1.1rem; font-size: 1.1rem; }
@@ -60,7 +62,8 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
       td:not(:first-child)::before { color: var(--color-muted-text); content: attr(data-label); font-size: .66rem; font-weight: 700; }
       td:last-child { grid-column: 1 / -1; grid-row: auto; padding-block-start: .55rem; border-block-start: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
       td:last-child::before { display: none; }
-      .actions { flex-wrap: wrap; justify-content: start; }
+      .quick-actions { flex-wrap: wrap; justify-content: start; }
+      tr[cdkDrag] { touch-action: pan-y; }
     }
   `,
   template: `
@@ -83,14 +86,29 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
         <div class="table-wrap">
           <table>
             <thead><tr><th>{{ 'ADMIN.DISHES.DISH' | translate }}</th><th>{{ 'ADMIN.DISHES.CATEGORY' | translate }}</th><th>{{ 'ADMIN.DISHES.PRICE' | translate }}</th><th>{{ 'ADMIN.DISHES.STATUS' | translate }}</th><th>{{ 'ADMIN.DISHES.ACTIONS' | translate }}</th></tr></thead>
-            <tbody cdkDropList [cdkDropListData]="store.dishes()" [cdkDropListDisabled]="store.categoryId() === 'all'" (cdkDropListDropped)="drop($event)">
+            <tbody cdkDropList [cdkDropListData]="store.dishes()" [cdkDropListSortPredicate]="canSortWithinCategory" (cdkDropListDropped)="drop($event)">
               @for (summary of store.dishes(); track summary.dish.id) {
                 <tr cdkDrag [cdkDragData]="summary">
+                  <ng-template cdkDragPreview>
+                    <article class="admin-dish-drag-preview">
+                      @if (summary.dish.image; as image) {
+                        <img [alt]="''" [src]="image.url" />
+                      } @else {
+                        <span class="preview-placeholder" aria-hidden="true"></span>
+                      }
+                      <div class="preview-details">
+                        <strong>{{ name(summary.dish.translations) }}</strong>
+                        <small>{{ name(summary.category.translations) }} · #{{ summary.dish.sortOrder }}</small>
+                        <span class="preview-status" [class.paused]="!summary.dish.isPublished || !summary.dish.isAvailable">{{ (summary.dish.isPublished && summary.dish.isAvailable ? 'ADMIN.DISHES.ACTIVE' : 'ADMIN.DISHES.PAUSED') | translate }}</span>
+                      </div>
+                      <app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" />
+                    </article>
+                  </ng-template>
                   <td data-label="Dish"><div class="dish">@if (summary.dish.image; as image) { <img [alt]="''" [src]="image.url" loading="lazy" /> } @else { <span class="placeholder" aria-hidden="true"></span> }<span><span class="dish-name">{{ name(summary.dish.translations) }}</span><br /><span class="order">#{{ summary.dish.sortOrder }}</span></span></div></td>
                   <td data-label="Category">{{ name(summary.category.translations) }}</td>
                   <td data-label="Price"><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></td>
                   <td data-label="Status"><span class="badge" [class.paused]="!summary.dish.isPublished || !summary.dish.isAvailable">{{ (summary.dish.isPublished && summary.dish.isAvailable ? 'ADMIN.DISHES.ACTIVE' : 'ADMIN.DISHES.PAUSED') | translate }}</span></td>
-                  <td data-label="Actions"><div class="actions"><button class="more primary" type="button" [attr.aria-label]="(summary.dish.isAvailable ? 'ADMIN.DISHES.PAUSE' : 'ADMIN.DISHES.RESUME') | translate" (click)="toggleAvailability(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isAvailable ? 'pause_circle' : 'play_circle' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="(summary.dish.isPublished ? 'ADMIN.DISHES.HIDE' : 'ADMIN.DISHES.SHOW') | translate" (click)="togglePublication(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isPublished ? 'visibility_off' : 'visibility' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="'ADMIN.DISHES.EDIT' | translate" (click)="openEditor(summary)"><mat-icon aria-hidden="true">edit</mat-icon></button><button class="more danger" type="button" [attr.aria-label]="'ADMIN.DISHES.REMOVE' | translate" (click)="remove(summary)"><mat-icon aria-hidden="true">delete</mat-icon></button></div></td>
+                  <td data-label="Actions"><div class="actions"><button class="drag-handle" type="button" cdkDragHandle [attr.aria-label]="'ADMIN.DISHES.DRAG_TO_REORDER' | translate"><mat-icon aria-hidden="true">drag_indicator</mat-icon><span>{{ 'ADMIN.DISHES.REORDER' | translate }}</span></button><div class="quick-actions"><button class="more primary" type="button" [attr.aria-label]="(summary.dish.isAvailable ? 'ADMIN.DISHES.PAUSE' : 'ADMIN.DISHES.RESUME') | translate" (click)="toggleAvailability(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isAvailable ? 'pause_circle' : 'play_circle' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="(summary.dish.isPublished ? 'ADMIN.DISHES.HIDE' : 'ADMIN.DISHES.SHOW') | translate" (click)="togglePublication(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isPublished ? 'visibility_off' : 'visibility' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="'ADMIN.DISHES.EDIT' | translate" (click)="openEditor(summary)"><mat-icon aria-hidden="true">edit</mat-icon></button><button class="more danger" type="button" [attr.aria-label]="'ADMIN.DISHES.REMOVE' | translate" (click)="remove(summary)"><mat-icon aria-hidden="true">delete</mat-icon></button></div></div></td>
                 </tr>
               } @empty { <tr><td class="state" colspan="5">{{ 'ADMIN.DISHES.EMPTY' | translate }}</td></tr> }
             </tbody>
@@ -121,7 +139,10 @@ export class AdminDishesPage {
   protected readonly saving = signal(false);
   protected readonly saveFailed = signal(false);
 
-  constructor() { this.store.load(); }
+  constructor() {
+    this.store.load();
+    void this.store.ensureCategories();
+  }
 
   protected openEditor(dish: AdminDishSummary | null = null): void {
     void this.store.ensureCategories().then(() => {
@@ -146,6 +167,12 @@ export class AdminDishesPage {
   protected drop(event: CdkDragDrop<readonly AdminDishSummary[]>): void {
     void this.store.reorderVisibleDishes(event.previousIndex, event.currentIndex);
   }
+
+  protected readonly canSortWithinCategory = (
+    index: number,
+    drag: CdkDrag<AdminDishSummary>,
+    dropList: CdkDropList<readonly AdminDishSummary[]>,
+  ): boolean => drag.data.category.id === dropList.data[index]?.category.id;
 
   protected toggleAvailability(summary: AdminDishSummary): void { void this.store.setDishStatus(summary, { isAvailable: !summary.dish.isAvailable, isPublished: summary.dish.isPublished }); }
   protected togglePublication(summary: AdminDishSummary): void { void this.store.setDishStatus(summary, { isAvailable: summary.dish.isAvailable, isPublished: !summary.dish.isPublished }); }

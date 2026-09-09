@@ -20,6 +20,7 @@ export class AdminDishesStore {
   private readonly pageState = signal(1);
   private readonly totalItemsState = signal(0);
   private readonly errorState = signal(false);
+  private categoriesRequest: Promise<void> | null = null;
 
   readonly loading = this.loadingState.asReadonly();
   readonly query = this.queryState.asReadonly();
@@ -60,8 +61,14 @@ export class AdminDishesStore {
       return Promise.resolve();
     }
 
-    return this.requests.run(() => this.repository.getCategories(DEFAULT_RESTAURANT_ID))
-      .then((items) => this.categoryList.set(items.map(({ category }) => category)));
+    if (!this.categoriesRequest) {
+      this.categoriesRequest = this.requests
+        .run(() => this.repository.getCategories(DEFAULT_RESTAURANT_ID))
+        .then((items) => this.categoryList.set(items.map(({ category }) => category)))
+        .finally(() => this.categoriesRequest = null);
+    }
+
+    return this.categoriesRequest;
   }
 
   create(draft: DishDraft): Promise<Dish> { return this.requests.run(() => this.repository.createDish(DEFAULT_RESTAURANT_ID, draft), { action: true, successKey: 'ADMIN.FEEDBACK.SAVED' }).then((dish) => { this.resetAndLoad(); return dish; }); }

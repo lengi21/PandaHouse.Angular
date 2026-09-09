@@ -30,7 +30,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
     .state { display: grid; min-block-size: 16rem; place-items: center; border: 1px dashed color-mix(in srgb, var(--color-text) 20%, transparent); border-radius: .85rem; color: var(--color-muted-text); font-size: .83rem; }
     @media (max-width: 78rem) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 58rem) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 38rem) { main { padding: 1rem; } .heading { align-items: stretch; flex-direction: column; } .add { justify-content: center; } .summary { align-items: start; flex-direction: column; gap: .3rem; } .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 38rem) { main { padding: 1rem; } .heading { align-items: stretch; flex-direction: column; } .add { justify-content: center; } .summary { align-items: start; flex-direction: column; gap: .3rem; } .grid { grid-template-columns: 1fr; } app-admin-category-tile[cdkDrag] { touch-action: pan-y; } }
   `,
   template: `
     <main>
@@ -49,7 +49,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
         <div class="summary"><span>{{ store.categories().length }} {{ 'ADMIN.CATEGORIES.TOTAL' | translate }}</span><span>{{ 'ADMIN.CATEGORIES.ORDER_NOTE' | translate }}</span></div>
         <div class="grid" cdkDropList cdkDropListOrientation="mixed" [cdkDropListData]="store.categories()" (cdkDropListDropped)="drop($event)">
           @for (summary of store.categories(); track summary.category.id) {
-            <app-admin-category-tile cdkDrag [cdkDragData]="summary" [language]="languageService.currentLanguage()" [summary]="summary" (editRequested)="openEditor(summary.category)" (moveRequested)="move(summary.category.id, $event)" (visibilityRequested)="toggleVisibility(summary.category)" />
+            <app-admin-category-tile cdkDrag [cdkDragData]="summary" [language]="languageService.currentLanguage()" [summary]="summary" (editRequested)="openEditor(summary.category)" (visibilityRequested)="toggleVisibility(summary.category)" />
           }
         </div>
       }
@@ -92,10 +92,6 @@ export class AdminCategoriesPage {
       .then(() => this.editorOpen.set(false))
       .catch(() => this.saveFailed.set(true))
       .finally(() => this.saving.set(false));
-  }
-
-  protected move(categoryId: string, direction: -1 | 1): void {
-    void this.store.move(categoryId, direction);
   }
 
   protected toggleVisibility(category: Category): void {

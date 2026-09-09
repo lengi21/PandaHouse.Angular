@@ -48,14 +48,15 @@ import { ToastContainer } from '../../shared/ui/toast-container/toast-container'
     @media (max-width: 52rem) {
       .layout { grid-template-columns: 1fr; }
       aside { position: sticky; z-index: 20; inset-block-start: 0; block-size: auto; padding: .55rem max(1rem, env(safe-area-inset-left)); box-shadow: 0 .35rem 1rem rgb(0 0 0 / 18%); }
-      .brand { padding: 0 .15rem .5rem; }
-      nav { display: flex; gap: .35rem; overflow-x: auto; padding-block-end: .1rem; scrollbar-width: none; }
-      nav::-webkit-scrollbar { display: none; }
-      nav a { flex: 0 0 auto; min-block-size: 2.3rem; padding-inline: .65rem; }
+      .brand { padding: 0; }
+      nav { position: fixed; z-index: 30; inset: auto .6rem max(.6rem, env(safe-area-inset-bottom)); grid-template-columns: repeat(5, minmax(0, 1fr)); max-inline-size: 38rem; margin: 0 auto; padding: .35rem; border: 1px solid rgb(255 255 255 / 14%); border-radius: 1rem; background: var(--color-shell); box-shadow: 0 .7rem 1.6rem rgb(0 0 0 / 30%); }
+      nav a { display: grid; min-inline-size: 0; min-block-size: 3.65rem; place-items: center; gap: .18rem; padding: .35rem .15rem; border-radius: .7rem; font-size: .57rem; line-height: 1.1; text-align: center; overflow-wrap: anywhere; }
+      nav a mat-icon { inline-size: 1.18rem; block-size: 1.18rem; font-size: 1.18rem; }
       .account { display: none; }
       header { min-block-size: 3.65rem; padding-inline: max(1rem, env(safe-area-inset-left)); }
+      section { padding-block-end: calc(5.2rem + env(safe-area-inset-bottom)); }
     }
-    @media (max-width: 32rem) { .brand span { font-size: .76rem; } .brand img { inline-size: 2.05rem; block-size: 2.05rem; } nav a { inline-size: 2.55rem; justify-content: center; padding: .4rem; font-size: 0; } nav a mat-icon { inline-size: 1.2rem; block-size: 1.2rem; font-size: 1.2rem; } .user { display: block; } header { min-block-size: 3.35rem; } }
+    @media (max-width: 32rem) { .brand span { font-size: .76rem; } .brand img { inline-size: 2.05rem; block-size: 2.05rem; } .user { display: block; } header { min-block-size: 3.35rem; } }
   `,
   template: `
     <div class="layout">

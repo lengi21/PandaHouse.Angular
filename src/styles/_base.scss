@@ -14,3 +14,99 @@ body {
   padding: 0;
   background: var(--color-shell);
 }
+
+button.drag-handle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  min-inline-size: 2.5rem;
+  min-block-size: 2.5rem;
+  margin: -.2rem;
+  padding: .35rem .5rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, transparent);
+  border-radius: .5rem;
+  background: color-mix(in srgb, var(--color-primary) 11%, var(--color-surface));
+  color: var(--color-primary);
+  cursor: grab;
+  font: inherit;
+  font-size: .64rem;
+  font-weight: 700;
+  touch-action: none;
+}
+
+button.drag-handle:active { cursor: grabbing; }
+
+button.drag-handle mat-icon {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  font-size: 1.1rem;
+}
+
+button.drag-handle:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.admin-dish-drag-preview {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .7rem;
+  inline-size: min(24rem, calc(100vw - 2rem));
+  padding: .8rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 34%, transparent);
+  border-radius: .75rem;
+  background: var(--color-panel);
+  box-shadow: 0 .9rem 2rem rgb(0 0 0 / 24%);
+  color: var(--color-text);
+}
+
+.admin-dish-drag-preview img,
+.admin-dish-drag-preview .preview-placeholder {
+  display: block;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: .45rem;
+  background: var(--color-surface);
+  object-fit: cover;
+}
+
+.admin-dish-drag-preview .preview-details {
+  display: grid;
+  min-inline-size: 0;
+  gap: .2rem;
+}
+
+.admin-dish-drag-preview strong {
+  overflow: hidden;
+  font-size: .8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-dish-drag-preview small {
+  overflow: hidden;
+  color: var(--color-muted-text);
+  font-size: .67rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-dish-drag-preview .preview-status {
+  inline-size: fit-content;
+  padding: .2rem .42rem;
+  border-radius: 2rem;
+  background: color-mix(in srgb, #55bd77 18%, transparent);
+  color: #16733c;
+  font-size: .61rem;
+  font-weight: 700;
+}
+
+.admin-dish-drag-preview .preview-status.paused {
+  background: color-mix(in srgb, #d77354 18%, transparent);
+  color: #a13d28;
+}
+
+.admin-dish-drag-preview app-price { font-size: .83rem; font-weight: 700; }
