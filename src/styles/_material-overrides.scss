@@ -5,6 +5,11 @@
 .cdk-overlay-container .admin-context-menu.mdc-menu-surface {
   --mat-menu-container-color: var(--color-panel);
   --mat-menu-container-shape: .9rem;
+  --mat-menu-item-label-text-color: var(--color-text);
+  --mat-menu-item-leading-icon-color: var(--color-primary);
+  --mat-menu-item-trailing-icon-color: var(--color-primary);
+  --mat-menu-item-hover-state-layer-color: color-mix(in srgb, var(--color-primary) 13%, transparent);
+  --mat-menu-item-focus-state-layer-color: color-mix(in srgb, var(--color-primary) 13%, transparent);
   min-inline-size: 14rem;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--color-text) 14%, transparent);
@@ -17,8 +22,17 @@
   box-shadow: 0 .9rem 2.2rem rgb(0 0 0 / 24%);
 }
 
+.cdk-overlay-container .cdk-overlay-pane:has(.admin-context-menu) {
+  --mat-menu-container-color: var(--color-panel);
+  --mat-menu-item-label-text-color: var(--color-text);
+  --mat-menu-item-leading-icon-color: var(--color-primary);
+  --mat-menu-item-trailing-icon-color: var(--color-primary);
+}
+
 .cdk-overlay-container .admin-context-menu .mat-mdc-menu-content,
-.cdk-overlay-container .admin-context-menu .mat-mdc-menu-content.mdc-menu-surface {
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-content.mdc-menu-surface,
+.cdk-overlay-container .admin-context-menu .mdc-menu__surface,
+.cdk-overlay-container .admin-context-menu .mdc-menu-surface {
   padding: .35rem;
   background: var(--color-panel) !important;
   background-color: var(--color-panel) !important;
@@ -32,6 +46,11 @@
   color: var(--color-text) !important;
   font-family: 'FiraGO', system-ui, sans-serif;
   font-size: .78rem;
+}
+
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item .mat-mdc-menu-item-text,
+.cdk-overlay-container .admin-context-menu .mat-mdc-menu-item .mdc-list-item__primary-text {
+  color: var(--color-text) !important;
 }
 
 .cdk-overlay-container .admin-context-menu .mat-mdc-menu-item:hover,
