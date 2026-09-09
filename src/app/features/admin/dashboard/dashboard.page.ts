@@ -7,10 +7,11 @@ import { Price } from '../../../shared/ui/price/price';
 import { getTranslation } from '../../../shared/utils/get-translation';
 import { AdminDashboardStore } from './admin-dashboard.store';
 import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
+import { AppImage } from '../../../shared/ui/app-image/app-image';
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [MatIcon, PageSkeleton, Price, RouterLink, TranslatePipe],
+  imports: [AppImage, MatIcon, PageSkeleton, Price, RouterLink, TranslatePipe],
   providers: [AdminDashboardStore],
   styles: `
     main { max-inline-size: 90rem; margin: 0 auto; padding: clamp(1rem, 3vw, 2.5rem); }
@@ -27,13 +28,13 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
     .view-all { color: var(--color-primary); font-size: .72rem; font-weight: 700; text-decoration: none; }
     .recent { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .75rem; }
     article { overflow: hidden; border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent); border-radius: .7rem; background: var(--color-panel); }
-    article img, .image-placeholder { display: block; inline-size: 100%; block-size: 6rem; object-fit: cover; background: var(--color-surface); }
+    article app-image, .image-placeholder { display: block; inline-size: 100%; block-size: 6rem; background: var(--color-surface); }
     article div { padding: .65rem; }
     article strong { display: block; overflow: hidden; font-size: .74rem; text-overflow: ellipsis; white-space: nowrap; }
     article span { color: var(--color-muted-text); font-size: .67rem; }
     .state { display: grid; min-block-size: 16rem; place-items: center; color: var(--color-muted-text); }
     @media (max-width: 70rem) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .recent { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (max-width: 32rem) { main { padding: 1rem; } .stats { gap: .65rem; } .stat { padding: .8rem; } .stat strong { font-size: 1.25rem; } .recent { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; } article img, .image-placeholder { block-size: 5.25rem; } }
+    @media (max-width: 32rem) { main { padding: 1rem; } .stats { gap: .65rem; } .stat { padding: .8rem; } .stat strong { font-size: 1.25rem; } .recent { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; } article app-image, .image-placeholder { block-size: 5.25rem; } }
   `,
   template: `
     <main>
@@ -47,7 +48,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
           <div class="stat"><mat-icon aria-hidden="true">check_circle</mat-icon><span>{{ 'ADMIN.DASHBOARD.AVAILABLE' | translate }}</span><strong>{{ store.dashboard()!.availableDishCount }}</strong></div>
         </div>
         <section class="section"><div class="section-heading"><h2>{{ 'ADMIN.DASHBOARD.RECENT_DISHES' | translate }}</h2><a class="view-all" routerLink="/admin/dishes">{{ 'ADMIN.DASHBOARD.VIEW_ALL' | translate }}</a></div><div class="recent">
-          @for (summary of store.dashboard()!.recentDishes; track summary.dish.id) { <article>@if (summary.dish.image; as image) { <img [alt]="''" [src]="image.url" loading="lazy" /> } @else { <span class="image-placeholder"></span> }<div><strong>{{ name(summary.dish.translations) }}</strong><span><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></span></div></article> }
+          @for (summary of store.dashboard()!.recentDishes; track summary.dish.id) { <article>@if (summary.dish.image; as image) { <app-image [alt]="''" [src]="image.url" /> } @else { <span class="image-placeholder"></span> }<div><strong>{{ name(summary.dish.translations) }}</strong><span><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></span></div></article> }
         </div></section>
       }
     </main>

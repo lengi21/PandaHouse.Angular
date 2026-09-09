@@ -5,10 +5,11 @@ import { LanguageService } from '../../../core/i18n/language.service';
 import { CustomerMenuStore } from '../menu/customer-menu.store';
 import { RestaurantTranslation } from '../../../shared/models/menu.model';
 import { getTranslation } from '../../../shared/utils/get-translation';
+import { AppImage } from '../../../shared/ui/app-image/app-image';
 
 @Component({
   selector: 'app-restaurant-info-page',
-  imports: [MatIcon, TranslatePipe],
+  imports: [AppImage, MatIcon, TranslatePipe],
   styles: `
     main {
       max-inline-size: 36rem;
@@ -25,7 +26,7 @@ import { getTranslation } from '../../../shared/utils/get-translation';
       border-radius: 1.25rem 1.25rem 0 0;
       background: var(--color-surface);
     }
-    .cover img {
+    .cover app-image {
       inline-size: 100%;
       block-size: 12rem;
       object-fit: cover;
@@ -124,9 +125,10 @@ import { getTranslation } from '../../../shared/utils/get-translation';
         <section>
           @if (restaurant.coverImage; as image) {
             <div class="cover">
-              <img
+              <app-image
                 [alt]="restaurantName()"
                 [height]="image.height"
+                loading="eager"
                 [src]="image.url"
                 [width]="image.width"
               />

@@ -5,17 +5,18 @@ import { Dish } from '../../models/menu.model';
 import { Price } from '../../ui/price/price';
 import { QuantityControl } from '../../ui/quantity-control/quantity-control';
 import { getTranslation } from '../../utils/get-translation';
+import { AppImage } from '../../ui/app-image/app-image';
 
 @Component({
   selector: 'app-cart-line-item',
-  imports: [MatIcon, Price, QuantityControl],
+  imports: [AppImage, MatIcon, Price, QuantityControl],
   styles: `
     .swipe-area { position: relative; overflow: hidden; border-radius: 1rem; touch-action: pan-y; }
     .swipe-remove { position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-end; gap: .4rem; padding-inline-end: 1rem; background: #c93d3d; color: #fff; font-size: .78rem; font-weight: 700; }
     .swipe-remove mat-icon { inline-size: 1.15rem; block-size: 1.15rem; font-size: 1.15rem; }
     article { position: relative; display: grid; grid-template-columns: 5rem minmax(0, 1fr) 2.5rem; gap: .75rem; align-items: center; padding: .7rem; border-radius: 1rem; background: var(--color-surface); transition: transform .18s ease-out; }
     article.dragging { transition: none; }
-    img, .placeholder { inline-size: 5rem; block-size: 5rem; border-radius: .75rem; object-fit: cover; }
+    app-image, .placeholder { inline-size: 5rem; block-size: 5rem; border-radius: .75rem; }
     .placeholder { display: grid; place-items: center; background: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface)); }
     .placeholder mat-icon { inline-size: 1.5rem; block-size: 1.5rem; font-size: 1.5rem; }
     h2, p { margin: 0; } h2 { font-size: .95rem; line-height: 1.25; } p { margin-block-start: .25rem; color: var(--color-muted-text); font-size: .78rem; }
@@ -24,13 +25,13 @@ import { getTranslation } from '../../utils/get-translation';
     .remove { display: grid; inline-size: 2.5rem; block-size: 2.5rem; place-items: center; border: 0; border-radius: .7rem; background: color-mix(in srgb, var(--color-text) 7%, transparent); color: var(--color-text); }
     .remove mat-icon { inline-size: 1.1rem; block-size: 1.1rem; font-size: 1.1rem; }
     .remove:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
-    @media (max-width: 25rem) { article { grid-template-columns: 4rem minmax(0, 1fr) 2.35rem; gap: .55rem; } img, .placeholder { inline-size: 4rem; block-size: 4rem; } .bottom { align-items: flex-start; flex-direction: column; } .control { transform: scale(.9); transform-origin: left; } }
+    @media (max-width: 25rem) { article { grid-template-columns: 4rem minmax(0, 1fr) 2.35rem; gap: .55rem; } app-image, .placeholder { inline-size: 4rem; block-size: 4rem; } .bottom { align-items: flex-start; flex-direction: column; } .control { transform: scale(.9); transform-origin: left; } }
   `,
   template: `
     <div class="swipe-area">
       <div aria-hidden="true" class="swipe-remove"><mat-icon>delete</mat-icon>{{ removeLabel() }}</div>
       <article [class.dragging]="isDragging()" [style.transform]="'translateX(' + swipeOffset() + 'px)'" (pointerdown)="startSwipe($event)" (pointermove)="continueSwipe($event)" (pointercancel)="finishSwipe($event)" (pointerup)="finishSwipe($event)">
-        @if (dish().image; as image) { <img [alt]="name()" [height]="image.height" [src]="image.url" [width]="image.width" loading="lazy" /> } @else { <span aria-hidden="true" class="placeholder"><mat-icon>restaurant</mat-icon></span> }
+        @if (dish().image; as image) { <app-image [alt]="name()" [height]="image.height" [src]="image.url" [width]="image.width" /> } @else { <span aria-hidden="true" class="placeholder"><mat-icon>restaurant</mat-icon></span> }
         <div>
           <h2>{{ name() }}</h2>
           <p>{{ description() }}</p>

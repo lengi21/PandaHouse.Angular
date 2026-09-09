@@ -4,10 +4,11 @@ import { LanguageCode } from '../../models/language.model';
 import { Category } from '../../models/menu.model';
 import { getTranslation } from '../../utils/get-translation';
 import { responsiveImageSrcset } from '../../utils/responsive-image';
+import { AppImage } from '../../ui/app-image/app-image';
 
 @Component({
   selector: 'app-category-card',
-  imports: [RouterLink],
+  imports: [AppImage, RouterLink],
   styles: `
     :host {
       display: block;
@@ -37,7 +38,7 @@ import { responsiveImageSrcset } from '../../utils/responsive-image';
       content: '';
     }
 
-    img {
+    app-image {
       position: absolute;
       z-index: -1;
       inline-size: 100%;
@@ -70,15 +71,14 @@ import { responsiveImageSrcset } from '../../utils/responsive-image';
       [routerLink]="['/menu']"
     >
       @if (category().image; as image) {
-        <img
+        <app-image
           [alt]="''"
-          [attr.fetchpriority]="priority() ? 'high' : null"
-          [attr.loading]="priority() ? 'eager' : 'lazy'"
-          [attr.srcset]="srcset()"
-          decoding="async"
+          [loading]="priority() ? 'eager' : 'lazy'"
           [height]="image.height"
+          [priority]="priority()"
           sizes="(max-width: 36rem) calc(100vw - 2rem), 34rem"
           [src]="image.url"
+          [srcset]="srcset()"
           [width]="image.width"
         />
       }

@@ -6,16 +6,17 @@ import { Price } from '../../ui/price/price';
 import { QuantityControl } from '../../ui/quantity-control/quantity-control';
 import { BottomSheet } from '../../ui/bottom-sheet/bottom-sheet';
 import { getTranslation } from '../../utils/get-translation';
+import { AppImage } from '../../ui/app-image/app-image';
 
 @Component({
   selector: 'app-dish-details-sheet',
-  imports: [BottomSheet, MatIcon, Price, QuantityControl],
+  imports: [AppImage, BottomSheet, MatIcon, Price, QuantityControl],
   styles: `
     .handle { inline-size: 2.5rem; block-size: .28rem; margin: 0 auto .9rem; border-radius: 999px; background: color-mix(in srgb, var(--color-text) 20%, transparent); }
     .close { position: absolute; inset: .75rem .75rem auto auto; display: grid; inline-size: 2.5rem; block-size: 2.5rem; place-items: center; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--color-text) 8%, transparent); color: var(--color-text); }
     .close mat-icon { inline-size: 1.25rem; block-size: 1.25rem; font-size: 1.25rem; }
     .close:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
-    img { inline-size: 100%; max-block-size: 13rem; border-radius: 1rem; object-fit: cover; }
+    app-image { inline-size: 100%; max-block-size: 13rem; block-size: 13rem; border-radius: 1rem; }
     h2, h3, p { margin: 0; } h2 { margin-block-start: 1rem; padding-inline-end: 3rem; font-size: 1.3rem; } h3 { font-size: .9rem; }
     .description { margin-block-start: .35rem; color: var(--color-muted-text); line-height: 1.45; }
     .facts { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-block-start: 1rem; padding: .8rem 0; border-block: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent); font-weight: 800; }
@@ -27,7 +28,7 @@ import { getTranslation } from '../../utils/get-translation';
     <app-bottom-sheet [ariaLabel]="name()" (closed)="closed.emit()">
       <div aria-hidden="true" class="handle"></div>
       <button class="close" type="button" [attr.aria-label]="closeLabel()" (click)="closed.emit()"><mat-icon aria-hidden="true">close</mat-icon></button>
-      @if (dish().image; as image) { <img [alt]="name()" [height]="image.height" [src]="image.url" [width]="image.width" /> }
+      @if (dish().image; as image) { <app-image [alt]="name()" [height]="image.height" loading="eager" [src]="image.url" [width]="image.width" /> }
       <h2>{{ name() }}</h2>
       <p class="description">{{ description() }}</p>
       <div class="facts"><app-price [language]="language()" [money]="dish().price" /> @if (dish().calories; as calories) { <span class="calories"><mat-icon aria-hidden="true">local_fire_department</mat-icon>{{ calories }} {{ caloriesLabel() }}</span> }</div>

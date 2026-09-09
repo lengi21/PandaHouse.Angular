@@ -13,10 +13,11 @@ import { AdminDishSummary, DishDraft } from '../../../shared/models/admin-menu.m
 import { DishEditorDialog } from './dish-editor-dialog';
 import { Pagination } from '../../../shared/ui/pagination/pagination';
 import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
+import { AppImage } from '../../../shared/ui/app-image/app-image';
 
 @Component({
   selector: 'app-admin-dishes-page',
-  imports: [CdkDrag, CdkDragHandle, CdkDragPreview, CdkDropList, DishEditorDialog, MatIcon, PageSkeleton, Pagination, Price, SearchField, SelectField, TranslatePipe],
+  imports: [AppImage, CdkDrag, CdkDragHandle, CdkDragPreview, CdkDropList, DishEditorDialog, MatIcon, PageSkeleton, Pagination, Price, SearchField, SelectField, TranslatePipe],
   providers: [AdminDishesStore],
   styles: `
     main { max-inline-size: 90rem; margin: 0 auto; padding: clamp(1rem, 3vw, 2.5rem); }
@@ -36,7 +37,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
     th { color: var(--color-muted-text); font-size: .65rem; font-weight: 700; }
     tr:last-child td { border-block-end: 0; }
     .dish { display: flex; align-items: center; gap: .65rem; min-inline-size: 13rem; }
-    .dish img, .placeholder { inline-size: 2.5rem; block-size: 2.5rem; border-radius: .45rem; object-fit: cover; background: var(--color-surface); }
+    .dish app-image, .placeholder { inline-size: 2.5rem; block-size: 2.5rem; border-radius: .45rem; background: var(--color-surface); }
     .dish-name { font-weight: 700; }
     .order { color: var(--color-muted-text); font-size: .66rem; }
     .badge { display: inline-flex; padding: .23rem .45rem; border-radius: 2rem; background: color-mix(in srgb, #55bd77 18%, transparent); color: #16733c; font-size: .62rem; font-weight: 700; }
@@ -92,7 +93,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
                   <ng-template cdkDragPreview>
                     <article class="admin-dish-drag-preview">
                       @if (summary.dish.image; as image) {
-                        <img [alt]="''" [src]="image.url" />
+                        <app-image [alt]="''" loading="eager" [src]="image.url" />
                       } @else {
                         <span class="preview-placeholder" aria-hidden="true"></span>
                       }
@@ -104,7 +105,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
                       <app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" />
                     </article>
                   </ng-template>
-                  <td data-label="Dish"><div class="dish">@if (summary.dish.image; as image) { <img [alt]="''" [src]="image.url" loading="lazy" /> } @else { <span class="placeholder" aria-hidden="true"></span> }<span><span class="dish-name">{{ name(summary.dish.translations) }}</span><br /><span class="order">#{{ summary.dish.sortOrder }}</span></span></div></td>
+                  <td data-label="Dish"><div class="dish">@if (summary.dish.image; as image) { <app-image [alt]="''" [src]="image.url" /> } @else { <span class="placeholder" aria-hidden="true"></span> }<span><span class="dish-name">{{ name(summary.dish.translations) }}</span><br /><span class="order">#{{ summary.dish.sortOrder }}</span></span></div></td>
                   <td data-label="Category">{{ name(summary.category.translations) }}</td>
                   <td data-label="Price"><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></td>
                   <td data-label="Status"><span class="badge" [class.paused]="!summary.dish.isPublished || !summary.dish.isAvailable">{{ (summary.dish.isPublished && summary.dish.isAvailable ? 'ADMIN.DISHES.ACTIVE' : 'ADMIN.DISHES.PAUSED') | translate }}</span></td>

@@ -5,14 +5,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AdminCategorySummary } from '../../models/admin-menu.model';
 import { LanguageCode } from '../../models/language.model';
 import { getTranslation } from '../../utils/get-translation';
+import { AppImage } from '../../ui/app-image/app-image';
 
 @Component({
   selector: 'app-admin-category-tile',
-  imports: [CdkDragHandle, MatIcon, TranslatePipe],
+  imports: [AppImage, CdkDragHandle, MatIcon, TranslatePipe],
   styles: `
     :host { display: block; min-inline-size: 0; }
     article { overflow: hidden; border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent); border-radius: .75rem; background: var(--color-panel); box-shadow: 0 .35rem .9rem rgb(0 0 0 / 4%); }
-    img, .image-placeholder { display: block; inline-size: 100%; block-size: 8.8rem; object-fit: cover; background: var(--color-surface); }
+    app-image, .image-placeholder { display: block; inline-size: 100%; block-size: 8.8rem; background: var(--color-surface); }
     .content { display: grid; gap: .42rem; padding: .7rem; }
     .title-row { display: flex; align-items: start; justify-content: space-between; gap: .4rem; }
     h2 { overflow: hidden; margin: 0; font-size: .82rem; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
@@ -31,7 +32,7 @@ import { getTranslation } from '../../utils/get-translation';
   template: `
     <article>
       @if (summary().category.image; as image) {
-        <img [alt]="''" [height]="image.height" [src]="image.url" [width]="image.width" loading="lazy" />
+        <app-image [alt]="''" [height]="image.height" [src]="image.url" [width]="image.width" />
       } @else {
         <div class="image-placeholder" aria-hidden="true"></div>
       }
