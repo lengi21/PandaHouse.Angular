@@ -64,7 +64,7 @@ const paletteOptions: readonly PaletteOption[] = [
           <button class="language" type="button" [attr.aria-pressed]="language.code === languageService.currentLanguage()" (click)="languageService.changeLanguage(language.code)"><img [alt]="''" class="flag" [src]="language.flagUrl" /><span>{{ language.label }}</span>@if (language.code === languageService.currentLanguage()) { <mat-icon aria-label="Selected">check_circle</mat-icon> }</button>
         }
       </div>
-      <button class="admin-login" type="button" (click)="openAdminLogin()"><mat-icon aria-hidden="true">admin_panel_settings</mat-icon>{{ 'CUSTOMER.APPEARANCE.ADMIN_LOGIN' | translate }}</button>
+<!--      <button class="admin-login" type="button" (click)="openAdminLogin()"><mat-icon aria-hidden="true">admin_panel_settings</mat-icon>{{ 'CUSTOMER.APPEARANCE.ADMIN_LOGIN' | translate }}</button>-->
     </app-bottom-sheet>
   `,
 })
