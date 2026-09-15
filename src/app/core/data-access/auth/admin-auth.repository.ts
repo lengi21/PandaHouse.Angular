@@ -4,6 +4,7 @@ import { AdminSession, AdminSignInCredentials } from '../../../shared/models/adm
 
 export interface AdminAuthRepository {
   signIn(credentials: AdminSignInCredentials): Observable<AdminSession>;
+  refresh(refreshToken: string): Observable<AdminSession>;
 }
 
 export const ADMIN_AUTH_REPOSITORY = new InjectionToken<AdminAuthRepository>('ADMIN_AUTH_REPOSITORY');

@@ -5,6 +5,7 @@ export interface AdminSignInCredentials {
 
 export interface AdminSession {
   readonly accessToken: string;
+  readonly refreshToken: string;
   readonly email: string;
   readonly expiresAt: string;
 }

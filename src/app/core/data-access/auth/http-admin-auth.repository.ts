@@ -8,8 +8,10 @@ import { AdminSession, AdminSignInCredentials } from '../../../shared/models/adm
 @Service()
 export class HttpAdminAuthRepository implements AdminAuthRepository {
   private readonly http = inject(HttpClient);
-
   signIn(credentials: AdminSignInCredentials): Observable<AdminSession> {
     return this.http.post<AdminSession>(apiUrl('/api/admin/auth/sign-in'), credentials);
+  }
+  refresh(refreshToken: string): Observable<AdminSession> {
+    return this.http.post<AdminSession>(apiUrl('/api/admin/auth/refresh'), { refreshToken });
   }
 }
