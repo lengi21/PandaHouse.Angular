@@ -13,7 +13,7 @@ import { AppImage } from '../../ui/app-image/app-image';
   styles: `
     :host { display: block; min-inline-size: 0; }
     article { overflow: hidden; border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent); border-radius: .75rem; background: var(--color-panel); box-shadow: 0 .35rem .9rem rgb(0 0 0 / 4%); }
-    app-image, .image-placeholder { display: block; inline-size: 100%; block-size: 8.8rem; background: var(--color-surface); }
+    app-image, .image-placeholder { display: block; inline-size: 100%; block-size: 8.8rem; background: var(--color-surface); }.image-placeholder { display:grid; place-items:center; background:linear-gradient(135deg,color-mix(in srgb,var(--color-primary) 16%,var(--color-surface)),var(--color-surface)); color:var(--color-primary); }.image-placeholder mat-icon{font-size:2rem;inline-size:2rem;block-size:2rem;}
     .content { display: grid; gap: .42rem; padding: .7rem; }
     .title-row { display: flex; align-items: start; justify-content: space-between; gap: .4rem; }
     h2 { overflow: hidden; margin: 0; font-size: .82rem; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
@@ -35,7 +35,7 @@ import { AppImage } from '../../ui/app-image/app-image';
       @if (summary().category.image; as image) {
         <app-image [alt]="''" [height]="image.height" [src]="image.url" [width]="image.width" />
       } @else {
-        <div class="image-placeholder" aria-hidden="true"></div>
+        <div class="image-placeholder" aria-hidden="true"><mat-icon>image</mat-icon></div>
       }
       <div class="content">
         <div class="title-row">

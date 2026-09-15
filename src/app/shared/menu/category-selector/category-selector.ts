@@ -1,4 +1,5 @@
 import { Component, computed, effect, ElementRef, input, output, viewChild } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { LanguageCode } from '../../models/language.model';
 import { CategoryId, MenuCategory } from '../../models/menu.model';
 import { getTranslation } from '../../utils/get-translation';
@@ -6,14 +7,14 @@ import { AppImage } from '../../ui/app-image/app-image';
 
 @Component({
   selector: 'app-category-selector',
-  imports: [AppImage],
+  imports: [AppImage, MatIcon],
   styles: `
     :host { display: block; min-inline-size: 0; }
     nav { display: flex; max-inline-size: 100%; gap: .8rem; overflow-x: auto; overscroll-behavior-inline: contain; padding: .1rem 0 .7rem; scrollbar-width: none; touch-action: pan-x; }
     nav::-webkit-scrollbar { display: none; }
     button { position: relative; display: grid; flex: 0 0 4.15rem; gap: .35rem; border: 0; padding: .15rem 0 .35rem; border-radius: .75rem; background: transparent; color: var(--color-shell-text); font: inherit; font-size: .62rem; text-align: center; }
     app-image, .fallback { inline-size: 3.45rem; block-size: 3.45rem; margin: 0 auto; border: 2px solid transparent; border-radius: 50%; }
-    .fallback { background: var(--color-primary); }
+    .fallback { display:grid; place-items:center; background:color-mix(in srgb,var(--color-primary) 25%,var(--color-surface)); color:var(--color-primary); }.fallback mat-icon{font-size:1.35rem;inline-size:1.35rem;block-size:1.35rem;}
     button.active { background: color-mix(in srgb, var(--color-secondary) 13%, transparent); }
     button.active app-image, button.active .fallback { border-color: var(--color-secondary); box-shadow: 0 0 0 2px var(--color-shell), 0 0 0 3px var(--color-secondary); }
     button.active span { color: var(--color-secondary); font-weight: 800; }
@@ -24,7 +25,7 @@ import { AppImage } from '../../ui/app-image/app-image';
     <nav #carousel [attr.aria-label]="label()">
       @for (menuCategory of orderedCategories(); track menuCategory.category.id) {
         <button type="button" [attr.aria-pressed]="menuCategory.category.id === activeCategoryId()" [class.active]="menuCategory.category.id === activeCategoryId()" [attr.data-category-id]="menuCategory.category.id" (click)="selected.emit(menuCategory.category.id)">
-          @if (menuCategory.category.image; as image) { <app-image [alt]="''" [height]="image.height" [src]="image.url" [width]="image.width" /> } @else { <span class="fallback"></span> }
+          @if (menuCategory.category.image; as image) { <app-image [alt]="''" [height]="image.height" [src]="image.url" [width]="image.width" /> } @else { <span class="fallback"><mat-icon>image</mat-icon></span> }
           <span>{{ categoryName(menuCategory) }}</span>
         </button>
       }

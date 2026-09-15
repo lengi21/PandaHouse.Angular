@@ -1,4 +1,5 @@
 import { Component, computed, input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { LanguageCode } from '../../models/language.model';
 import { Category } from '../../models/menu.model';
@@ -8,7 +9,7 @@ import { AppImage } from '../../ui/app-image/app-image';
 
 @Component({
   selector: 'app-category-card',
-  imports: [AppImage, RouterLink],
+  imports: [AppImage, MatIcon, RouterLink],
   styles: `
     :host {
       display: block;
@@ -46,6 +47,9 @@ import { AppImage } from '../../ui/app-image/app-image';
       object-fit: cover;
     }
 
+    .placeholder { position:absolute; z-index:0; display:grid; place-items:center; inline-size:100%; block-size:100%; background:linear-gradient(135deg,color-mix(in srgb,var(--color-primary) 26%,var(--color-shell)),var(--color-shell)); color:var(--color-on-image); }
+    .placeholder mat-icon { inline-size:2rem; block-size:2rem; font-size:2rem; opacity:.78; }
+
     .name {
       z-index: 2;
       padding: 1rem;
@@ -81,6 +85,8 @@ import { AppImage } from '../../ui/app-image/app-image';
           [srcset]="srcset()"
           [width]="image.width"
         />
+      } @else {
+        <span class="placeholder" aria-hidden="true"><mat-icon>image</mat-icon></span>
       }
       <span class="name">{{ name() }}</span>
     </a>
