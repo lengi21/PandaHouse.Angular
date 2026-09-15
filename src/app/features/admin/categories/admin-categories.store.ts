@@ -45,6 +45,12 @@ export class AdminCategoriesStore {
     });
   }
 
+  delete(categoryId: CategoryId): Promise<void> {
+    return this.requests.run(() => this.repository.deleteCategory(DEFAULT_RESTAURANT_ID, categoryId), { action: true, successKey: 'ADMIN.FEEDBACK.SAVED' }).then(() => {
+      this.loadFresh();
+    });
+  }
+
   move(categoryId: CategoryId, direction: -1 | 1): Promise<void> {
     const categoryIds = this.categoryList().map(({ category }) => category.id);
     const currentIndex = categoryIds.indexOf(categoryId);

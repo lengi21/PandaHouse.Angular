@@ -49,7 +49,7 @@ import { PageSkeleton } from '../../../shared/ui/page-skeleton/page-skeleton';
         <div class="summary"><span>{{ store.categories().length }} {{ 'ADMIN.CATEGORIES.TOTAL' | translate }}</span><span>{{ 'ADMIN.CATEGORIES.ORDER_NOTE' | translate }}</span></div>
         <div class="grid" cdkDropList cdkDropListOrientation="mixed" [cdkDropListData]="store.categories()" (cdkDropListDropped)="drop($event)">
           @for (summary of store.categories(); track summary.category.id) {
-            <app-admin-category-tile cdkDrag [cdkDragData]="summary" [language]="languageService.currentLanguage()" [summary]="summary" (editRequested)="openEditor(summary.category)" (visibilityRequested)="toggleVisibility(summary.category)" />
+            <app-admin-category-tile cdkDrag [cdkDragData]="summary" [language]="languageService.currentLanguage()" [summary]="summary" (editRequested)="openEditor(summary.category)" (visibilityRequested)="toggleVisibility(summary.category)" (deleteRequested)="deleteCategory(summary.category)" />
           }
         </div>
       }
@@ -100,6 +100,10 @@ export class AdminCategoriesPage {
       isVisible: !category.isVisible,
       translations: category.translations,
     });
+  }
+
+  protected deleteCategory(category: Category): void {
+    void this.store.delete(category.id);
   }
 
   protected drop(event: CdkDragDrop<readonly AdminCategorySummary[]>): void {

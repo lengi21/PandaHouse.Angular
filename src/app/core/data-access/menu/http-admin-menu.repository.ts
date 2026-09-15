@@ -22,6 +22,10 @@ export class HttpAdminMenuRepository implements AdminMenuRepository {
     return firstValueFrom(this.http.post<Category>(apiUrl(`/api/admin/restaurants/${restaurantId}/categories/${categoryId}`), draft));
   }
 
+  async deleteCategory(restaurantId: RestaurantId, categoryId: CategoryId): Promise<void> {
+    await firstValueFrom(this.http.post<void>(apiUrl(`/api/admin/restaurants/${restaurantId}/categories/${categoryId}/delete`), {}));
+  }
+
   async reorderCategories(restaurantId: RestaurantId, categoryIds: readonly CategoryId[]): Promise<void> {
     await firstValueFrom(this.http.post<void>(apiUrl(`/api/admin/restaurants/${restaurantId}/categories/order`), { categoryIds }));
   }

@@ -82,6 +82,16 @@ export class MockAdminMenuRepository implements AdminMenuRepository {
     );
   }
 
+  deleteCategory(restaurantId: RestaurantId, categoryId: CategoryId): Promise<void> {
+    return firstValueFrom(
+      this.http.post<{}, void>(apiUrl(`/api/admin/restaurants/${restaurantId}/categories/${categoryId}/delete`), {}, () => {
+        this.assertRestaurant(restaurantId);
+        if (!pandaHouseMenu.categories.some((item) => item.category.id === categoryId)) throw new Error(`Category "${categoryId}" was not found.`);
+        replaceMockMenuCategories(pandaHouseMenu.categories.filter((item) => item.category.id !== categoryId));
+      }),
+    );
+  }
+
   reorderCategories(restaurantId: RestaurantId, categoryIds: readonly CategoryId[]): Promise<void> {
     return firstValueFrom(
       this.http.post(apiUrl(`/api/admin/restaurants/${restaurantId}/categories/order`), { categoryIds }, (request) => {

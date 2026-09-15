@@ -6,6 +6,7 @@ export interface AdminMenuRepository {
   getCategories(restaurantId: RestaurantId): Promise<readonly AdminCategorySummary[]>;
   createCategory(restaurantId: RestaurantId, draft: CategoryDraft): Promise<Category>;
   updateCategory(restaurantId: RestaurantId, categoryId: CategoryId, draft: CategoryDraft): Promise<Category>;
+  deleteCategory(restaurantId: RestaurantId, categoryId: CategoryId): Promise<void>;
   reorderCategories(restaurantId: RestaurantId, categoryIds: readonly CategoryId[]): Promise<void>;
   getDishes(restaurantId: RestaurantId, request: AdminDishListRequest): Promise<PageResult<AdminDishSummary>>;
   createDish(restaurantId: RestaurantId, draft: DishDraft): Promise<Dish>;

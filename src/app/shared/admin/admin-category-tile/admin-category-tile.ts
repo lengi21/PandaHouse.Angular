@@ -23,6 +23,7 @@ import { AppImage } from '../../ui/app-image/app-image';
     .quick-actions { display: flex; gap: .35rem; }
     .quick-actions button { display: inline-grid; flex: 1; min-block-size: 2rem; place-items: center; border: 0; border-radius: .45rem; background: var(--color-surface); color: var(--color-text); }
     .quick-actions button:first-child { color: var(--color-primary); }
+    .quick-actions button.delete { color: #b33131; }
     .quick-actions mat-icon { inline-size: 1.05rem; block-size: 1.05rem; font-size: 1.05rem; }
     .reorder { inline-size: 100%; margin: 0; }
     .meta { display: flex; align-items: center; justify-content: space-between; gap: .35rem; color: var(--color-muted-text); font-size: .67rem; }
@@ -49,6 +50,7 @@ import { AppImage } from '../../ui/app-image/app-image';
         <div class="quick-actions">
           <button type="button" [attr.aria-label]="'ADMIN.CATEGORIES.EDIT' | translate" (click)="editRequested.emit()"><mat-icon aria-hidden="true">edit</mat-icon></button>
           <button type="button" [attr.aria-label]="(summary().category.isVisible ? 'ADMIN.CATEGORIES.HIDE' : 'ADMIN.CATEGORIES.SHOW') | translate" (click)="visibilityRequested.emit()"><mat-icon aria-hidden="true">{{ summary().category.isVisible ? 'visibility_off' : 'visibility' }}</mat-icon></button>
+          <button class="delete" type="button" aria-label="Delete category" (click)="deleteRequested.emit()"><mat-icon aria-hidden="true">delete</mat-icon></button>
         </div>
       </div>
     </article>
@@ -59,6 +61,7 @@ export class AdminCategoryTile {
   readonly language = input.required<LanguageCode>();
   readonly editRequested = output<void>();
   readonly visibilityRequested = output<void>();
+  readonly deleteRequested = output<void>();
   protected readonly name = computed(
     () => getTranslation(this.summary().category.translations, this.language())?.name ?? '',
   );
