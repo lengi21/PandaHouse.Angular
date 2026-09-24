@@ -18,7 +18,7 @@ export class Price {
   readonly formattedPrice = computed(() => {
     const { amountMinor, currency } = this.money();
     const amount = new Intl.NumberFormat(localeByLanguage[this.language()] ?? 'en-US', {
-      maximumFractionDigits: 0,
+      maximumFractionDigits: 2,
       minimumFractionDigits: 0,
     }).format(amountMinor / 100);
     return currency === 'GEL' ? `${amount} ₾` : amount;

@@ -8,10 +8,11 @@ import { SelectInput } from '../../../shared/ui/select-input/select-input';
 import { TextInput } from '../../../shared/ui/text-input/text-input';
 import { getTranslation } from '../../../shared/utils/get-translation';
 import { ImageUploadField } from '../../../shared/ui/image-upload-field/image-upload-field';
+import { TextareaInput } from '../../../shared/ui/textarea-input/textarea-input';
 
 @Component({
   selector: 'app-dish-editor-dialog',
-  imports: [ImageUploadField, ModalPanel, ReactiveFormsModule, SelectInput, TextInput, TranslatePipe],
+  imports: [ImageUploadField, ModalPanel, ReactiveFormsModule, SelectInput, TextareaInput, TextInput, TranslatePipe],
   styles: `
     form { display: grid; gap: 1rem; padding: 1rem; }
     .two-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
@@ -43,6 +44,12 @@ import { ImageUploadField } from '../../../shared/ui/image-upload-field/image-up
           <app-text-input formControlName="en" [label]="'ADMIN.CATEGORIES.ENGLISH' | translate" name="nameEn" type="text" [required]="true" />
           <app-text-input formControlName="ru" [label]="'ADMIN.CATEGORIES.RUSSIAN' | translate" name="nameRu" type="text" [required]="true" />
         </div>
+        <div class="translations" formGroupName="comments">
+          <h3>{{ 'ADMIN.DISHES.COMMENTS' | translate }}</h3>
+          <app-textarea-input formControlName="ka" [label]="'ADMIN.DISHES.COMMENT_GEORGIAN' | translate" name="commentKa" />
+          <app-textarea-input formControlName="en" [label]="'ADMIN.DISHES.COMMENT_ENGLISH' | translate" name="commentEn" />
+          <app-textarea-input formControlName="ru" [label]="'ADMIN.DISHES.COMMENT_RUSSIAN' | translate" name="commentRu" />
+        </div>
         <div class="toggles">
           <label class="toggle">{{ 'ADMIN.DISHES.PUBLISHED' | translate }}<input formControlName="isPublished" type="checkbox" /></label>
           <label class="toggle">{{ 'ADMIN.DISHES.AVAILABLE' | translate }}<input formControlName="isAvailable" type="checkbox" /></label>
@@ -65,6 +72,7 @@ export class DishEditorDialog {
   protected readonly form = this.formBuilder.nonNullable.group({
     categoryId: ['', Validators.required], imageUrl: '', price: ['', [Validators.required, Validators.min(0)]], calories: '', isPublished: true, isAvailable: true,
     names: this.formBuilder.nonNullable.group({ ka: ['', Validators.required], en: ['', Validators.required], ru: ['', Validators.required] }),
+    comments: this.formBuilder.nonNullable.group({ ka: '', en: '', ru: '' }),
   });
 
   constructor() {
@@ -76,6 +84,9 @@ export class DishEditorDialog {
         names: {
           ka: dish ? getTranslation(dish.translations, 'ka')?.name ?? '' : '', en: dish ? getTranslation(dish.translations, 'en')?.name ?? '' : '', ru: dish ? getTranslation(dish.translations, 'ru')?.name ?? '' : '',
         },
+        comments: {
+          ka: dish ? getTranslation(dish.translations, 'ka')?.description ?? '' : '', en: dish ? getTranslation(dish.translations, 'en')?.description ?? '' : '', ru: dish ? getTranslation(dish.translations, 'ru')?.description ?? '' : '',
+        },
       });
     });
   }
@@ -86,7 +97,7 @@ export class DishEditorDialog {
     const existing = this.dish()?.dish;
     this.saved.emit({
       categoryId: value.categoryId, imageUrl: value.imageUrl, priceAmountMinor: Math.round(Number(value.price) * 100), calories: value.calories.trim() ? Number(value.calories) : null, isPublished: value.isPublished, isAvailable: value.isAvailable,
-      translations: (['ka', 'en', 'ru'] as const).map((languageCode) => ({ languageCode, name: value.names[languageCode], description: existing ? getTranslation(existing.translations, languageCode)?.description ?? '' : '', recipe: existing ? getTranslation(existing.translations, languageCode)?.recipe ?? null : null })),
+      translations: (['ka', 'en', 'ru'] as const).map((languageCode) => ({ languageCode, name: value.names[languageCode], description: value.comments[languageCode], recipe: existing ? getTranslation(existing.translations, languageCode)?.recipe ?? null : null })),
     });
   }
 }
