@@ -12,7 +12,8 @@ import { AppImage } from '../../ui/app-image/app-image';
   imports: [AppImage, CdkDragHandle, MatIcon, TranslatePipe],
   styles: `
     :host { display: block; min-inline-size: 0; }
-    article { overflow: hidden; border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent); border-radius: .75rem; background: var(--color-panel); box-shadow: 0 .35rem .9rem rgb(0 0 0 / 4%); }
+    article { overflow: hidden; border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent); border-radius: .75rem; background: var(--color-panel); box-shadow: 0 .45rem 1.1rem rgb(0 0 0 / 9%); cursor: pointer; transition: box-shadow 160ms ease, transform 160ms ease; }
+    article:hover { box-shadow: 0 .65rem 1.35rem rgb(0 0 0 / 13%); transform: translateY(-1px); }
     app-image, .image-placeholder { display: block; inline-size: 100%; block-size: 8.8rem; background: var(--color-surface); }.image-placeholder { display:grid; place-items:center; background:linear-gradient(135deg,color-mix(in srgb,var(--color-primary) 16%,var(--color-surface)),var(--color-surface)); color:var(--color-primary); }.image-placeholder mat-icon{font-size:2rem;inline-size:2rem;block-size:2rem;}
     .content { display: grid; gap: .42rem; padding: .7rem; }
     .title-row { display: flex; align-items: start; justify-content: space-between; gap: .4rem; }
@@ -31,7 +32,7 @@ import { AppImage } from '../../ui/app-image/app-image';
     .status.hidden { background: color-mix(in srgb, #d77354 18%, transparent); color: #a13d28; }
   `,
   template: `
-    <article>
+    <article (click)="editRequested.emit()">
       @if (summary().category.image; as image) {
         <app-image [alt]="''" [height]="image.height" [src]="image.url" [width]="image.width" />
       } @else {
@@ -40,17 +41,17 @@ import { AppImage } from '../../ui/app-image/app-image';
       <div class="content">
         <div class="title-row">
           <h2>{{ name() }}</h2>
-          <div class="tile-controls"><button class="more" type="button" [attr.aria-label]="'ADMIN.CATEGORIES.MORE_ACTIONS' | translate" (click)="editRequested.emit()"><mat-icon aria-hidden="true">more_vert</mat-icon></button></div>
+          <div class="tile-controls"><button class="more" type="button" [attr.aria-label]="'ADMIN.CATEGORIES.MORE_ACTIONS' | translate" (click)="$event.stopPropagation(); editRequested.emit()"><mat-icon aria-hidden="true">more_vert</mat-icon></button></div>
         </div>
         <div class="meta">
           <span>{{ summary().dishCount }} {{ 'ADMIN.CATEGORIES.DISHES' | translate }}</span>
           <span class="status" [class.hidden]="!summary().category.isVisible">{{ (summary().category.isVisible ? 'ADMIN.CATEGORIES.ACTIVE' : 'ADMIN.CATEGORIES.HIDDEN') | translate }}</span>
         </div>
-        <button class="drag-handle reorder" type="button" cdkDragHandle [attr.aria-label]="'ADMIN.CATEGORIES.DRAG_TO_REORDER' | translate"><mat-icon aria-hidden="true">drag_indicator</mat-icon><span>{{ 'ADMIN.CATEGORIES.REORDER' | translate }}</span></button>
+        <button class="drag-handle reorder" type="button" cdkDragHandle [attr.aria-label]="'ADMIN.CATEGORIES.DRAG_TO_REORDER' | translate" (click)="$event.stopPropagation()"><mat-icon aria-hidden="true">drag_indicator</mat-icon><span>{{ 'ADMIN.CATEGORIES.REORDER' | translate }}</span></button>
         <div class="quick-actions">
-          <button type="button" [attr.aria-label]="'ADMIN.CATEGORIES.EDIT' | translate" (click)="editRequested.emit()"><mat-icon aria-hidden="true">edit</mat-icon></button>
-          <button type="button" [attr.aria-label]="(summary().category.isVisible ? 'ADMIN.CATEGORIES.HIDE' : 'ADMIN.CATEGORIES.SHOW') | translate" (click)="visibilityRequested.emit()"><mat-icon aria-hidden="true">{{ summary().category.isVisible ? 'visibility_off' : 'visibility' }}</mat-icon></button>
-          <button class="delete" type="button" aria-label="Delete category" (click)="deleteRequested.emit()"><mat-icon aria-hidden="true">delete</mat-icon></button>
+          <button type="button" [attr.aria-label]="'ADMIN.CATEGORIES.EDIT' | translate" (click)="$event.stopPropagation(); editRequested.emit()"><mat-icon aria-hidden="true">edit</mat-icon></button>
+          <button type="button" [attr.aria-label]="(summary().category.isVisible ? 'ADMIN.CATEGORIES.HIDE' : 'ADMIN.CATEGORIES.SHOW') | translate" (click)="$event.stopPropagation(); visibilityRequested.emit()"><mat-icon aria-hidden="true">{{ summary().category.isVisible ? 'visibility_off' : 'visibility' }}</mat-icon></button>
+          <button class="delete" type="button" aria-label="Delete category" (click)="$event.stopPropagation(); deleteRequested.emit()"><mat-icon aria-hidden="true">delete</mat-icon></button>
         </div>
       </div>
     </article>

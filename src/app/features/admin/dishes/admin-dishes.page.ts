@@ -29,7 +29,8 @@ import { AppImage } from '../../../shared/ui/app-image/app-image';
     .filters { display: grid; grid-template-columns: minmax(12rem, 1fr) auto auto; gap: .6rem; margin-block-end: 1rem; }
     .reorder-note { margin: -.35rem 0 .8rem; color: var(--color-muted-text); font-size: .7rem; }
     .table-wrap { overflow-x: auto; border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent); border-radius: .8rem; background: var(--color-panel); }
-    tr[cdkDrag] { transition: transform 220ms cubic-bezier(.2, 0, 0, 1); }
+    tr[cdkDrag] { cursor: pointer; box-shadow: 0 .2rem .65rem rgb(0 0 0 / 5%); transition: box-shadow 160ms ease, transform 220ms cubic-bezier(.2, 0, 0, 1); }
+    tr[cdkDrag]:hover { box-shadow: 0 .35rem .9rem rgb(0 0 0 / 10%); }
     .cdk-drag-preview { display: table; box-shadow: 0 .8rem 2rem rgb(0 0 0 / 24%); background: var(--color-panel); }
     .cdk-drag-placeholder { opacity: .3; }
     table { inline-size: 100%; min-inline-size: 48rem; border-collapse: collapse; font-size: .75rem; }
@@ -89,7 +90,7 @@ import { AppImage } from '../../../shared/ui/app-image/app-image';
             <thead><tr><th>{{ 'ADMIN.DISHES.DISH' | translate }}</th><th>{{ 'ADMIN.DISHES.CATEGORY' | translate }}</th><th>{{ 'ADMIN.DISHES.PRICE' | translate }}</th><th>{{ 'ADMIN.DISHES.STATUS' | translate }}</th><th>{{ 'ADMIN.DISHES.ACTIONS' | translate }}</th></tr></thead>
             <tbody cdkDropList [cdkDropListData]="store.dishes()" [cdkDropListSortPredicate]="canSortWithinCategory" (cdkDropListDropped)="drop($event)">
               @for (summary of store.dishes(); track summary.dish.id) {
-                <tr cdkDrag [cdkDragData]="summary">
+                <tr cdkDrag [cdkDragData]="summary" (click)="openEditor(summary)">
                   <ng-template cdkDragPreview>
                     <article class="admin-dish-drag-preview">
                       @if (summary.dish.image; as image) {
@@ -109,7 +110,7 @@ import { AppImage } from '../../../shared/ui/app-image/app-image';
                   <td data-label="Category">{{ name(summary.category.translations) }}</td>
                   <td data-label="Price"><app-price [language]="languageService.currentLanguage()" [money]="summary.dish.price" /></td>
                   <td data-label="Status"><span class="badge" [class.paused]="!summary.dish.isPublished || !summary.dish.isAvailable">{{ (summary.dish.isPublished && summary.dish.isAvailable ? 'ADMIN.DISHES.ACTIVE' : 'ADMIN.DISHES.PAUSED') | translate }}</span></td>
-                  <td data-label="Actions"><div class="actions"><button class="drag-handle" type="button" cdkDragHandle [attr.aria-label]="'ADMIN.DISHES.DRAG_TO_REORDER' | translate"><mat-icon aria-hidden="true">drag_indicator</mat-icon><span>{{ 'ADMIN.DISHES.REORDER' | translate }}</span></button><div class="quick-actions"><button class="more primary" type="button" [attr.aria-label]="(summary.dish.isAvailable ? 'ADMIN.DISHES.PAUSE' : 'ADMIN.DISHES.RESUME') | translate" (click)="toggleAvailability(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isAvailable ? 'pause_circle' : 'play_circle' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="(summary.dish.isPublished ? 'ADMIN.DISHES.HIDE' : 'ADMIN.DISHES.SHOW') | translate" (click)="togglePublication(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isPublished ? 'visibility_off' : 'visibility' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="'ADMIN.DISHES.EDIT' | translate" (click)="openEditor(summary)"><mat-icon aria-hidden="true">edit</mat-icon></button><button class="more danger" type="button" [attr.aria-label]="'ADMIN.DISHES.REMOVE' | translate" (click)="remove(summary)"><mat-icon aria-hidden="true">delete</mat-icon></button></div></div></td>
+                  <td data-label="Actions"><div class="actions"><button class="drag-handle" type="button" cdkDragHandle [attr.aria-label]="'ADMIN.DISHES.DRAG_TO_REORDER' | translate" (click)="$event.stopPropagation()"><mat-icon aria-hidden="true">drag_indicator</mat-icon><span>{{ 'ADMIN.DISHES.REORDER' | translate }}</span></button><div class="quick-actions"><button class="more primary" type="button" [attr.aria-label]="(summary.dish.isAvailable ? 'ADMIN.DISHES.PAUSE' : 'ADMIN.DISHES.RESUME') | translate" (click)="$event.stopPropagation(); toggleAvailability(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isAvailable ? 'pause_circle' : 'play_circle' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="(summary.dish.isPublished ? 'ADMIN.DISHES.HIDE' : 'ADMIN.DISHES.SHOW') | translate" (click)="$event.stopPropagation(); togglePublication(summary)"><mat-icon aria-hidden="true">{{ summary.dish.isPublished ? 'visibility_off' : 'visibility' }}</mat-icon></button><button class="more" type="button" [attr.aria-label]="'ADMIN.DISHES.EDIT' | translate" (click)="$event.stopPropagation(); openEditor(summary)"><mat-icon aria-hidden="true">edit</mat-icon></button><button class="more danger" type="button" [attr.aria-label]="'ADMIN.DISHES.REMOVE' | translate" (click)="$event.stopPropagation(); remove(summary)"><mat-icon aria-hidden="true">delete</mat-icon></button></div></div></td>
                 </tr>
               } @empty { <tr><td class="state" colspan="5">{{ 'ADMIN.DISHES.EMPTY' | translate }}</td></tr> }
             </tbody>
