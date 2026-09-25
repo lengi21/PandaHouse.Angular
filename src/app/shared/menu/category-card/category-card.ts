@@ -52,7 +52,12 @@ import { AppImage } from '../../ui/app-image/app-image';
 
     .name {
       z-index: 2;
-      padding: 1rem;
+      max-inline-size: calc(100% - 1.5rem);
+      padding: .7rem .9rem;
+      border: 1px solid rgb(255 255 255 / 18%);
+      border-radius: .55rem;
+      background: rgb(0 0 0 / 36%);
+      box-shadow: 0 .35rem .9rem rgb(0 0 0 / 28%);
       text-align: center;
       font-family: Georgia, serif;
       font-size: 1.3rem;
@@ -60,6 +65,7 @@ import { AppImage } from '../../ui/app-image/app-image';
       letter-spacing: .09em;
       text-transform: uppercase;
       line-height: 1.2;
+      text-shadow: 0 1px 2px rgb(0 0 0 / 50%);
     }
 
     .card:focus-visible {
