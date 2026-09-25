@@ -16,7 +16,9 @@
     "INFO": "Info"
   },
   "CUSTOMER": {
-    "CATEGORIES": { "TITLE": "Categories" },
+    "CATEGORIES": {
+      "TITLE": "Categories"
+    },
     "MENU": {
       "TITLE": "Menu",
       "RECIPE": "Recipe",
@@ -101,9 +103,19 @@
       "DISHES": "Dishes",
       "RESTAURANT": "Restaurant information",
       "BACK_TO_MENU": "Back to menu",
-      "SIGN_OUT": "Sign out"
+      "SIGN_OUT": "Sign out",
+      "ANALYTICS": "QR analytics"
     },
-    "DASHBOARD": { "TITLE": "Dashboard", "DESCRIPTION": "Overview of your restaurant menu.", "CATEGORIES": "Categories", "DISHES": "Dishes", "PUBLISHED": "Published dishes", "AVAILABLE": "Available dishes", "RECENT_DISHES": "Recent dishes", "VIEW_ALL": "View all" },
+    "DASHBOARD": {
+      "TITLE": "Dashboard",
+      "DESCRIPTION": "Overview of your restaurant menu.",
+      "CATEGORIES": "Categories",
+      "DISHES": "Dishes",
+      "PUBLISHED": "Published dishes",
+      "AVAILABLE": "Available dishes",
+      "RECENT_DISHES": "Recent dishes",
+      "VIEW_ALL": "View all"
+    },
     "CATEGORIES": {
       "TITLE": "Categories",
       "DESCRIPTION": "Manage menu categories and their order.",
@@ -175,6 +187,41 @@
       "SHOW": "Show dish",
       "REMOVE": "Remove dish"
     },
-    "SETTINGS": { "TITLE": "Restaurant information", "DESCRIPTION": "Manage the details shown in the customer menu.", "IMAGES": "Restaurant images", "LOGO_URL": "Logo image URL", "COVER_URL": "Cover image URL", "CONTACT": "Contact information", "ADDRESS": "Address", "PHONE": "Phone", "FACEBOOK": "Facebook URL", "INSTAGRAM": "Instagram URL", "NAMES": "Restaurant names", "HOURS": "Working hours", "OPENS": "Opens", "CLOSES": "Closes", "SAVE": "Save changes", "SAVING": "Saving…", "SAVED": "Changes saved.", "SAVE_ERROR": "Changes could not be saved." }
+    "SETTINGS": {
+      "TITLE": "Restaurant information",
+      "DESCRIPTION": "Manage the details shown in the customer menu.",
+      "IMAGES": "Restaurant images",
+      "LOGO_URL": "Logo image URL",
+      "COVER_URL": "Cover image URL",
+      "CONTACT": "Contact information",
+      "ADDRESS": "Address",
+      "PHONE": "Phone",
+      "FACEBOOK": "Facebook URL",
+      "INSTAGRAM": "Instagram URL",
+      "NAMES": "Restaurant names",
+      "HOURS": "Working hours",
+      "OPENS": "Opens",
+      "CLOSES": "Closes",
+      "SAVE": "Save changes",
+      "SAVING": "Saving…",
+      "SAVED": "Changes saved.",
+      "SAVE_ERROR": "Changes could not be saved."
+    },
+    "QR_ANALYTICS": {
+      "TITLE": "QR analytics",
+      "DESCRIPTION": "Anonymous visitor activity from your QR menu.",
+      "DATE_RANGE": "Report date range",
+      "DAYS": "d",
+      "SCANS": "QR scans",
+      "DISH_VIEWS": "Dish views",
+      "CATEGORY_VISITS": "Category visits",
+      "MOST_VIEWED_DISHES": "Most-viewed dishes",
+      "LANGUAGES": "Languages",
+      "DEVICES": "Devices",
+      "NO_ACTIVITY": "No activity for this period.",
+      "DEVICE_MOBILE": "Mobile",
+      "DEVICE_TABLET": "Tablet",
+      "DEVICE_DESKTOP": "Desktop"
+    }
   }
 }

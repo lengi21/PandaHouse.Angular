@@ -13,6 +13,7 @@ import { CartStore } from '../cart/cart.store';
 import { CustomerMenuStore } from './customer-menu.store';
 import { SearchField } from '../../../shared/ui/search-field/search-field';
 import { DishDetailsSheet } from '../../../shared/menu/dish-details-sheet/dish-details-sheet';
+import { QrAnalyticsTracker } from '../../../core/analytics/qr-analytics-tracker';
 
 @Component({
   selector: 'app-menu-page',
@@ -37,7 +38,7 @@ import { DishDetailsSheet } from '../../../shared/menu/dish-details-sheet/dish-d
       } @else {
         <div class="menu-top">
           <app-search-field [label]="'HEADER.SEARCH' | translate" [placeholder]="'HEADER.SEARCH' | translate" [value]="menuStore.searchQuery()" (valueChange)="menuStore.setSearchQuery($event)" />
-          <app-category-selector [activeCategoryId]="activeCategoryId()" [categories]="menuStore.categories()" [firstCategoryId]="carouselFirstCategoryId()" [label]="'CUSTOMER.CATEGORIES.TITLE' | translate" [language]="languageService.currentLanguage()" (selected)="scrollToCategory($event)" />
+          <app-category-selector [activeCategoryId]="activeCategoryId()" [categories]="menuStore.categories()" [firstCategoryId]="carouselFirstCategoryId()" [label]="'CUSTOMER.CATEGORIES.TITLE' | translate" [language]="languageService.currentLanguage()" (selected)="selectCategory($event)" />
         </div>
         <div class="menu-workspace">
           <div class="menu-panel">
@@ -46,7 +47,7 @@ import { DishDetailsSheet } from '../../../shared/menu/dish-details-sheet/dish-d
                 <h2>{{ categoryName(menuCategory.category.translations) }}</h2>
                 <div class="dishes" role="list">
                   @for (dish of menuCategory.dishes; track dish.id) {
-                    <app-dish-card [addLabel]="'CART.ADD' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" (add)="cartStore.add(dish)" (decrement)="cartStore.decrement(dish.id)" (detailsRequested)="selectedDish.set(dish)" (increment)="cartStore.increment(dish.id)" />
+                    <app-dish-card [addLabel]="'CART.ADD' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" (add)="cartStore.add(dish)" (decrement)="cartStore.decrement(dish.id)" (detailsRequested)="openDish(dish)" (increment)="cartStore.increment(dish.id)" />
                   }
                 </div>
               </section>
@@ -70,6 +71,7 @@ export class MenuPage {
   private readonly requestedCategoryId = signal<string | null>(null);
   private readonly isProgrammaticCategoryScroll = signal(false);
   private categoryScrollTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly analytics = inject(QrAnalyticsTracker);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -128,6 +130,16 @@ export class MenuPage {
         observer?.disconnect();
       });
     });
+  }
+
+  protected selectCategory(categoryId: string): void {
+    this.analytics.track('CATEGORY_VIEW', categoryId);
+    this.scrollToCategory(categoryId);
+  }
+
+  protected openDish(dish: Dish): void {
+    this.analytics.track('DISH_VIEW', dish.categoryId, dish.id);
+    this.selectedDish.set(dish);
   }
 
   protected scrollToCategory(categoryId: string): void {

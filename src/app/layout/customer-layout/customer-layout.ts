@@ -5,6 +5,7 @@ import { CartStore } from '../../features/customer/cart/cart.store';
 import { CustomerHeader } from './customer-header';
 import { CustomerNavigation } from './customer-navigation';
 import { AppearanceSheet } from '../../shared/ui/appearance-sheet/appearance-sheet';
+import { QrAnalyticsTracker } from '../../core/analytics/qr-analytics-tracker';
 
 @Component({
   selector: 'app-customer-layout',
@@ -26,9 +27,11 @@ import { AppearanceSheet } from '../../shared/ui/appearance-sheet/appearance-she
 })
 export class CustomerLayout {
   private readonly customerMenuStore = inject(CustomerMenuStore);
+  private readonly analytics = inject(QrAnalyticsTracker);
   protected readonly appearanceOpen = signal(false);
 
   constructor() {
     this.customerMenuStore.load();
+    this.analytics.track('SCAN');
   }
 }

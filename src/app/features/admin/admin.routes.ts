@@ -9,12 +9,15 @@ import { ADMIN_RESTAURANT_REPOSITORY } from '../../core/data-access/restaurant/a
 import { HttpAdminRestaurantRepository } from '../../core/data-access/restaurant/http-admin-restaurant.repository';
 import { MEDIA_STORAGE_REPOSITORY } from '../../core/data-access/storage/media-storage.repository';
 import { HttpMediaStorageRepository } from '../../core/data-access/storage/http-media-storage.repository';
+import { QR_ANALYTICS_REPOSITORY } from '../../core/data-access/qr-analytics/qr-analytics.repository';
+import { HttpQrAnalyticsRepository } from '../../core/data-access/qr-analytics/http-qr-analytics.repository';
 
 const adminPanelProviders = [
   { provide: ADMIN_DASHBOARD_REPOSITORY, useClass: HttpAdminDashboardRepository },
   { provide: ADMIN_MENU_REPOSITORY, useClass: HttpAdminMenuRepository },
   { provide: ADMIN_RESTAURANT_REPOSITORY, useClass: HttpAdminRestaurantRepository },
   { provide: MEDIA_STORAGE_REPOSITORY, useClass: HttpMediaStorageRepository },
+  { provide: QR_ANALYTICS_REPOSITORY, useClass: HttpQrAnalyticsRepository },
 ];
 
 export const adminRoutes: Routes = [
@@ -49,6 +52,11 @@ export const adminRoutes: Routes = [
         path: 'dishes',
         title: 'Panda House | Admin dishes',
         loadComponent: () => import('./dishes/admin-dishes.page').then((module) => module.AdminDishesPage),
+      },
+      {
+        path: 'analytics',
+        title: 'Panda House | QR analytics',
+        loadComponent: () => import('./qr-analytics/admin-qr-analytics.page').then((module) => module.AdminQrAnalyticsPage),
       },
       {
         path: 'settings',

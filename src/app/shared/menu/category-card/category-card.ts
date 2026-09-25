@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { LanguageCode } from '../../models/language.model';
@@ -79,6 +79,7 @@ import { AppImage } from '../../ui/app-image/app-image';
       [attr.aria-label]="name()"
       [queryParams]="{ category: category().id, source: 'category-list' }"
       [routerLink]="['/menu']"
+      (click)="selected.emit()"
     >
       @if (category().image; as image) {
         <app-image
@@ -102,6 +103,7 @@ export class CategoryCard {
   readonly category = input.required<Category>();
   readonly language = input.required<LanguageCode>();
   readonly priority = input(false);
+  readonly selected = output<void>();
   readonly srcset = computed(() => responsiveImageSrcset(this.category().image?.url ?? ''));
   readonly name = computed(
     () => getTranslation(this.category().translations, this.language())?.name ?? '',

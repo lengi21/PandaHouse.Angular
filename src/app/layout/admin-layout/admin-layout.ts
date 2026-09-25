@@ -256,6 +256,10 @@ import { ToastContainer } from '../../shared/ui/toast-container/toast-container'
             ><mat-icon aria-hidden="true">restaurant_menu</mat-icon
             >{{ 'ADMIN.NAVIGATION.DISHES' | translate }}</a
           >
+          <a routerLink="/admin/analytics" routerLinkActive="active"
+            ><mat-icon aria-hidden="true">analytics</mat-icon
+            >{{ 'ADMIN.NAVIGATION.ANALYTICS' | translate }}</a
+          >
           <a routerLink="/admin/settings" routerLinkActive="active"
             ><mat-icon aria-hidden="true">storefront</mat-icon
             >{{ 'ADMIN.NAVIGATION.RESTAURANT' | translate }}</a

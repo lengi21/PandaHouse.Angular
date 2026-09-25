@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../../core/i18n/language.service';
 import { CategoryCard } from '../../../shared/menu/category-card/category-card';
 import { CustomerMenuStore } from '../menu/customer-menu.store';
+import { QrAnalyticsTracker } from '../../../core/analytics/qr-analytics-tracker';
 
 @Component({
   selector: 'app-category-list-page',
@@ -46,6 +47,7 @@ import { CustomerMenuStore } from '../menu/customer-menu.store';
               [category]="menuCategory.category"
               [language]="languageService.currentLanguage()"
               [priority]="index < 2"
+              (selected)="trackCategory(menuCategory.category.id)"
             />
           }
         </section>
@@ -56,4 +58,9 @@ import { CustomerMenuStore } from '../menu/customer-menu.store';
 export class CategoryListPage {
   protected readonly languageService = inject(LanguageService);
   protected readonly menuStore = inject(CustomerMenuStore);
+  private readonly analytics = inject(QrAnalyticsTracker);
+
+  protected trackCategory(categoryId: string): void {
+    this.analytics.track('CATEGORY_VIEW', categoryId);
+  }
 }
