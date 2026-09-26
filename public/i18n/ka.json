@@ -221,7 +221,8 @@
       "NO_ACTIVITY": "ამ პერიოდისთვის აქტივობა არ არის.",
       "DEVICE_MOBILE": "მობილური",
       "DEVICE_TABLET": "ტაბლეტი",
-      "DEVICE_DESKTOP": "კომპიუტერი"
+      "DEVICE_DESKTOP": "კომპიუტერი",
+      "DAILY_ACTIVITY": "დღიური QR სკანირება"
     }
   }
 }

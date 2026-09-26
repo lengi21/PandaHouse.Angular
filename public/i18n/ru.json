@@ -221,7 +221,8 @@
       "NO_ACTIVITY": "За этот период активности нет.",
       "DEVICE_MOBILE": "Телефон",
       "DEVICE_TABLET": "Планшет",
-      "DEVICE_DESKTOP": "Компьютер"
+      "DEVICE_DESKTOP": "Компьютер",
+      "DAILY_ACTIVITY": "Ежедневные сканирования QR"
     }
   }
 }

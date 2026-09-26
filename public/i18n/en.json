@@ -221,7 +221,8 @@
       "NO_ACTIVITY": "No activity for this period.",
       "DEVICE_MOBILE": "Mobile",
       "DEVICE_TABLET": "Tablet",
-      "DEVICE_DESKTOP": "Desktop"
+      "DEVICE_DESKTOP": "Desktop",
+      "DAILY_ACTIVITY": "Daily QR scans"
     }
   }
 }

@@ -11,9 +11,16 @@ export interface QrAnalyticsReport {
   readonly categoryVisits: readonly { readonly categoryId: string; readonly visits: number; readonly translations: readonly QrAnalyticsTranslation[] }[];
   readonly languages: readonly { readonly languageCode: QrAnalyticsLanguage; readonly count: number }[];
   readonly devices: readonly { readonly deviceType: string; readonly count: number }[];
+  readonly dailyActivity: readonly QrAnalyticsDailyActivity[];
 }
 
 export interface QrAnalyticsTranslation {
   readonly languageCode: QrAnalyticsLanguage;
   readonly name: string;
+}
+export interface QrAnalyticsDailyActivity {
+  readonly date: string;
+  readonly scans: number;
+  readonly dishViews: number;
+  readonly categoryVisits: number;
 }
