@@ -47,7 +47,7 @@ import { QrAnalyticsTracker } from '../../../core/analytics/qr-analytics-tracker
                 <h2>{{ categoryName(menuCategory.category.translations) }}</h2>
                 <div class="dishes" role="list">
                   @for (dish of menuCategory.dishes; track dish.id) {
-                    <app-dish-card [addLabel]="'CART.ADD' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" (add)="cartStore.add(dish)" (decrement)="cartStore.decrement(dish.id)" (detailsRequested)="openDish(dish)" (increment)="cartStore.increment(dish.id)" />
+                    <app-dish-card [addLabel]="'CART.ADD' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [unavailableLabel]="'CUSTOMER.MENU.UNAVAILABLE' | translate" (add)="addOrIncrement(dish)" (decrement)="cartStore.decrement(dish.id)" (detailsRequested)="openDish(dish)" (increment)="addOrIncrement(dish)" />
                   }
                 </div>
               </section>
@@ -55,7 +55,7 @@ import { QrAnalyticsTracker } from '../../../core/analytics/qr-analytics-tracker
           </div>
         </div>
         @if (selectedDish(); as dish) {
-          <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish)" />
+          <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" [unavailableLabel]="'CUSTOMER.MENU.UNAVAILABLE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish)" />
         }
       }
     </main>
@@ -161,6 +161,9 @@ export class MenuPage {
   }
 
   protected addOrIncrement(dish: Dish): void {
+    if (!dish.isAvailable) {
+      return;
+    }
     if (this.cartStore.quantityFor(dish.id) === 0) {
       this.cartStore.add(dish);
       return;

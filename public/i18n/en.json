@@ -24,6 +24,7 @@
       "RECIPE": "Recipe",
       "CALORIES": "kcal",
       "QUANTITY": "Quantity",
+      "UNAVAILABLE": "Temporarily unavailable",
       "CLOSE_DETAILS": "Close dish details"
     },
     "CART": {

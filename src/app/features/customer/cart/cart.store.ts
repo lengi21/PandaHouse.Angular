@@ -51,6 +51,9 @@ export class CartStore {
   }
 
   add(dish: Dish): void {
+    if (!dish.isAvailable) {
+      return;
+    }
     if (this.quantityFor(dish.id) === 0) {
       this.entries.update((entries) => [...entries, { dishId: dish.id, quantity: 1, dish }]);
     }

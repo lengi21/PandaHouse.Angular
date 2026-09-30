@@ -24,6 +24,7 @@
       "RECIPE": "Рецепт",
       "CALORIES": "ккал",
       "QUANTITY": "Количество",
+      "UNAVAILABLE": "Временно недоступно",
       "CLOSE_DETAILS": "Закрыть детали блюда"
     },
     "CART": {

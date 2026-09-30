@@ -23,6 +23,8 @@ import { AppImage } from '../../ui/app-image/app-image';
     .calories { display: inline-flex; align-items: center; gap: .35rem; color: var(--color-muted-text); font-size: .82rem; font-weight: 700; } .calories mat-icon { inline-size: 1rem; block-size: 1rem; color: var(--color-primary); font-size: 1rem; }
     .recipe { margin-block-start: 1rem; } .recipe p { margin-block-start: .4rem; color: var(--color-muted-text); font-size: .9rem; line-height: 1.55; }
     .quantity { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-block-start: 1.25rem; } .quantity span { color: var(--color-muted-text); font-size: .85rem; font-weight: 700; }
+    .unavailable { display: flex; align-items: center; gap: .5rem; margin-block-start: 1.25rem; padding: .8rem .9rem; border: 1px solid color-mix(in srgb, #e0a52e 82%, var(--color-surface)); border-radius: .8rem; background: color-mix(in srgb, #f5b940 10%, var(--color-surface)); color: color-mix(in srgb, #8a5700 88%, var(--color-text)); font-weight: 800; }
+    .unavailable mat-icon { color: inherit; }
   `,
   template: `
     <app-bottom-sheet [ariaLabel]="name()" (closed)="closed.emit()">
@@ -33,7 +35,11 @@ import { AppImage } from '../../ui/app-image/app-image';
       <p class="description">{{ description() }}</p>
       <div class="facts"><app-price [language]="language()" [money]="dish().price" /> @if (dish().calories; as calories) { <span class="calories"><mat-icon aria-hidden="true">local_fire_department</mat-icon>{{ calories }} {{ caloriesLabel() }}</span> }</div>
       @if (recipe(); as recipe) { <section class="recipe"><h3>{{ recipeLabel() }}</h3><p>{{ recipe }}</p></section> }
-      <div class="quantity"><span>{{ quantityLabel() }}</span><app-quantity-control [quantity]="quantity()" (decrement)="decrement.emit()" (increment)="increment.emit()" /></div>
+      @if (dish().isAvailable) {
+        <div class="quantity"><span>{{ quantityLabel() }}</span><app-quantity-control [quantity]="quantity()" (decrement)="decrement.emit()" (increment)="increment.emit()" /></div>
+      } @else {
+        <p class="unavailable"><mat-icon aria-hidden="true">pause_circle</mat-icon>{{ unavailableLabel() }}</p>
+      }
     </app-bottom-sheet>
   `,
 })
@@ -45,6 +51,7 @@ export class DishDetailsSheet {
   readonly caloriesLabel = input.required<string>();
   readonly quantityLabel = input.required<string>();
   readonly closeLabel = input.required<string>();
+  readonly unavailableLabel = input.required<string>();
   readonly decrement = output<void>();
   readonly increment = output<void>();
   readonly closed = output<void>();

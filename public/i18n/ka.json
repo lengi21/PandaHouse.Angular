@@ -24,6 +24,7 @@
       "RECIPE": "რეცეპტი",
       "CALORIES": "კკალ",
       "QUANTITY": "რაოდენობა",
+      "UNAVAILABLE": "დროებით მიუწვდომელია",
       "CLOSE_DETAILS": "კერძის დეტალების დახურვა"
     },
     "CART": {
