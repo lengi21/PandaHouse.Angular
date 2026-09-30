@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, input, output, viewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, computed, effect, ElementRef, input, output, signal, viewChild } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { LanguageCode } from '../../models/language.model';
 import { CategoryId, MenuCategory } from '../../models/menu.model';
@@ -12,16 +12,16 @@ import { AppImage } from '../../ui/app-image/app-image';
     :host { display: block; min-inline-size: 0; }
     nav { display: flex; max-inline-size: 100%; gap: .8rem; overflow-x: auto; overscroll-behavior-inline: contain; padding: .1rem 0 .7rem; scrollbar-width: none; touch-action: pan-x; }
     nav::-webkit-scrollbar { display: none; }
-    button { position: relative; display: grid; flex: 0 0 4.75rem; gap: .35rem; border: 0; padding: .2rem .15rem .4rem; border-radius: .75rem; background: transparent; color: var(--color-shell-text); font: inherit; font-size: .62rem; text-align: center; }
+    nav > button { position: relative; display: grid; flex: 0 0 4.75rem; gap: .35rem; border: 0; padding: .2rem .15rem .4rem; border-radius: .75rem; background: transparent; color: var(--color-shell-text); font: inherit; font-size: .62rem; text-align: center; }
     .name { display: grid; min-block-size: 1.85rem; place-items: center; padding: .18rem .3rem; border: 1px solid rgb(255 255 255 / 15%); border-radius: .45rem; background: rgb(0 0 0 / 28%); box-shadow: 0 .18rem .45rem rgb(0 0 0 / 18%); line-height: 1.18; text-shadow: 0 1px 2px rgb(0 0 0 / 45%); }
     app-image, .fallback { inline-size: 3.45rem; block-size: 3.45rem; margin: 0 auto; border: 2px solid transparent; border-radius: 50%; }
     .fallback { display:grid; place-items:center; background:color-mix(in srgb,var(--color-primary) 25%,var(--color-surface)); color:var(--color-primary); }.fallback mat-icon{font-size:1.35rem;inline-size:1.35rem;block-size:1.35rem;}
-    button.active { background: color-mix(in srgb, var(--color-secondary) 18%, transparent); }
-    button.active .name { border-color: color-mix(in srgb, var(--color-secondary) 68%, white); background: color-mix(in srgb, var(--color-secondary) 30%, rgb(0 0 0 / 48%)); box-shadow: 0 .25rem .6rem rgb(0 0 0 / 24%); }
-    button.active app-image, button.active .fallback { border-color: var(--color-secondary); box-shadow: 0 0 0 2px var(--color-shell), 0 0 0 3px var(--color-secondary); }
-    button.active span { color: var(--color-secondary); font-weight: 800; }
-    button.active::after { position: absolute; inset: auto 50% 0; inline-size: 1.35rem; block-size: .2rem; transform: translateX(-50%); border-radius: 999px; background: var(--color-secondary); content: ''; }
-    button:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; border-radius: .5rem; }
+    nav > button.active { background: color-mix(in srgb, var(--color-secondary) 18%, transparent); }
+    nav > button.active .name { border-color: color-mix(in srgb, var(--color-secondary) 68%, white); background: color-mix(in srgb, var(--color-secondary) 30%, rgb(0 0 0 / 48%)); box-shadow: 0 .25rem .6rem rgb(0 0 0 / 24%); }
+    nav > button.active app-image, button.active .fallback { border-color: var(--color-secondary); box-shadow: 0 0 0 2px var(--color-shell), 0 0 0 3px var(--color-secondary); }
+    nav > button.active span { color: var(--color-secondary); font-weight: 800; }
+    nav > button.active::after { position: absolute; inset: auto 50% 0; inline-size: 1.35rem; block-size: .2rem; transform: translateX(-50%); border-radius: 999px; background: var(--color-secondary); content: ''; }
+    nav > button:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; border-radius: .5rem; }
   `,
   template: `
     <nav #carousel [attr.aria-label]="label()">
@@ -34,7 +34,7 @@ import { AppImage } from '../../ui/app-image/app-image';
     </nav>
   `,
 })
-export class CategorySelector {
+export class CategorySelector implements AfterViewInit, OnDestroy {
   readonly categories = input.required<readonly MenuCategory[]>();
   readonly language = input.required<LanguageCode>();
   readonly label = input.required<string>();
@@ -42,6 +42,9 @@ export class CategorySelector {
   readonly firstCategoryId = input<CategoryId | null>(null);
   readonly selected = output<CategoryId>();
   private readonly carousel = viewChild<ElementRef<HTMLElement>>('carousel');
+  protected readonly canScrollLeft = signal(false);
+  protected readonly canScrollRight = signal(false);
+  private resizeObserver: ResizeObserver | null = null;
   private readonly names = computed(() => new Map(this.categories().map((menuCategory) => [menuCategory.category.id, getTranslation(menuCategory.category.translations, this.language())?.name ?? ''])));
   protected readonly orderedCategories = computed(() => {
     const firstCategoryId = this.firstCategoryId();
@@ -51,6 +54,16 @@ export class CategorySelector {
       return 0;
     });
   });
+
+  ngAfterViewInit(): void {
+    const carousel = this.carousel()?.nativeElement;
+    if (!carousel) return;
+    this.resizeObserver = new ResizeObserver(() => this.updateScrollHints());
+    this.resizeObserver.observe(carousel);
+    queueMicrotask(() => this.updateScrollHints());
+  }
+
+  ngOnDestroy(): void { this.resizeObserver?.disconnect(); }
 
   constructor() {
     effect(() => {
@@ -75,8 +88,28 @@ export class CategorySelector {
     });
   }
 
+  protected updateScrollHints(): void {
+    const carousel = this.carousel()?.nativeElement;
+    if (!carousel) return;
+    const tolerance = 3;
+    this.canScrollLeft.set(carousel.scrollLeft > tolerance);
+    this.canScrollRight.set(carousel.scrollLeft + carousel.clientWidth < carousel.scrollWidth - tolerance);
+  }
+
+  protected scrollCarousel(direction: -1 | 1): void {
+    const carousel = this.carousel()?.nativeElement;
+    if (!carousel) return;
+    carousel.scrollBy({ left: direction * Math.max(180, carousel.clientWidth * .72), behavior: 'smooth' });
+  }
+
+  protected scrollHintLabel(): string { return this.language() === 'ka' ? 'გადაუსვით' : this.language() === 'ru' ? 'Листайте' : 'Swipe'; }
+  protected nextLabel(): string { return this.language() === 'ka' ? 'კატეგორიების მარჯვნივ გადახვევა' : this.language() === 'ru' ? 'Прокрутить категории вправо' : 'Scroll categories right'; }
+  protected previousLabel(): string { return this.language() === 'ka' ? 'კატეგორიების მარცხნივ გადახვევა' : this.language() === 'ru' ? 'Прокрутить категории влево' : 'Scroll categories left'; }
+
   protected categoryName(menuCategory: MenuCategory): string {
     return this.names().get(menuCategory.category.id) ?? '';
   }
 
 }
+
+
