@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CustomerMenuStore } from '../../features/customer/menu/customer-menu.store';
 import { CartStore } from '../../features/customer/cart/cart.store';
@@ -28,10 +28,28 @@ import { QrAnalyticsTracker } from '../../core/analytics/qr-analytics-tracker';
 export class CustomerLayout {
   private readonly customerMenuStore = inject(CustomerMenuStore);
   private readonly analytics = inject(QrAnalyticsTracker);
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly appearanceOpen = signal(false);
 
   constructor() {
     this.customerMenuStore.load();
     this.analytics.track('SCAN');
+
+    // The catalog is no longer HTTP-cached. Poll only while this QR menu is
+    // visible so staff edits become visible to active guests within seconds.
+    const refresh = () => this.customerMenuStore.refresh();
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') refresh();
+    }, 3_000);
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') refresh();
+    };
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+    window.addEventListener('focus', refresh);
+    this.destroyRef.onDestroy(() => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+      window.removeEventListener('focus', refresh);
+    });
   }
 }

@@ -21,6 +21,7 @@ export class CustomerMenuStore {
   private readonly menuDishes = signal<readonly Dish[] | null>(null);
   private readonly loading = signal(false);
   private readonly dishesLoading = signal(false);
+  private refreshRequest: Promise<void> | null = null;
   private readonly loadError = signal<string | null>(null);
   private readonly query = signal('');
 
@@ -101,5 +102,32 @@ export class CustomerMenuStore {
       })
       .catch(() => this.loadError.set('Unable to load dishes.'))
       .finally(() => this.dishesLoading.set(false));
+  }
+
+  /**
+   * Refreshes data already displayed by a guest without showing the initial
+   * loading state or losing their current category, search, or scroll position.
+   */
+  refresh(): void {
+    if (this.refreshRequest) {
+      return;
+    }
+
+    const requests: Promise<void>[] = [];
+    if (this.overview()) {
+      requests.push(this.menuRepository.getCustomerMenuOverview(DEFAULT_RESTAURANT_ID).then((overview) => this.overview.set(overview)));
+    }
+    if (this.menuDishes()) {
+      requests.push(this.menuRepository.getMenuDishes(DEFAULT_RESTAURANT_ID).then((dishes) => this.menuDishes.set(dishes)));
+    }
+    if (!requests.length) {
+      return;
+    }
+
+    this.refreshRequest = Promise.all(requests)
+      .then(() => this.loadError.set(null))
+      // Keep the last successful menu visible if a background refresh fails.
+      .catch(() => undefined)
+      .finally(() => this.refreshRequest = null);
   }
 }
