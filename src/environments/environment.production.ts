@@ -7,4 +7,5 @@ import { AppEnvironment } from './environment.model';
 export const environment: AppEnvironment = {
   production: true,
   apiOrigin: '',
+  qrCatalogEventsOrigin: 'https://admin.meno.pandahouse2025.ge',
 };

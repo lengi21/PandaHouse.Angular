@@ -8,4 +8,5 @@ import { AppEnvironment } from './environment.model';
 export const environment: AppEnvironment = {
   production: false,
   apiOrigin: '',
+  qrCatalogEventsOrigin: 'http://localhost:3010',
 };

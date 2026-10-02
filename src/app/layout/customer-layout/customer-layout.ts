@@ -6,6 +6,8 @@ import { CustomerHeader } from './customer-header';
 import { CustomerNavigation } from './customer-navigation';
 import { AppearanceSheet } from '../../shared/ui/appearance-sheet/appearance-sheet';
 import { QrAnalyticsTracker } from '../../core/analytics/qr-analytics-tracker';
+import { QrCatalogEventsService } from '../../core/realtime/qr-catalog-events.service';
+import { DEFAULT_RESTAURANT_ID } from '../../features/customer/menu/customer-menu.store';
 
 @Component({
   selector: 'app-customer-layout',
@@ -28,6 +30,7 @@ import { QrAnalyticsTracker } from '../../core/analytics/qr-analytics-tracker';
 export class CustomerLayout {
   private readonly customerMenuStore = inject(CustomerMenuStore);
   private readonly analytics = inject(QrAnalyticsTracker);
+  private readonly catalogEvents = inject(QrCatalogEventsService);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly appearanceOpen = signal(false);
 
@@ -35,21 +38,10 @@ export class CustomerLayout {
     this.customerMenuStore.load();
     this.analytics.track('SCAN');
 
-    // The catalog is no longer HTTP-cached. Poll only while this QR menu is
-    // visible so staff edits become visible to active guests within seconds.
     const refresh = () => this.customerMenuStore.refresh();
-    const timer = window.setInterval(() => {
-      if (document.visibilityState === 'visible') refresh();
-    }, 3_000);
-    const refreshWhenVisible = () => {
-      if (document.visibilityState === 'visible') refresh();
-    };
-    document.addEventListener('visibilitychange', refreshWhenVisible);
-    window.addEventListener('focus', refresh);
+    const disconnect = this.catalogEvents.connect(DEFAULT_RESTAURANT_ID, refresh);
     this.destroyRef.onDestroy(() => {
-      window.clearInterval(timer);
-      document.removeEventListener('visibilitychange', refreshWhenVisible);
-      window.removeEventListener('focus', refresh);
+      disconnect();
     });
   }
 }
