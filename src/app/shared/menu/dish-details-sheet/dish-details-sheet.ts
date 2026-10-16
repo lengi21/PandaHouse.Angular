@@ -16,7 +16,7 @@ import { AppImage } from '../../ui/app-image/app-image';
     .close { position: absolute; inset: .75rem .75rem auto auto; display: grid; inline-size: 2.5rem; block-size: 2.5rem; place-items: center; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--color-text) 8%, transparent); color: var(--color-text); }
     .close mat-icon { inline-size: 1.25rem; block-size: 1.25rem; font-size: 1.25rem; }
     .close:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
-    app-image { inline-size: 100%; max-block-size: 13rem; block-size: 13rem; border-radius: 1rem; }
+    app-image { inline-size: 100%; min-block-size: 15rem; block-size: min(42dvh, 23rem); border-radius: 1rem; background: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface)); }
     h2, h3, p { margin: 0; } h2 { margin-block-start: 1rem; padding-inline-end: 3rem; font-size: 1.3rem; } h3 { font-size: .9rem; }
     .description { margin-block-start: .35rem; color: var(--color-muted-text); line-height: 1.45; }
     .facts { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-block-start: 1rem; padding: .8rem 0; border-block: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent); font-weight: 800; }
@@ -27,10 +27,10 @@ import { AppImage } from '../../ui/app-image/app-image';
     .unavailable mat-icon { color: inherit; }
   `,
   template: `
-    <app-bottom-sheet [ariaLabel]="name()" (closed)="closed.emit()">
+    <app-bottom-sheet [ariaLabel]="name()" [expanded]="true" [topOffset]="topOffset()" (closed)="closed.emit()">
       <div aria-hidden="true" class="handle"></div>
       <button class="close" type="button" [attr.aria-label]="closeLabel()" (click)="closed.emit()"><mat-icon aria-hidden="true">close</mat-icon></button>
-      @if (dish().image; as image) { <app-image [alt]="name()" [height]="image.height" loading="eager" [src]="image.url" [width]="image.width" /> }
+      @if (dish().image; as image) { <app-image [alt]="name()" [height]="image.height" fit="contain" loading="eager" [src]="image.url" [width]="image.width" /> }
       <h2>{{ name() }}</h2>
       <p class="description">{{ description() }}</p>
       <div class="facts"><app-price [language]="language()" [money]="dish().price" /> @if (dish().calories; as calories) { <span class="calories"><mat-icon aria-hidden="true">local_fire_department</mat-icon>{{ calories }} {{ caloriesLabel() }}</span> }</div>
@@ -52,6 +52,8 @@ export class DishDetailsSheet {
   readonly quantityLabel = input.required<string>();
   readonly closeLabel = input.required<string>();
   readonly unavailableLabel = input.required<string>();
+  /** The bottom of the menu controls; the expanded sheet begins directly below it. */
+  readonly topOffset = input<string | null>(null);
   readonly decrement = output<void>();
   readonly increment = output<void>();
   readonly closed = output<void>();

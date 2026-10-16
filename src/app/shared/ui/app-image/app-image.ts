@@ -31,6 +31,7 @@ type ImageState = 'loading' | 'loaded' | 'error';
       [class.loaded]="state() === 'loaded'"
       [src]="src()"
       [style.object-position]="objectPosition()"
+      [style.object-fit]="fit()"
       decoding="async"
       (error)="imageFailed()"
       (load)="imageLoaded()"
@@ -47,6 +48,8 @@ export class AppImage {
   readonly srcset = input<string | null>(null);
   readonly sizes = input<string | null>(null);
   readonly objectPosition = input<string | null>(null);
+  /** Use contain where the complete image matters more than edge-to-edge crop. */
+  readonly fit = input<'cover' | 'contain'>('cover');
   protected readonly state = signal<ImageState>('loading');
   protected readonly imageSource = computed(() => this.src());
 
