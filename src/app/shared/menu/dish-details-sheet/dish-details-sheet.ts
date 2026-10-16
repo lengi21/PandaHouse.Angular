@@ -27,7 +27,7 @@ import { AppImage } from '../../ui/app-image/app-image';
     .unavailable mat-icon { color: inherit; }
   `,
   template: `
-    <app-bottom-sheet [ariaLabel]="name()" [expanded]="true" [topOffset]="topOffset()" (closed)="closed.emit()">
+    <app-bottom-sheet [ariaLabel]="name()" [expanded]="true" (closed)="closed.emit()">
       <div aria-hidden="true" class="handle"></div>
       <button class="close" type="button" [attr.aria-label]="closeLabel()" (click)="closed.emit()"><mat-icon aria-hidden="true">close</mat-icon></button>
       @if (dish().image; as image) { <app-image [alt]="name()" [height]="image.height" fit="contain" loading="eager" [src]="image.url" [width]="image.width" /> }
