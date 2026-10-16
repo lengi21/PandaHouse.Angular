@@ -55,7 +55,7 @@ import { QrAnalyticsTracker } from '../../../core/analytics/qr-analytics-tracker
           </div>
         </div>
         @if (selectedDish(); as dish) {
-          <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" [topOffset]="dishDetailsTop()" [unavailableLabel]="'CUSTOMER.MENU.UNAVAILABLE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish)" />
+          <app-dish-details-sheet [caloriesLabel]="'CUSTOMER.MENU.CALORIES' | translate" [closeLabel]="'CUSTOMER.MENU.CLOSE_DETAILS' | translate" [dish]="dish" [language]="languageService.currentLanguage()" [quantity]="cartStore.quantityFor(dish.id)" [quantityLabel]="'CUSTOMER.MENU.QUANTITY' | translate" [recipeLabel]="'CUSTOMER.MENU.RECIPE' | translate" [unavailableLabel]="'CUSTOMER.MENU.UNAVAILABLE' | translate" (closed)="selectedDish.set(null)" (decrement)="cartStore.decrement(dish.id)" (increment)="addOrIncrement(dish)" />
         }
       }
     </main>
@@ -68,8 +68,6 @@ export class MenuPage {
   protected readonly activeCategoryId = signal<string | null>(null);
   protected readonly selectedDish = signal<Dish | null>(null);
   protected readonly carouselFirstCategoryId = signal<CategoryId | null>(null);
-  /** Updated from the actual search/category controls, including responsive heights. */
-  protected readonly dishDetailsTop = signal<string | null>(null);
   private readonly requestedCategoryId = signal<string | null>(null);
   private readonly isProgrammaticCategoryScroll = signal(false);
   private categoryScrollTimer: ReturnType<typeof setTimeout> | null = null;
@@ -79,28 +77,10 @@ export class MenuPage {
 
   constructor() {
     this.menuStore.loadDishes();
-    let menuTopObserver: ResizeObserver | null = null;
-    let menuTopTimer: ReturnType<typeof setTimeout> | null = null;
-    const attachMenuTopObserver = () => {
-      const menuTop = document.querySelector<HTMLElement>('app-menu-page .menu-top');
-      if (!menuTop) {
-        menuTopTimer = setTimeout(attachMenuTopObserver);
-        return;
-      }
-      const updateSheetTop = () => this.dishDetailsTop.set(`${Math.round(menuTop.getBoundingClientRect().bottom + 2)}px`);
-      updateSheetTop();
-      menuTopObserver = new ResizeObserver(updateSheetTop);
-      menuTopObserver.observe(menuTop);
-      window.addEventListener('resize', updateSheetTop);
-      this.destroyRef.onDestroy(() => window.removeEventListener('resize', updateSheetTop));
-    };
-    menuTopTimer = setTimeout(attachMenuTopObserver);
     this.destroyRef.onDestroy(() => {
       if (this.categoryScrollTimer) {
         clearTimeout(this.categoryScrollTimer);
       }
-      if (menuTopTimer) clearTimeout(menuTopTimer);
-      menuTopObserver?.disconnect();
     });
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const categoryId = params.get('category');

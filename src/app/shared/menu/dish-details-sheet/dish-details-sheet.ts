@@ -52,8 +52,6 @@ export class DishDetailsSheet {
   readonly quantityLabel = input.required<string>();
   readonly closeLabel = input.required<string>();
   readonly unavailableLabel = input.required<string>();
-  /** The bottom of the menu controls; the expanded sheet begins directly below it. */
-  readonly topOffset = input<string | null>(null);
   readonly decrement = output<void>();
   readonly increment = output<void>();
   readonly closed = output<void>();
